@@ -353,7 +353,7 @@ if ($is_adminOfCourse) {
 		$tool_content .= "<td width='10%'><div class=\"cellpos\">
 		<a href=\"group_edit.php?userGroupId=".$group["id"]."\">
 		<img src=\"../../template/classic/img/edit.gif\" border=\"0\" title=\"".$langEdit."\"></a>
-		<a href=\"".$_SERVER['PHP_SELF']."?delete_one=yes&id=".$group["id"]."\" onClick=\"return confirmation('".addslashes($group["name"])."');\">
+		<a href=\"".$_SERVER['PHP_SELF']."?delete_one=yes&id=".$group["id"]."\" onClick=\"return confirmation('".mysql_real_escape_string($group["name"])."');\">
 		<img src=\"../../template/classic/img/delete.gif\" border=\"0\" title=\"".$langDelete."\"></a></div></td>
     		</tr>";
 		$totalRegistered = $totalRegistered+$countRegistered;

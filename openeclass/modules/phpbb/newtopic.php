@@ -138,8 +138,8 @@ if (isset($submit) && $submit) {
 	$subject = strip_tags($subject);
 	$poster_ip = $REMOTE_ADDR;
 	$time = date("Y-m-d H:i");
-	$nom = addslashes($nom);
-	$prenom = addslashes($prenom);
+	$nom = mysql_real_escape_string($nom);
+	$prenom = mysql_real_escape_string($prenom);
 
 	if (isset($sig) && $sig) {
 		$message .= "\n[addsig]";

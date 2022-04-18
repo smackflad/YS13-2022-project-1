@@ -765,7 +765,7 @@ if (mysql_num_rows($sql) == 0) {
                         }
                         if ($is_adminOfCourse) {
                                 /*** delete command ***/
-                                $tool_content .= "\n    <td><a href='$_SERVER[PHP_SELF]?delete=$cmdDirName' onClick=\"return confirmation('".addslashes($entry['filename'])."');\">";
+                                $tool_content .= "\n    <td><a href='$_SERVER[PHP_SELF]?delete=$cmdDirName' onClick=\"return confirmation('".mysql_real_escape_string($entry['filename'])."');\">";
                                 $tool_content .= "<img src='../../template/classic/img/delete.gif' border='0' title='$langDelete' /></a>&nbsp;";
                                 /*** copy command ***/
                                 $tool_content .= "<a href='$_SERVER[PHP_SELF]?move=$cmdDirName'>";

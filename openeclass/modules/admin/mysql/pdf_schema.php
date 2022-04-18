@@ -265,7 +265,7 @@ class PMA_PDF extends TCPDF {
         global $cfgRelation, $db, $pdf_page_number, $with_doc;
         if ($with_doc) {
             $test_query = 'SELECT * FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['pdf_pages'])
-             . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
+             . ' WHERE db_name = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
              . ' AND page_nr = \'' . $pdf_page_number . '\'';
             $test_rs = PMA_query_as_cu($test_query);
             $pages = @PMA_DBI_fetch_assoc($test_rs);
@@ -653,8 +653,8 @@ class PMA_RT_Table {
         // x and y
         $sql = 'SELECT x, y FROM '
          . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['table_coords'])
-         . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
-         . ' AND   table_name = \'' . PMA_sqlAddslashes($table_name) . '\''
+         . ' WHERE db_name = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
+         . ' AND   table_name = \'' . PMA_sqlmysql_real_escape_string($table_name) . '\''
          . ' AND   pdf_page_number = ' . $pdf_page_number;
         $result = PMA_query_as_cu($sql, false, PMA_DBI_QUERY_STORE);
 
@@ -996,14 +996,14 @@ class PMA_RT {
         $pdf->SetAutoPageBreak('auto');
         // Gets tables on this page
         $tab_sql = 'SELECT table_name FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['table_coords'])
-         . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
+         . ' WHERE db_name = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
          . ' AND pdf_page_number = ' . $which_rel;
         $tab_rs = PMA_query_as_cu($tab_sql, null, PMA_DBI_QUERY_STORE);
         if (!$tab_rs || !PMA_DBI_num_rows($tab_rs) > 0) {
             $pdf->PMA_PDF_die($GLOBALS['strPdfNoTables']);
             // die('No tables');
         } while ($curr_table = @PMA_DBI_fetch_assoc($tab_rs)) {
-            $alltables[] = PMA_sqlAddslashes($curr_table['table_name']);
+            $alltables[] = PMA_sqlmysql_real_escape_string($curr_table['table_name']);
             // $intable     = '\'' . implode('\', \'', $alltables) . '\'';
         }
         // make doc                    //
@@ -1054,8 +1054,8 @@ class PMA_RT {
         }
         $pdf->PMA_PDF_setFontSizeScale(14);
         // $sql    = 'SELECT * FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['relation'])
-        // .   ' WHERE master_db   = \'' . PMA_sqlAddslashes($db) . '\' '
-        // .   ' AND foreign_db    = \'' . PMA_sqlAddslashes($db) . '\' '
+        // .   ' WHERE master_db   = \'' . PMA_sqlmysql_real_escape_string($db) . '\' '
+        // .   ' AND foreign_db    = \'' . PMA_sqlmysql_real_escape_string($db) . '\' '
         // .   ' AND master_table  IN (' . $intable . ')'
         // .   ' AND foreign_table IN (' . $intable . ')';
         // $result =  PMA_query_as_cu($sql);

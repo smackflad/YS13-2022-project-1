@@ -53,7 +53,7 @@ if (isset($fields['dbase'])) {
 // (needed for browsing from DefaultTabTable)
 if (empty($sql_query) && strlen($table) && strlen($db)) {
     require_once './libraries/bookmark.lib.php';
-    $book_sql_query = PMA_Bookmark_get($db, '\'' . PMA_sqlAddslashes($table) . '\'',
+    $book_sql_query = PMA_Bookmark_get($db, '\'' . PMA_sqlmysql_real_escape_string($table) . '\'',
         'label');
 
     if (! empty($book_sql_query)) {

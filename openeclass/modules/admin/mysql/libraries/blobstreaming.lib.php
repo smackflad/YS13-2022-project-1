@@ -377,7 +377,7 @@ function PMA_BS_SetVariables($bs_variables)
         if (!is_null($val) && strlen($val) > 0)
         {
             // set BS variable to specified value
-            $query = "SET GLOBAL $key=" . PMA_sqlAddSlashes($val);
+            $query = "SET GLOBAL $key=" . PMA_sqlmysql_real_escape_string($val);
             $result = PMA_DBI_query($query);
 
             // if query fails execution, return false
@@ -427,7 +427,7 @@ function PMA_BS_GetVariables()
  * @access  public
  * @param   string - ON or OFF
  * @uses    PMA_Config::get()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_query()
  * @return  boolean - success/failure of query execution
 */
@@ -441,7 +441,7 @@ function PMA_BS_SetFieldReferences($val)
         return FALSE;
 
     // set field references to value specified
-    $query = "SET GLOBAL " . $PMA_Config->get('PBMS_NAME') . "_field_references=" . PMA_sqlAddslashes($val);
+    $query = "SET GLOBAL " . $PMA_Config->get('PBMS_NAME') . "_field_references=" . PMA_sqlmysql_real_escape_string($val);
     $result = PMA_DBI_try_query($query, null, 0);
 
     // get last known error (if applicable)
@@ -599,7 +599,7 @@ function PMA_BS_GetPrimaryField($db_name, $tbl_name)
  * @uses    PMA_DBI_select_db()
  * @uses    PMA_backquote()
  * @uses    PMA_Config::get()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_query()
  * @return  boolean - existence of BLOB reference
 */
@@ -622,7 +622,7 @@ function PMA_BS_ReferenceExists($bs_reference, $db_name)
     PMA_DBI_select_db($db_name);
 
     // run query on BS reference retrieval
-    $query = "SELECT * FROM " . PMA_backquote($PMA_Config->get('PBMS_NAME') . "_reference") . " WHERE Blob_url='" . PMA_sqlAddslashes($bs_reference) . "'";
+    $query = "SELECT * FROM " . PMA_backquote($PMA_Config->get('PBMS_NAME') . "_reference") . " WHERE Blob_url='" . PMA_sqlmysql_real_escape_string($bs_reference) . "'";
     $result = PMA_DBI_query($query);
 
     // if record exists
@@ -642,7 +642,7 @@ function PMA_BS_ReferenceExists($bs_reference, $db_name)
  * @uses    PMA_Config::get()
  * @uses    PMA_DBI_select_db()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_query()
  * @uses    PMA_DBI_fetch_assoc()
  * @return  string - HTTP link or Error
@@ -673,7 +673,7 @@ function PMA_BS_CreateReferenceLink($bs_reference, $db_name)
     $query .= " AND $pbms_repo_bq.Blob_size=$pbms_ref_bq.Blob_size";
     $query .= " AND $pbms_repo_bq.Repo_blob_offset=$pbms_ref_bq.Repo_blob_offset";
     $query .= " LEFT JOIN $pbms_cust_content_bq ON $pbms_cust_content_bq.Blob_url=$pbms_ref_bq.Blob_url";
-    $query .= " WHERE $pbms_ref_bq.Blob_url='" . PMA_sqlAddslashes($bs_reference) . "'";
+    $query .= " WHERE $pbms_ref_bq.Blob_url='" . PMA_sqlmysql_real_escape_string($bs_reference) . "'";
 
     $result = PMA_DBI_query($query);
 

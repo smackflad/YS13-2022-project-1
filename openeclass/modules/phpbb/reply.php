@@ -159,8 +159,8 @@ if (isset($submit) && $submit) {
 	}
 	$message = format_message($message);
 	$time = date("Y-m-d H:i");
-	$nom = addslashes($nom);
-	$prenom = addslashes($prenom);
+	$nom = mysql_real_escape_string($nom);
+	$prenom = mysql_real_escape_string($prenom);
 
 	//to prevent [addsig] from getting in the way, let's put the sig insert down here.
 	if (isset($sig) && $sig) {

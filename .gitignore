@@ -1,3 +1,7 @@
 openeclass/images
 openeclass/config
 openeclass/video
+openeclass/courses
+openeclass/.dccache
+.dccache
+.gitignore

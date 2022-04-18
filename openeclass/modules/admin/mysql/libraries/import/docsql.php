@@ -67,10 +67,10 @@ if ($data === TRUE && !$error && !$timeout_passed) {
                         ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['column_info']) . '
                       (db_name, table_name, column_name, ' . PMA_backquote('comment') . ')
                  VALUES (
-                        \'' . PMA_sqlAddslashes($GLOBALS['db']) . '\',
-                        \'' . PMA_sqlAddslashes(trim($tab)) . '\',
-                        \'' . PMA_sqlAddslashes(trim($inf[0])) . '\',
-                        \'' . PMA_sqlAddslashes(trim($inf[1])) . '\')';
+                        \'' . PMA_sqlmysql_real_escape_string($GLOBALS['db']) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string(trim($tab)) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string(trim($inf[0])) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string(trim($inf[1])) . '\')';
             PMA_importRunQuery($qry, $qry . '-- ' . htmlspecialchars($tab) . '.' . htmlspecialchars($inf[0]), true);
         } // end inf[1] exists
         if (!empty($inf[2]) && strlen(trim($inf[2])) > 0) {
@@ -80,12 +80,12 @@ if ($data === TRUE && !$error && !$timeout_passed) {
                         ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['relation']) . '
                       (master_db, master_table, master_field, foreign_db, foreign_table, foreign_field)
                  VALUES (
-                        \'' . PMA_sqlAddslashes($GLOBALS['db']) . '\',
-                        \'' . PMA_sqlAddslashes(trim($tab)) . '\',
-                        \'' . PMA_sqlAddslashes(trim($inf[0])) . '\',
-                        \'' . PMA_sqlAddslashes($GLOBALS['db']) . '\',
-                        \'' . PMA_sqlAddslashes(trim($for[0])) . '\',
-                        \'' . PMA_sqlAddslashes(trim($for[1])) . '\')';
+                        \'' . PMA_sqlmysql_real_escape_string($GLOBALS['db']) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string(trim($tab)) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string(trim($inf[0])) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string($GLOBALS['db']) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string(trim($for[0])) . '\',
+                        \'' . PMA_sqlmysql_real_escape_string(trim($for[1])) . '\')';
             PMA_importRunQuery($qry, $qry . '-- ' . htmlspecialchars($tab) . '.' . htmlspecialchars($inf[0]) . '(' . htmlspecialchars($inf[2]) . ')', true);
         } // end inf[2] exists
     } // End lines loop

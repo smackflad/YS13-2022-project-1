@@ -212,7 +212,7 @@ if($is_adminOfCourse) {
 			if(!isset($fromExercise)) {
 				$tool_content .= "<td><div align='center'>
 					<a href=\"".$_SERVER['PHP_SELF']."?exerciseId=".$exerciseId."&delete=".$row['id']."\"". 
-					" onclick=\"javascript:if(!confirm('".addslashes(htmlspecialchars($langConfirmYourChoice)).
+					" onclick=\"javascript:if(!confirm('".mysql_real_escape_string(htmlspecialchars($langConfirmYourChoice)).
 					"')) return false;\"><img src='../../template/classic/img/delete.gif' border='0' title='$langDelete'></a></div></td>";
 			}
 			$tool_content .= "</tr>";

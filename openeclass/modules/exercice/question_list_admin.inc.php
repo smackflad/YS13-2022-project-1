@@ -94,7 +94,7 @@ if($nbrQuestions) {
 	$tool_content .= "<tr><td align=\"right\" width=\"1\">".$i.".</td>
 	<td> ".$objQuestionTmp->selectTitle()."<br/>
 	<small class=\"invisible\">".$aType[$objQuestionTmp->selectType()-1]."</small></td>
-	<td class=\"right\" width=\"50\"><a href=\"".$_SERVER['PHP_SELF']."?editQuestion=".$id."\">"."<img src='../../template/classic/img/edit.gif' border='0' align='absmiddle' title='$langModify'></a>"." <a href=\"".$_SERVER['PHP_SELF']."?deleteQuestion=".$id."\" "."onclick=\"javascript:if(!confirm('".addslashes(htmlspecialchars($langConfirmYourChoice))."')) return false;\">"."<img src='../../template/classic/img/delete.gif' border='0' align='absmiddle' title='$langDelete'></a></td>
+	<td class=\"right\" width=\"50\"><a href=\"".$_SERVER['PHP_SELF']."?editQuestion=".$id."\">"."<img src='../../template/classic/img/edit.gif' border='0' align='absmiddle' title='$langModify'></a>"." <a href=\"".$_SERVER['PHP_SELF']."?deleteQuestion=".$id."\" "."onclick=\"javascript:if(!confirm('".mysql_real_escape_string(htmlspecialchars($langConfirmYourChoice))."')) return false;\">"."<img src='../../template/classic/img/delete.gif' border='0' align='absmiddle' title='$langDelete'></a></td>
 	<td width='20'>";
 	
 		if($i != 1) {

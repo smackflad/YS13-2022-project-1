@@ -322,7 +322,7 @@ while ($myrow = mysql_fetch_array($result)) {
                 }
                 $tool_content .= "<td valign='top' align='center'>";
                 $alert_uname = $myrow['prenom'] . " " . $myrow['nom'];
-                $tool_content .= "<a href='$_SERVER[PHP_SELF]?unregister=$myrow[user_id]' onClick=\"return confirmation('".addslashes($alert_uname)."');\"><img src='../../template/classic/img/delete.gif' title='$langDelete' /></a>";
+                $tool_content .= "<a href='$_SERVER[PHP_SELF]?unregister=$myrow[user_id]' onClick=\"return confirmation('".mysql_real_escape_string($alert_uname)."');\"><img src='../../template/classic/img/delete.gif' title='$langDelete' /></a>";
         }	// admin only
         $tool_content .= "</td></tr>";$i++;
 } 	// end of while

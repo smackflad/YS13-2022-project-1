@@ -136,7 +136,7 @@ function db_query_fetch_all($sqlQuery, $db = FALSE) {
 
 // Quote string for SQL query
 function quote($s) {
-	return "'".addslashes($s)."'";
+	return "'".mysql_real_escape_string($s)."'";
 }
 
 
@@ -145,7 +145,7 @@ function autoquote($s) {
         if (get_magic_quotes_gpc()) {
         	return "'$s'";
         } else {
-        	return "'".addslashes($s)."'";
+        	return "'".mysql_real_escape_string($s)."'";
         }
 }
 
@@ -195,7 +195,7 @@ function escapeSimpleSelect($str)
 {
 	if (get_magic_quotes_gpc())
 	{
-		return addslashes($str);
+		return mysql_real_escape_string($str);
 	}
 	else
 	{
@@ -595,7 +595,7 @@ function find_faculty_by_id($id) {
 		$fac = mysql_fetch_row($req);
 		return $fac[0];
 	} else {
-		$req = mysql_query("SELECT name FROM faculte WHERE name = '" . addslashes($id) ."'");
+		$req = mysql_query("SELECT name FROM faculte WHERE name = '" . mysql_real_escape_string($id) ."'");
 		if ($req and mysql_num_rows($req)) {
 			$fac = mysql_fetch_row($req);
 			return $fac[0];

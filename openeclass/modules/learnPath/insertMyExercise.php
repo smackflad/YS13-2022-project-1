@@ -121,7 +121,7 @@ while ($listex = mysql_fetch_array($resultex) )
             // create new module
             $sql = "INSERT INTO `".$TABLEMODULE."`
                     (`name` , `comment`, `contentType`, `launch_data`)
-                    VALUES ('".addslashes($exercise['titre'])."' , '".addslashes($comment)."', '".CTEXERCISE_."','')";
+                    VALUES ('".mysql_real_escape_string($exercise['titre'])."' , '".mysql_real_escape_string($comment)."', '".CTEXERCISE_."','')";
             $query = db_query($sql);
             $insertedExercice_id = mysql_insert_id();
 
@@ -143,7 +143,7 @@ while ($listex = mysql_fetch_array($resultex) )
             // finally : insert in learning path
             $sql = "INSERT INTO `".$TABLELEARNPATHMODULE."`
                     (`learnPath_id`, `module_id`, `specificComment`, `rank`, `lock`)
-                    VALUES ('". (int)$_SESSION['path_id']."', '".(int)$insertedExercice_id."','".addslashes($langDefaultModuleAddedComment)."', ".$order.",'OPEN')";
+                    VALUES ('". (int)$_SESSION['path_id']."', '".(int)$insertedExercice_id."','".mysql_real_escape_string($langDefaultModuleAddedComment)."', ".$order.",'OPEN')";
             $query = db_query($sql);
 
             $MessBox .= $exercise['titre'] ." :  ".$langExInsertedAsModule."<br>";
@@ -180,7 +180,7 @@ while ($listex = mysql_fetch_array($resultex) )
                 // finally : insert in learning path
                 $sql = "INSERT INTO `".$TABLELEARNPATHMODULE."`
                         (`learnPath_id`, `module_id`, `specificComment`, `rank`, `lock`)
-                        VALUES (".(int)$_SESSION['path_id'].", ".(int)$thisExerciseModule['module_id'].",'".addslashes($langDefaultModuleAddedComment)."', ".$order.", 'OPEN')";
+                        VALUES (".(int)$_SESSION['path_id'].", ".(int)$thisExerciseModule['module_id'].",'".mysql_real_escape_string($langDefaultModuleAddedComment)."', ".$order.", 'OPEN')";
                 $query = db_query($sql);
 
                 // select infos about added exercise

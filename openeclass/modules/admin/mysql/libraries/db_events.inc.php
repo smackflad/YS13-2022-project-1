@@ -14,7 +14,7 @@ if (! defined('PHPMYADMIN')) {
  */
 $url_query .= '&amp;goto=db_structure.php';
 
-$events = PMA_DBI_fetch_result('SELECT EVENT_NAME, EVENT_TYPE FROM information_schema.EVENTS WHERE EVENT_SCHEMA= \'' . PMA_sqlAddslashes($db,true) . '\';');
+$events = PMA_DBI_fetch_result('SELECT EVENT_NAME, EVENT_TYPE FROM information_schema.EVENTS WHERE EVENT_SCHEMA= \'' . PMA_sqlmysql_real_escape_string($db,true) . '\';');
 
 if ($events) {
     PMA_generate_slider_effect('events', $strEvents);

@@ -138,7 +138,7 @@ if ($is_adminOfCourse) { // course admin
 				} else {
 					$notify = 1;
 				}
-				$subject = addslashes($subject);
+				$subject = mysql_real_escape_string($subject);
 				$sql = "UPDATE topics
 					SET topic_title = '$subject', topic_notify = '$notify'
 					WHERE topic_id = '$topic_id'";

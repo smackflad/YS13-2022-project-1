@@ -73,7 +73,7 @@ $assetPath = db_query_get_single_value($sql);
 
 $sql = "SELECT `filename`
          FROM `".$TABLEDOCUMENT."`
-        WHERE `path` LIKE \"" .addslashes($assetPath) ."\"";
+        WHERE `path` LIKE \"" .mysql_real_escape_string($assetPath) ."\"";
 $fileName = db_query_get_single_value($sql);
 
 $baseServDir = $webDir;

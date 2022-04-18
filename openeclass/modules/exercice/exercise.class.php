@@ -398,8 +398,8 @@ class Exercise
 		global $TBL_EXERCICES, $TBL_QUESTIONS, $currentCourseID;
 
 		$id=$this->id;
-		$exercise=addslashes($this->exercise);
-		$description=addslashes($this->description);
+		$exercise=mysql_real_escape_string($this->exercise);
+		$description=mysql_real_escape_string($this->description);
 		$type=$this->type;
 		$StartDate=$this->StartDate;
 		$EndDate=$this->EndDate;

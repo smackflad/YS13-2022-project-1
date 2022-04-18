@@ -137,7 +137,7 @@ function PMA_getAvailableMIMEtypes()
  * @uses    $GLOBALS['controllink']
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_fetch_result()
  * @author  Mike Beck <mikebeck@users.sourceforge.net>
  * @author  Garvin Hicking <me@supergarv.de>
@@ -161,8 +161,8 @@ function PMA_getMIME($db, $table, $strict = false)
                 `transformation`,
                 `transformation_options`
           FROM ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['column_info']) . '
-         WHERE `db_name`    = \'' . PMA_sqlAddslashes($db) . '\'
-           AND `table_name` = \'' . PMA_sqlAddslashes($table) . '\'
+         WHERE `db_name`    = \'' . PMA_sqlmysql_real_escape_string($db) . '\'
+           AND `table_name` = \'' . PMA_sqlmysql_real_escape_string($table) . '\'
            AND ( `mimetype` != \'\'' . (!$strict ? '
               OR `transformation` != \'\'
               OR `transformation_options` != \'\'' : '') . ')';
@@ -175,7 +175,7 @@ function PMA_getMIME($db, $table, $strict = false)
  * @uses    PMA_DBI_QUERY_STORE
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_query_as_cu()
  * @uses    PMA_DBI_num_rows()
  * @uses    PMA_DBI_fetch_assoc()
@@ -204,9 +204,9 @@ function PMA_setMIME($db, $table, $key, $mimetype, $transformation,
          SELECT `mimetype`,
                 `comment`
            FROM ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['column_info']) . '
-          WHERE `db_name`     = \'' . PMA_sqlAddslashes($db) . '\'
-            AND `table_name`  = \'' . PMA_sqlAddslashes($table) . '\'
-            AND `column_name` = \'' . PMA_sqlAddslashes($key) . '\'';
+          WHERE `db_name`     = \'' . PMA_sqlmysql_real_escape_string($db) . '\'
+            AND `table_name`  = \'' . PMA_sqlmysql_real_escape_string($table) . '\'
+            AND `column_name` = \'' . PMA_sqlmysql_real_escape_string($key) . '\'';
     $test_rs   = PMA_query_as_cu($test_qry, true, PMA_DBI_QUERY_STORE);
 
     if ($test_rs && PMA_DBI_num_rows($test_rs) > 0) {
@@ -218,27 +218,27 @@ function PMA_setMIME($db, $table, $key, $mimetype, $transformation,
           || strlen($transformation_options) || strlen($row['comment']))) {
             $upd_query = '
                 UPDATE ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['column_info']) . '
-                   SET `mimetype`               = \'' . PMA_sqlAddslashes($mimetype) . '\',
-                       `transformation`         = \'' . PMA_sqlAddslashes($transformation) . '\',
-                       `transformation_options` = \'' . PMA_sqlAddslashes($transformation_options) . '\'';
+                   SET `mimetype`               = \'' . PMA_sqlmysql_real_escape_string($mimetype) . '\',
+                       `transformation`         = \'' . PMA_sqlmysql_real_escape_string($transformation) . '\',
+                       `transformation_options` = \'' . PMA_sqlmysql_real_escape_string($transformation_options) . '\'';
         } else {
             $upd_query = 'DELETE FROM ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['column_info']);
         }
         $upd_query .= '
-            WHERE `db_name`     = \'' . PMA_sqlAddslashes($db) . '\'
-              AND `table_name`  = \'' . PMA_sqlAddslashes($table) . '\'
-              AND `column_name` = \'' . PMA_sqlAddslashes($key) . '\'';
+            WHERE `db_name`     = \'' . PMA_sqlmysql_real_escape_string($db) . '\'
+              AND `table_name`  = \'' . PMA_sqlmysql_real_escape_string($table) . '\'
+              AND `column_name` = \'' . PMA_sqlmysql_real_escape_string($key) . '\'';
     } elseif (strlen($mimetype) || strlen($transformation)
      || strlen($transformation_options)) {
         $upd_query = 'INSERT INTO ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['column_info'])
                    . ' (db_name, table_name, column_name, mimetype, transformation, transformation_options) '
                    . ' VALUES('
-                   . '\'' . PMA_sqlAddslashes($db) . '\','
-                   . '\'' . PMA_sqlAddslashes($table) . '\','
-                   . '\'' . PMA_sqlAddslashes($key) . '\','
-                   . '\'' . PMA_sqlAddslashes($mimetype) . '\','
-                   . '\'' . PMA_sqlAddslashes($transformation) . '\','
-                   . '\'' . PMA_sqlAddslashes($transformation_options) . '\')';
+                   . '\'' . PMA_sqlmysql_real_escape_string($db) . '\','
+                   . '\'' . PMA_sqlmysql_real_escape_string($table) . '\','
+                   . '\'' . PMA_sqlmysql_real_escape_string($key) . '\','
+                   . '\'' . PMA_sqlmysql_real_escape_string($mimetype) . '\','
+                   . '\'' . PMA_sqlmysql_real_escape_string($transformation) . '\','
+                   . '\'' . PMA_sqlmysql_real_escape_string($transformation_options) . '\')';
     }
 
     if (isset($upd_query)){

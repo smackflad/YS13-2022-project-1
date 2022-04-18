@@ -367,8 +367,8 @@
                     . "`title`,`description`,`group_id`"
                     . ") "
                     . "VALUES("
-                    . "'". addslashes( $this->getTitle() ) ."', "
-                    . "'" . addslashes( $this->getDescription() ) . "', "
+                    . "'". mysql_real_escape_string( $this->getTitle() ) ."', "
+                    . "'" . mysql_real_escape_string( $this->getDescription() ) . "', "
                     . "'" . $this->getGroupId() . "'"
                     . ")"
                     ;
@@ -388,8 +388,8 @@
                 // UPDATE PROPERTIES
                 $sql = "UPDATE `" . $this->config['tbl_wiki_properties'] . "` "
                     . "SET "
-                    . "`title`='".addslashes($this->getTitle())."', "
-                    . "`description`='".addslashes($this->getDescription())."', "
+                    . "`title`='".mysql_real_escape_string($this->getTitle())."', "
+                    . "`description`='".mysql_real_escape_string($this->getDescription())."', "
                     . "`group_id`='".$this->getGroupId()."' "
                     . "WHERE `id`=" . $this->getWikiId()
                     ;
@@ -415,7 +415,7 @@
 
             $sql = "SELECT `id` "
                 . "FROM `".$this->config['tbl_wiki_pages']."` "
-                . "WHERE BINARY `title` = '".addslashes($title)."' "
+                . "WHERE BINARY `title` = '".mysql_real_escape_string($title)."' "
                 . "AND `wiki_id` = " . $this->wikiId
                 ;
 
@@ -437,7 +437,7 @@
 
             $sql = "SELECT `id` "
                 . "FROM `".$this->config['tbl_wiki_properties']."` "
-                . "WHERE `title` = '".addslashes($title)."'"
+                . "WHERE `title` = '".mysql_real_escape_string($title)."'"
                 ;
 
             return $this->con->queryReturnsResult( $sql );

@@ -77,9 +77,9 @@ while ($iterator <= $_POST['maxLinkForm']) {
 		// check if this link is already a module
 		$sql = "SELECT * FROM `".$TABLEMODULE."` AS M, `".$TABLEASSET."` AS A
         		WHERE A.`module_id` = M.`module_id`
-        		AND M.`name` LIKE \"" .addslashes($row['titre']) ."\"
-        		AND M.`comment` LIKE \"" .addslashes($row['description']) ."\"
-        		AND A.`path` LIKE \"" .addslashes($row['url']) ."\"
+        		AND M.`name` LIKE \"" .mysql_real_escape_string($row['titre']) ."\"
+        		AND M.`comment` LIKE \"" .mysql_real_escape_string($row['description']) ."\"
+        		AND A.`path` LIKE \"" .mysql_real_escape_string($row['url']) ."\"
         		AND M.`contentType` = \"".CTLINK_."\"";
 		$query0 = db_query($sql);
         $num = mysql_numrows($query0);
@@ -88,8 +88,8 @@ while ($iterator <= $_POST['maxLinkForm']) {
 			// create new module
 			$sql = "INSERT INTO `".$TABLEMODULE."`
 					(`name` , `comment`, `contentType`, `launch_data`)
-					VALUES ('". addslashes($row['titre']) ."' , '"
-					.addslashes($row['description']) . "', '".CTLINK_."','')";
+					VALUES ('". mysql_real_escape_string($row['titre']) ."' , '"
+					.mysql_real_escape_string($row['description']) . "', '".CTLINK_."','')";
 			$query = db_query($sql);
 
 			$insertedModule_id = mysql_insert_id();
@@ -97,7 +97,7 @@ while ($iterator <= $_POST['maxLinkForm']) {
 			// create new asset
 			$sql = "INSERT INTO `".$TABLEASSET."`
 					(`path` , `module_id` , `comment`)
-					VALUES ('". addslashes($row['url'])."', "
+					VALUES ('". mysql_real_escape_string($row['url'])."', "
 					. (int)$insertedModule_id . ", '')";
 			$query = db_query($sql);
 
@@ -132,7 +132,7 @@ while ($iterator <= $_POST['maxLinkForm']) {
 				`".$TABLEASSET."` AS A
 				WHERE M.`module_id` =  LPM.`module_id`
 				AND M.`startAsset_id` = A.`asset_id`
-				AND A.`path` = '". addslashes($row['url'])."'
+				AND A.`path` = '". mysql_real_escape_string($row['url'])."'
 				AND LPM.`learnPath_id` = ". (int)$_SESSION['path_id'];
 			$query2 = db_query($sql);
 			$num = mysql_numrows($query2);

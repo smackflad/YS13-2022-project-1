@@ -360,7 +360,7 @@ class PMA_Theme {
      * @uses    $GLOBALS['strThemeNoPreviewAvailable']
      * @uses    $GLOBALS['strTakeIt']
      * @uses    PMA_generate_common_url()
-     * @uses    addslashes()
+     * @uses    mysql_real_escape_string()
      * @uses    file_exists()
      * @uses    htmlspecialchars()
      */
@@ -372,7 +372,7 @@ class PMA_Theme {
             .'<p>'
             .'<a target="_top" href="index.php'
             .PMA_generate_common_url(array('set_theme' => $this->getId())) . '"'
-            .' onclick="takeThis(\'' . addslashes($this->getId()) . '\');'
+            .' onclick="takeThis(\'' . mysql_real_escape_string($this->getId()) . '\');'
             .' return false;">';
         if (@file_exists($this->getPath() . '/screen.png')) {
             // if screen exists then output

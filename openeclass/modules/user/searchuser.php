@@ -223,7 +223,7 @@ if($is_adminOfCourse) {
 			}
 				$tool_content .= "<td valign=\"top\" align='center'>";
 				$alert_uname = $myrow['prenom'] . " " . $myrow['nom'];
-				$tool_content .= "<a href='$_SERVER[PHP_SELF]?unregister=yes&user_id=$myrow[user_id]&$s' onClick=\"return confirmation('".addslashes($alert_uname)."');\">
+				$tool_content .= "<a href='$_SERVER[PHP_SELF]?unregister=yes&user_id=$myrow[user_id]&$s' onClick=\"return confirmation('".mysql_real_escape_string($alert_uname)."');\">
 				<img src='../../template/classic/img/delete.gif' border='0' title='$langDelete'></a>";
 				$tool_content .= "</td></tr>";
 				$i++;	

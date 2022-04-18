@@ -155,7 +155,7 @@ if ($databases_count > 0) {
     $_url_params['pos'] = $pos;
 
     echo '<form action="./server_databases.php" method="post" name="dbStatsForm" id="dbStatsForm">' . "\n"
-       . PMA_generate_common_hidden_inputs($_url_params);
+       . htmlspecialchars(PMA_generate_common_hidden_inputs($_url_params), ENT_QUOTES);
 
     $_url_params['sort_by'] = 'SCHEMA_NAME';
     $_url_params['sort_order'] = ($sort_by == 'SCHEMA_NAME' && $sort_order == 'asc') ? 'desc' : 'asc';
@@ -164,7 +164,7 @@ if ($databases_count > 0) {
        . '<thead>' . "\n"
        . '<tr>' . "\n"
        . ($is_superuser || $cfg['AllowUserDropDatabase'] ? '        <th></th>' . "\n" : '')
-       . '    <th><a href="./server_databases.php' . PMA_generate_common_url($_url_params) . '">' . "\n"
+       . '    <th><a href="./server_databases.php' . htmlspecialchars(PMA_generate_common_url($_url_params), ENT_QUOTES) . '">' . "\n"
        . '            ' . $strDatabase . "\n"
        . ($sort_by == 'SCHEMA_NAME' ? '                <img class="icon" src="' . $pmaThemeImage . 's_' . $sort_order . '.png" width="11" height="9"  alt="' . ($sort_order == 'asc' ? $strAscending : $strDescending) . '" />' . "\n" : '')
        . '        </a></th>' . "\n";
@@ -180,8 +180,8 @@ if ($databases_count > 0) {
             }
             $_url_params['sort_by'] = $stat_name;
             $_url_params['sort_order'] = ($sort_by == $stat_name && $sort_order == 'desc') ? 'asc' : 'desc';
-            echo '    <th' . $colspan . '>'
-                .'<a href="./server_databases.php' . PMA_generate_common_url($_url_params) . '">' . "\n"
+            echo '    <th' . htmlspecialchars($colspan, ENT_QUOTES) . '>'
+                .'<a href="./server_databases.php' . htmlspecialchars(PMA_generate_common_url($_url_params), ENT_QUOTES) . '">' . "\n"
                 .'            ' . $stat['disp_name'] . "\n"
                 .($sort_by == $stat_name ? '            <img class="icon" src="' . $pmaThemeImage . 's_' . $sort_order . '.png" width="11" height="9"  alt="' . ($sort_order == 'asc' ? $strAscending : $strDescending) . '" />' . "\n" : '')
                 .'        </a></th>' . "\n";
@@ -235,9 +235,9 @@ if ($databases_count > 0) {
                 }
                 echo '    <td class="value">';
                 if (isset($stat['description_function'])) {
-                    echo '<dfn title="' . $stat['description_function']($current[$stat_name]) . '">';
+                    echo '<dfn title="' . htmlspecialchars($stat['description_function']($current[$stat_name]), ENT_QUOTES) . '">';
                 }
-                echo $value;
+                echo htmlspecialchars($value, ENT_QUOTES);
                 if (isset($stat['description_function'])) {
                     echo '</dfn>';
                 }
@@ -251,7 +251,7 @@ if ($databases_count > 0) {
         if ($is_superuser) {
             echo '    <td class="tool">' . "\n"
                . '        <a onclick="'
-               . 'if (window.parent.setDb) window.parent.setDb(\'' . PMA_jsFormat($current['SCHEMA_NAME']) . '\');'
+               . 'if (window.parent.setDb) window.parent.setDb(\'' . htmlspecialchars(PMA_jsFormat($current['SCHEMA_NAME']), ENT_QUOTES) . '\');'
                . '" href="./server_privileges.php?' . $url_query
                . '&amp;checkprivs=' . urlencode($current['SCHEMA_NAME'])
                . '" title="' . sprintf($strCheckPrivsLong, htmlspecialchars($current['SCHEMA_NAME']))

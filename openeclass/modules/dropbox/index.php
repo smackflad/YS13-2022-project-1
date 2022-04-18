@@ -246,7 +246,7 @@ if (!isset($_GET['mailing']))  // RH: Mailing detail: no received files
 	$dr_unid = urlencode( $dropbox_unid);
 	if ($numberDisplayed > 0)
 	{
-		$dr_lang_all = addslashes( $dropbox_lang["all"]);
+		$dr_lang_all = mysql_real_escape_string( $dropbox_lang["all"]);
 		$tool_content .= "
       <th width='3' style='border: 1px solid #edecdf'>
         <a href='dropbox_submit.php?deleteReceived=all&amp;dropbox_unid=$dr_unid' onClick=\"return confirmationall('".$dropbox_lang['all']."');\"><img src='../../images/delete.gif' title='$langDelete' /></a></th>";
@@ -350,7 +350,7 @@ $tool_content .= "
 	$tool_content .= "
         <th width='3' style='border: 1px solid #edecdf'>
             <a href='dropbox_submit.php?deleteSent=all&amp;dropbox_unid=".urlencode( $dropbox_unid).$mailingInUrl."'
-	onClick='return confirmationall('".addslashes($dropbox_lang["all"])."');'>
+	onClick='return confirmationall('".mysql_real_escape_string($dropbox_lang["all"])."');'>
             <img src='../../images/delete.gif' title='$langDelete' /></a>
         </th>";
 	}

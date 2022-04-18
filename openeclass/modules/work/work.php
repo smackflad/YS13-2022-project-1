@@ -658,7 +658,7 @@ function assignment_details($id, $row, $message = null)
 	$tool_content .= "
     <div id=\"operations_container\">
       <ul id=\"opslist\">
-        <li><a href=\"work.php?id=$id&amp;choice=do_delete\" onClick=\"return confirmation('".addslashes($row['title'])."');\">$langDelAssign</a></li>
+        <li><a href=\"work.php?id=$id&amp;choice=do_delete\" onClick=\"return confirmation('".mysql_real_escape_string($row['title'])."');\">$langDelAssign</a></li>
         <li><a href=\"work.php?download=$id\">$langZipDownload</a></li>
       </ul>
     </div>
@@ -1142,7 +1142,7 @@ cData;
       <td align='right'>
          <a href='work.php?id=$row[id]&amp;choice=edit'><img src='../../template/classic/img/edit.gif' alt='$m[edit]' /></a>";
 			$tool_content .= "
-         <a href='work.php?id=$row[id]&amp;choice=do_delete' onClick='return confirmation(\"".addslashes($row_title)."\");'><img src='../../template/classic/img/delete.gif' alt='$m[delete]' /></a>";
+         <a href='work.php?id=$row[id]&amp;choice=do_delete' onClick='return confirmation(\"".mysql_real_escape_string($row_title)."\");'><img src='../../template/classic/img/delete.gif' alt='$m[delete]' /></a>";
 
 			if ($row['active']) {
 				$deactivate_temp = htmlspecialchars($m['deactivate']);
