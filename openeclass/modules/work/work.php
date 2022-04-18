@@ -314,6 +314,7 @@ function submit_work($id) {
 	if (move_uploaded_file($_FILES['userfile']['tmp_name'], "$workPath/$filename")) {
 		$msg2 = "$langUploadSuccess";//to message
 		$group_id = user_group($uid, FALSE);
+		$stud_comments = htmlspecialchars($stud_comments, ENT_QUOTES);
 		if ($group_sub == 'yes' and !was_submitted(-1, $group_id, $id)) {
 			delete_submissions_by_uid(-1, $group_id, $id);
 			db_query("INSERT INTO assignment_submit

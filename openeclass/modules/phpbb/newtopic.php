@@ -102,7 +102,7 @@ if (!does_exists($forum, $currentCourseID, "forum")) {
 }
 
 if (isset($submit) && $submit) {
-	$subject = strip_tags($subject);
+	$subject = htmlspecialchars($subject, ENT_QUOTES);
 	if (trim($message) == '' || trim($subject) == '') {
 		$tool_content .= $langEmptyMsg;
 		draw($tool_content, 2, 'phpbb', $head_content);

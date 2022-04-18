@@ -103,6 +103,7 @@ if (!isset( $_POST['authors']) || !isset( $_POST['description']))
 	}
 	else
 	{
+
 		$thisIsAMailing = FALSE;  // RH: Mailing selected as destination
 		$thisIsJustUpload = FALSE;  // RH
 
@@ -199,7 +200,7 @@ if (!isset( $_POST['authors']) || !isset( $_POST['description']))
 			{
 				move_uploaded_file($dropbox_filetmpname, $dropbox_cnf["sysPath"] . '/' . $dropbox_filename)
 				or die($dropbox_lang["uploadError"]);
-				new Dropbox_SentWork($uid, $dropbox_title, $_POST['description'], $_POST['authors'], $dropbox_filename, $dropbox_filesize, $newWorkRecipients);
+				new Dropbox_SentWork($uid, $dropbox_title, htmlspecialchars($_POST['description'], ENT_QUOTES), $_POST['authors'], $dropbox_filename, $dropbox_filesize, $newWorkRecipients);
 			}
 		}
 		chdir ($cwd);
