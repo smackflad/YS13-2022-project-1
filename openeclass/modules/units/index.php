@@ -75,11 +75,9 @@ _editor_lang = '$lang_editor';
 }  elseif(isset($_REQUEST['edit_res_submit'])) { // edit resource
 	$res_id = intval($_REQUEST['resource_id']);	
 	if ($id = check_admin_unit_resource($res_id)) {
-		@$restitle = autoquote(trim($_REQUEST['restitle']));
-                $rescomments = autoquote(trim($_REQUEST['rescomments']));
 		$result = db_query("UPDATE unit_resources SET
-				title = $restitle,
-				comments = $rescomments
+				title = '".mysql_real_escape_string($_REQUEST['restitle'])."',
+				comments = '".mysql_real_escape_string($_REQUEST['rescomments'])."'
 				WHERE unit_id = $id AND id = $res_id");
 	}
 	$tool_content .= "<p class='success_small'>$langResourceUnitModified</p>";
