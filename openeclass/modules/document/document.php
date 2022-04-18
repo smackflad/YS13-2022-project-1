@@ -405,7 +405,7 @@ if($is_adminOfCourse)
 		{
 			//elegxos ean o xrhsths epelekse diaforetikh glwssa h' tipota (option -> "")
 			if (empty($file_language)) $file_language = $file_oldLanguage;
-			$query =  "UPDATE ".$dbTable." SET
+			$query =  "UPDATE ".mysql_real_escape_string($dbTable)." SET
     				comment=\"".mysql_real_escape_string($file_comment)."\",
 				category=\"".mysql_real_escape_string($file_category)."\",
   	 			title=\"".mysql_real_escape_string($file_title)."\",
@@ -415,21 +415,21 @@ if($is_adminOfCourse)
     				author=\"".mysql_real_escape_string($file_author)."\",
     				language=\"".mysql_real_escape_string($file_language)."\",
     				copyrighted=\"".mysql_real_escape_string($file_copyrighted)."\"
-    				  WHERE path=\"".$commentPath."\"";
+    				  WHERE path=\"".mysql_real_escape_string($commentPath)."\"";
 		} else
 		//den yparxei eggrafh sth vash gia to sygkekrimeno arxeio opote dhmiourghse thn eggrafh
 		{
 			if (empty($file_language)) $file_language = $file_oldLanguage;
 			if (empty($file_filename)) $file_filename = htmlspecialchars($fileName);
 			$file_format = get_file_extension($file_filename);
-			$query =  "INSERT INTO ".$dbTable." SET
-    			path=\"".$commentPath."\",
-    			filename=\"".$file_filename."\",
+			$query =  "INSERT INTO ".mysql_real_escape_string($dbTable)." SET
+    			path=\"".mysql_real_escape_string($commentPath)."\",
+    			filename=\"".mysql_real_escape_string($file_filename)."\",
     			visibility=\"v\",
 				comment=\"".mysql_real_escape_string($file_comment)."\",
 				category=\"".mysql_real_escape_string($file_category)."\",
 				title=\"".mysql_real_escape_string($file_title)."\",
-				creator=\"".$prenom." ".$nom."\",
+				creator=\"".mysql_real_escape_string($prenom)." ".mysql_real_escape_string($nom)."\",
 				date=\"".date("Y\-m\-d G\:i\:s")."\",
 				date_modified=\"".date("Y\-m\-d G\:i\:s")."\",
 				subject=\"".mysql_real_escape_string($file_subject)."\",
