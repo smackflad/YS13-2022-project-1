@@ -65,7 +65,7 @@ function table_row($title, $content)
 		$tool_content .= "
     <tr>
       <th class=\"left\">$title:</th>
-      <td>".htmlspecialchars($content)."</td>
+      <td>$content</td>
     </tr>";
 	}
 }
@@ -314,7 +314,8 @@ function show_submission_details($id)
     <tr>
       <th class=\"left\">$m[SubmissionStatusWorkInfo]:</th>
       <td>$notice</td>
-    </tr>";
+    </tr>
+	";
 	table_row($m['grade'], $sub['grade']);
 	table_row($m['gradecomments'], $sub['grade_comments']);
 	table_row($m['sub_date'], $sub['submission_date']);
