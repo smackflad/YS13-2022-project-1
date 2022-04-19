@@ -49,7 +49,7 @@ $tool_content = "";
 // first check
 // check if we can connect to database. If not then eclass is most likely not installed
 if (isset($mysqlServer) and isset($mysqlUser) and isset($mysqlPassword)) {
-    $db = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword);
+	$db = mysql_connect($mysqlServer, $mysqlUser, $mysqlPassword);
 	if (mysql_version()) mysql_query("SET NAMES utf8");
 }
 if (!$db) {
@@ -59,7 +59,7 @@ if (!$db) {
 // unset system that records visitor only once by course for statistics
 include('include/action.php');
 if (isset($dbname)) {
-        $db->select_db($dbname);
+        mysql_select_db($dbname);
         $action = new action();
         $action->record('MODULE_ID_UNITS', 'exit');
 }
@@ -67,10 +67,7 @@ unset($dbname);
 
 // second check
 // can we select a database? if not then there is some sort of a problem
-if (isset($mysqlMainDb)) {
-//    $selectResult = mysql_select_db($mysqlMainDb, $db);
-    $selectResult = $db->select_db($mysqlMainDb);
-}
+if (isset($mysqlMainDb)) $selectResult = mysql_select_db($mysqlMainDb,$db);
 if (!isset($selectResult)) {
 	include "include/not_installed.php";
 }
@@ -101,7 +98,6 @@ if (isset($_SESSION['shib_uname'])) { // authenticate via shibboleth
 		unset($uid);
 		$sqlLogin= "SELECT user_id, nom, username, password, prenom, statut, email, perso, lang
 			FROM user WHERE username='".$uname."'";
-        $db->prepare();
 		$result = mysql_query($sqlLogin);
 		$check_passwords = array("pop3","imap","ldap","db");
 		$warning = "";
