@@ -42,7 +42,7 @@ $path_components = split('/', $uri);
 array_shift($path_components);
 
 // temporary course change
-$dbname = addslashes(array_shift($path_components));
+$dbname = mysql_real_escape_string(array_shift($path_components));
 
 $require_current_course = true;
 $guest_allowed = true;

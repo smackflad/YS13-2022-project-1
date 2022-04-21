@@ -379,9 +379,9 @@ else {
                         $parens_open  = '';
                         $parens_close = '';
                     }
-                    $enum_where = '\'' . PMA_sqlAddslashes($fields[$i][0]) . '\'';
+                    $enum_where = '\'' . PMA_sqlmysql_real_escape_string($fields[$i][0]) . '\'';
                     for ($e = 1; $e < $enum_selected_count; $e++) {
-                        $enum_where .= ', \'' . PMA_sqlAddslashes($fields[$i][$e]) . '\'';
+                        $enum_where .= ', \'' . PMA_sqlmysql_real_escape_string($fields[$i][$e]) . '\'';
                     }
 
                     $w[] = PMA_backquote($names[$i]) . ' ' . $func_type . ' ' . $parens_open . $enum_where . $parens_close;
@@ -402,7 +402,7 @@ else {
                     $func_type = 'LIKE';
                     $fields[$i] = '%' . $fields[$i] . '%';
                 }
-                $w[] = PMA_backquote($names[$i]) . ' ' . $func_type . ' ' . $quot . PMA_sqlAddslashes($fields[$i]) . $quot;
+                $w[] = PMA_backquote($names[$i]) . ' ' . $func_type . ' ' . $quot . PMA_sqlmysql_real_escape_string($fields[$i]) . $quot;
 
             } // end if
         } // end for

@@ -152,7 +152,7 @@ function PMA_generateCharsetQueryPart($collation) {
  *
  * @uses    PMA_DBI_fetch_value()
  * @uses    PMA_DBI_select_db()
- * @uses    PMA_sqlAddSlashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    $GLOBALS['db']
  * @param   string  $db     name of db
  * @return  string  collation of $db
@@ -164,7 +164,7 @@ function PMA_getDbCollation($db) {
         return 'utf8_general_ci';
     }
 
-    return PMA_DBI_fetch_value('SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = \'' . PMA_sqlAddSlashes($db) . '\' LIMIT 1;');
+    return PMA_DBI_fetch_value('SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = \'' . PMA_sqlmysql_real_escape_string($db) . '\' LIMIT 1;');
 }
 
 /**

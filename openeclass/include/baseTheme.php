@@ -511,3 +511,27 @@ function lang_select_options($name, $onchange_js = '', $default_langcode = false
 	return selection($native_language_names, $name, $default_langcode, $onchange_js);
 }
 
+function run_Query($query, $params){
+    global $mysqlServer, $mysqlUser, $mysqlPassword,$mysqlMainDb;
+    $sqlLogin= $query;
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$mysqlMainDb);
+    $conn->query("SET NAMES utf8");
+    $stmt=$conn->prepare($sqlLogin);
+    $tmp = array();
+    foreach($params as $key => $value) $tmp[$key] = &$params[$key];
+    call_user_func_array(array($stmt, 'bind_param'), $tmp);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $conn->close();
+    $stmt->close();
+    if($stmt->error){
+//        echo "<script>alert('error');</script>";
+        return false;
+    }else {
+        if($result){
+            return $result;
+        }else{
+            return true;
+        }
+    }
+}

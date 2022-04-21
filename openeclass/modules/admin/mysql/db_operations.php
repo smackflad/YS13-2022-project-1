@@ -591,7 +591,7 @@ if ($cfgRelation['pdfwork'] && $num_tables > 0) { ?>
     $test_query = '
          SELECT *
            FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['pdf_pages']) . '
-          WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\'';
+          WHERE db_name = \'' . PMA_sqlmysql_real_escape_string($db) . '\'';
     $test_rs    = PMA_query_as_cu($test_query, null, PMA_DBI_QUERY_STORE);
 
     if ($test_rs && PMA_DBI_num_rows($test_rs) > 0) { ?>

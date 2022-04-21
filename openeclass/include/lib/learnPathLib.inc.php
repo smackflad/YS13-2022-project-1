@@ -132,7 +132,7 @@ function commentBox($type, $mode)
         if ( isset($_POST['insertCommentBox']) )
         {
             $sql = "UPDATE `" . $tbl_name . "`
-                           SET `" . $col_name . "` = \"". addslashes($_POST['insertCommentBox'])."\"
+                           SET `" . $col_name . "` = \"". mysql_real_escape_string($_POST['insertCommentBox'])."\"
                          WHERE " . $where_cond;
             db_query($sql);
 
@@ -273,7 +273,7 @@ function nameBox($type, $mode, $formlabel = FALSE)
 
             $sql = "SELECT COUNT(`" . $col_name . "`)
                                  FROM `" . $tbl_name . "`
-                                WHERE `" . $col_name . "` = '" . addslashes($_POST['newName']) . "'
+                                WHERE `" . $col_name . "` = '" . mysql_real_escape_string($_POST['newName']) . "'
                                   AND !(" . $where_cond . ")";
             $num = db_query_get_single_value($sql);
 
@@ -281,7 +281,7 @@ function nameBox($type, $mode, $formlabel = FALSE)
             {
 
                 $sql = "UPDATE `" . $tbl_name . "`
-                            SET `" . $col_name . "` = '" . addslashes($_POST['newName']) ."'
+                            SET `" . $col_name . "` = '" . mysql_real_escape_string($_POST['newName']) ."'
                             WHERE " . $where_cond;
 
                 db_query($sql);
@@ -1080,9 +1080,9 @@ function set_module_tree_visibility($module_tree, $visibility)
         if($module['visibility'] != $visibility)
         {
             $sql = "UPDATE `" . $tbl_lp_rel_learnPath_module . "`
-                        SET `visibility` = '" . addslashes($visibility) . "'
+                        SET `visibility` = '" . mysql_real_escape_string($visibility) . "'
                         WHERE `learnPath_module_id` = " . (int) $module['learnPath_module_id'] . "
-                          AND `visibility` != '" . addslashes($visibility) . "'";
+                          AND `visibility` != '" . mysql_real_escape_string($visibility) . "'";
             db_query($sql);
         }
         if (isset($module['children']) && is_array($module['children']) ) set_module_tree_visibility($module['children'], $visibility);
@@ -1424,7 +1424,7 @@ function addScormTime($time1, $time2)
  *
  * This function is needed to clean strings used in javascript output
  * Newlines are prohibited in the script, specialchar  are prohibited
- * quotes must be addslashes
+ * quotes must be mysql_real_escape_string
  *
  * @param $str string original string
  * @return string cleaned string
@@ -1435,9 +1435,9 @@ function addScormTime($time1, $time2)
 function clean_str_for_javascript( $str )
 {
     $output = $str;
-    // 1. addslashes, prevent problems with quotes
+    // 1. mysql_real_escape_string, prevent problems with quotes
     // must be before the str_replace to avoid double backslash for \n
-    $output = addslashes($output);
+    $output = mysql_real_escape_string($output);
     // 2. turn windows CR into *nix CR
     $output = str_replace("\r", '', $output);
     // 3. replace "\n" by uninterpreted '\n'

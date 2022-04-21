@@ -25,7 +25,7 @@
  * @uses    $GLOBALS['strUnselectAll']
  * @uses    $GLOBALS['strSelectAll']
  * @uses    PMA_DBI_get_tables()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_getSearchSqls()
  * @uses    PMA_DBI_fetch_value()
  * @uses    PMA_linkOrButton()
@@ -100,11 +100,11 @@ if (empty($_REQUEST['search_str']) || ! is_string($_REQUEST['search_str'])) {
     $searched = htmlspecialchars($_REQUEST['search_str']);
     // For "as regular expression" (search option 4), we should not treat
     // this as an expression that contains a LIKE (second parameter of
-    // PMA_sqlAddslashes()).
+    // PMA_sqlmysql_real_escape_string()).
     //
     // Usage example: If user is seaching for a literal $ in a regexp search,
     // he should enter \$ as the value.
-    $search_str = PMA_sqlAddslashes($_REQUEST['search_str'], ($search_option == 4 ? false : true));
+    $search_str = PMA_sqlmysql_real_escape_string($_REQUEST['search_str'], ($search_option == 4 ? false : true));
 }
 
 $tables_selected = array();
@@ -123,7 +123,7 @@ if (isset($_REQUEST['selectall'])) {
 if (empty($_REQUEST['field_str']) || ! is_string($_REQUEST['field_str'])) {
     unset($field_str);
 } else {
-    $field_str = PMA_sqlAddslashes($_REQUEST['field_str'], true);
+    $field_str = PMA_sqlmysql_real_escape_string($_REQUEST['field_str'], true);
 }
 
 /**

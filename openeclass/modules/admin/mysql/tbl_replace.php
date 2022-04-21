@@ -21,7 +21,7 @@
  * @uses    PMA_DBI_insert_id()
  * @uses    PMA_backquote()
  * @uses    PMA_getUniqueCondition()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_securePath()
  * @uses    PMA_sendHeaderLocation()
  * @uses    str_replace()
@@ -250,7 +250,7 @@ foreach ($loop_array as $rowcount => $primary_key) {
 
 			// if the most recent BLOB reference exists, set it as a field value
 			if (!is_null($bs_reference))
-				$val = "'" . PMA_sqlAddslashes($bs_reference) . "'";
+				$val = "'" . PMA_sqlmysql_real_escape_string($bs_reference) . "'";
 		}
 	}
 
@@ -283,7 +283,7 @@ foreach ($loop_array as $rowcount => $primary_key) {
             $query_values[] = PMA_backquote($me_fields_name[$key]) . ' = ' . $cur_value;
         } elseif (empty($me_funcs[$key])
          && isset($me_fields_prev[$key])
-         && ("'" . PMA_sqlAddslashes($me_fields_prev[$key]) . "'" == $val)) {
+         && ("'" . PMA_sqlmysql_real_escape_string($me_fields_prev[$key]) . "'" == $val)) {
             // No change for this column and no MySQL function is used -> next column
             continue;
         } elseif (! empty($val)) {

@@ -269,7 +269,7 @@
                         . "VALUES("
                         . $this->getWikiId() . ", "
                         . $this->getOwnerId() . ", "
-                        . "'" . addslashes( $this->getTitle() ) . "', "
+                        . "'" . mysql_real_escape_string( $this->getTitle() ) . "', "
                         . "'" . $this->getCreationTime() . "', "
                         . "'" . $this->getLastEditTime() . "'"
                         . ")"
@@ -343,7 +343,7 @@
             
             $sql = "SELECT `id` "
                 . "FROM `".$this->config['tbl_wiki_pages']."` "
-                . "WHERE BINARY `title` = '". addslashes( $title )."' "
+                . "WHERE BINARY `title` = '". mysql_real_escape_string( $title )."' "
                 . "AND `wiki_id` = " . $this->getWikiId();
                 ;
 
@@ -371,7 +371,7 @@
                 . "c.`editor_id`, c.`content` "
                 . "FROM `".$this->config['tbl_wiki_pages']."` p"
                 . ", `".$this->config['tbl_wiki_pages_content']."` c "
-                . "WHERE BINARY p.`title` = '".addslashes( $title )."' "
+                . "WHERE BINARY p.`title` = '".mysql_real_escape_string( $title )."' "
                 . "AND c.`id` = p.`last_version` "
                 . "AND `wiki_id` = " . $this->getWikiId();
                 ;
@@ -465,7 +465,7 @@
                     . $this->getPageId() . ", "
                     . "'" . $this->getEditorId() . "', "
                     . "'" . $this->getLastEditTime() . "', "
-                    . "'" . addslashes( $this->getContent() ) . "'"
+                    . "'" . mysql_real_escape_string( $this->getContent() ) . "'"
                     . ")"
                     ;
                     

@@ -75,12 +75,12 @@ if (PMA_foreignkey_supported($type_T1) && PMA_foreignkey_supported($type_T2) && 
         $q  = 'INSERT INTO ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['relation'])
                             . '(master_db, master_table, master_field, foreign_db, foreign_table, foreign_field)'
                             . ' values('
-                            . '\'' . PMA_sqlAddslashes($db) . '\', '
-                            . '\'' . PMA_sqlAddslashes($T2) . '\', '
-                            . '\'' . PMA_sqlAddslashes($F2) . '\', '
-                            . '\'' . PMA_sqlAddslashes($db) . '\', '
-                            . '\'' . PMA_sqlAddslashes($T1) . '\','
-                            . '\'' . PMA_sqlAddslashes($F1) . '\')';
+                            . '\'' . PMA_sqlmysql_real_escape_string($db) . '\', '
+                            . '\'' . PMA_sqlmysql_real_escape_string($T2) . '\', '
+                            . '\'' . PMA_sqlmysql_real_escape_string($F2) . '\', '
+                            . '\'' . PMA_sqlmysql_real_escape_string($db) . '\', '
+                            . '\'' . PMA_sqlmysql_real_escape_string($T1) . '\','
+                            . '\'' . PMA_sqlmysql_real_escape_string($F1) . '\')';
 
         if (PMA_query_as_cu($q , false, PMA_DBI_QUERY_STORE)) {
             PMD_return_new(1, 'strInternalRelationAdded');

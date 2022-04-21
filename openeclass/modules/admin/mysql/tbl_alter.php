@@ -168,7 +168,7 @@ if ($abort == false) {
      * @todo optimize in case of multiple fields to modify
      */
     for ($i = 0; $i < $selected_cnt; $i++) {
-        $_REQUEST['field'] = PMA_sqlAddslashes($selected[$i], true);
+        $_REQUEST['field'] = PMA_sqlmysql_real_escape_string($selected[$i], true);
         $result        = PMA_DBI_query('SHOW FULL FIELDS FROM ' . PMA_backquote($table) . ' FROM ' . PMA_backquote($db) . ' LIKE \'' . $_REQUEST['field'] . '\';');
         $fields_meta[] = PMA_DBI_fetch_assoc($result);
         PMA_DBI_free_result($result);

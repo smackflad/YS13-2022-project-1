@@ -50,7 +50,7 @@
                 if (PMA_DBI_select_db($bsDB))
                 {
                     $query = "SELECT * FROM " . PMA_backquote($pbms_ref_tbl);
-                    $query .= " WHERE Blob_url='" . PMA_sqlAddslashes($bsReference) . "'";
+                    $query .= " WHERE Blob_url='" . PMA_sqlmysql_real_escape_string($bsReference) . "'";
 
                     $result = PMA_DBI_query($query);
 
@@ -58,7 +58,7 @@
                     if ($data = PMA_DBI_fetch_assoc($result))
                     {
                         $query = "SELECT count(*) FROM " . PMA_backquote($pbms_cust_content_type_tbl);
-			$query .= " WHERE Blob_url='" . PMA_sqlAddslashes($bsReference) . "'";
+			$query .= " WHERE Blob_url='" . PMA_sqlmysql_real_escape_string($bsReference) . "'";
 
                         $result = PMA_DBI_query($query);
 
@@ -68,12 +68,12 @@
                             if (1 == $data['count(*)'])
                             {
                                 $query = "UPDATE " . PMA_backquote($pbms_cust_content_type_tbl) . " SET Content_type='";
-                                $query .= PMA_sqlAddslashes($bsNewMIMEType) . "' WHERE Blob_url='" . PMA_sqlAddslashes($bsReference) . "'";
+                                $query .= PMA_sqlmysql_real_escape_string($bsNewMIMEType) . "' WHERE Blob_url='" . PMA_sqlmysql_real_escape_string($bsReference) . "'";
                             }
                             else
                             {
                                 $query = "INSERT INTO " . PMA_backquote($pbms_cust_content_type_tbl) . " (Blob_url, Content_type)";
-                                $query .= " VALUES('" . PMA_sqlAddslashes($bsReference) . "', '" . PMA_sqlAddslashes($bsNewMIMEType) . "')";
+                                $query .= " VALUES('" . PMA_sqlmysql_real_escape_string($bsReference) . "', '" . PMA_sqlmysql_real_escape_string($bsNewMIMEType) . "')";
                             }
 
                             $result = PMA_DBI_query($query);

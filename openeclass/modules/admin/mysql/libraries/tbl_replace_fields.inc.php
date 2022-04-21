@@ -27,7 +27,7 @@
  * @uses md5()
  * @uses implode()
  * @uses PMA_NO_VARIABLES_IMPORT
- * @uses PMA_sqlAddslashes()
+ * @uses PMA_sqlmysql_real_escape_string()
  * @package phpMyAdmin
  */
 if (! defined('PHPMYADMIN')) {
@@ -84,7 +84,7 @@ if (false !== $possibly_uploaded_val) {
                 // if we have a foreign key, then construct the value
                 if (! empty($_REQUEST[$f]['multi_edit'][$rowcount])) {
                     $val = implode(',', $_REQUEST[$f]['multi_edit'][$rowcount]);
-                    $val = "'" . PMA_sqlAddslashes($val) . "'";
+                    $val = "'" . PMA_sqlmysql_real_escape_string($val) . "'";
                 }
                 break;
             case 'protected':
@@ -112,9 +112,9 @@ if (false !== $possibly_uploaded_val) {
         }
     } elseif ($type == 'bit') {
         $val = preg_replace('/[^01]/', '0', $val);
-        $val = "b'" . PMA_sqlAddslashes($val) . "'";
+        $val = "b'" . PMA_sqlmysql_real_escape_string($val) . "'";
     } elseif (! ($type == 'timestamp' && $val == 'CURRENT_TIMESTAMP')) {
-        $val = "'" . PMA_sqlAddslashes($val) . "'";
+        $val = "'" . PMA_sqlmysql_real_escape_string($val) . "'";
     }
 
     // Was the Null checkbox checked for this field?

@@ -395,8 +395,8 @@ class Question
 		mysql_select_db($currentCourseID);
 
 		$id=$this->id;
-		$question=addslashes($this->question);
-		$description=addslashes($this->description);
+		$question=mysql_real_escape_string($this->question);
+		$description=mysql_real_escape_string($this->description);
 		$weighting=$this->weighting;
 		$position=$this->position;
 		$type=$this->type;
@@ -527,8 +527,8 @@ class Question
 	{
 		global $TBL_QUESTIONS, $picturePath, $currentCourseID;
 
-		$question=addslashes($this->question);
-		$description=addslashes($this->description);
+		$question=mysql_real_escape_string($this->question);
+		$description=mysql_real_escape_string($this->description);
 		$weighting=$this->weighting;
 		$position=$this->position;
 		$type=$this->type;

@@ -211,7 +211,7 @@ while($row = mysql_fetch_array($result)) {
 		$tool_content .= "<td align=\"center\">	-&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;- </td>";
 	}
 	$langModify_temp = htmlspecialchars($langModify);
-	$langConfirmYourChoice_temp = addslashes(htmlspecialchars($langConfirmYourChoice));
+	$langConfirmYourChoice_temp = mysql_real_escape_string(htmlspecialchars($langConfirmYourChoice));
 	$langDelete_temp = htmlspecialchars($langDelete);
 	$tool_content .= <<<cData
 

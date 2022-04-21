@@ -253,9 +253,9 @@ class Answer
 
 		for($i=1;$i <= $this->new_nbrAnswers;$i++)
 		{
-			$answer=addslashes($this->new_answer[$i]);
+			$answer=mysql_real_escape_string($this->new_answer[$i]);
 			$correct=$this->new_correct[$i];
-			$comment=addslashes($this->new_comment[$i]);
+			$comment=mysql_real_escape_string($this->new_comment[$i]);
 			$weighting=$this->new_weighting[$i];
 			$position=$this->new_position[$i];
 
@@ -294,9 +294,9 @@ class Answer
 			$sql="INSERT INTO `$TBL_REPONSES`(id,question_id,reponse,correct,comment,ponderation,r_position) VALUES";
 
 			for($i=1;$i <= $this->nbrAnswers;$i++) {
-				$answer=addslashes($this->answer[$i]);
+				$answer=mysql_real_escape_string($this->answer[$i]);
 				$correct=$this->correct[$i];
-				$comment=addslashes($this->comment[$i]);
+				$comment=mysql_real_escape_string($this->comment[$i]);
 				$weighting=$this->weighting[$i];
 				$position=$this->position[$i];
 				$sql.="('$i','$newQuestionId','$answer','$correct','$comment','$weighting','$position'),";

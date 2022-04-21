@@ -425,7 +425,7 @@ if (mysql_num_rows($result) > 0) {
 		$tool_content .=  "\n<td class='right' width='80'>
 		<a href='$_SERVER[PHP_SELF]?id=".$myrow['id']."&amp;edit=true'>
             	<img src='../../template/classic/img/edit.gif' border='0' title='".$langModify."'></a>&nbsp;
-        	<a href='$_SERVER[PHP_SELF]?id=".$myrow[0]."&amp;delete=yes' onClick='return confirmation('".addslashes($myrow["titre"])."');'>
+        	<a href='$_SERVER[PHP_SELF]?id=".$myrow[0]."&amp;delete=yes' onClick='return confirmation('".mysql_real_escape_string($myrow["titre"])."');'>
             	<img src='../../template/classic/img/delete.gif' border='0' title='".$langDelete."'></a>&nbsp;";
 		if ($myrow["visibility"] == 'v') {
 			$tool_content .= "<a href='$_SERVER[PHP_SELF]?id=".$myrow[0]."&amp;mkInvisibl=true'>

@@ -134,7 +134,7 @@ function getUserNameFromId ($id)  // RH: Mailing: return 'Mailing ' + id
     if ($mailingId > 0) return $dropbox_lang["mailingAsUsername"] . $mailingId;
 
     $sql = "SELECT CONCAT(nom,' ', prenom) AS name
-		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . addslashes($id) . "'";
+		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'";
     $result = db_query($sql, $mysqlMainDb);
     $res = mysql_fetch_array($result);
     if ($res == FALSE) return FALSE;
@@ -148,7 +148,7 @@ function getLoginFromId ($id)
 {
     global $dropbox_cnf, $dropbox_lang, $mysqlMainDb;
 
-    $sql = "SELECT username FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . addslashes($id) . "'";
+    $sql = "SELECT username FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'";
     $result = db_query($sql,$mysqlMainDb);
     $res = mysql_fetch_array($result);
     if ($res == FALSE) return FALSE;
@@ -163,7 +163,7 @@ function isCourseMember($id)
     global $dropbox_cnf, $dropbox_lang, $mysqlMainDb;
 
     $sql = "SELECT * FROM `" . $dropbox_cnf["courseUserTbl"] . "`
-		WHERE user_id = '" . addslashes( $id) . "' AND cours_id = '" . $dropbox_cnf["cid"] . "'";
+		WHERE user_id = '" . mysql_real_escape_string( $id) . "' AND cours_id = '" . $dropbox_cnf["cid"] . "'";
     $result = db_query($sql, $mysqlMainDb); 
     if (mysql_num_rows($result) == 1)
     {

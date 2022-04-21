@@ -51,7 +51,7 @@ function PMA_Bookmark_getParams()
  * Gets the list of bookmarks defined for the current database
  *
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_fetch_result()
  * @uses    PMA_DBI_QUERY_STORE
  * @uses    PMA_Bookmark_getParams()
@@ -74,8 +74,8 @@ function PMA_Bookmark_getList($db)
     }
 
     $query  = 'SELECT label, id FROM '. PMA_backquote($cfgBookmark['db']) . '.' . PMA_backquote($cfgBookmark['table'])
-            . ' WHERE dbase = \'' . PMA_sqlAddslashes($db) . '\''
-            . ' AND (user = \'' . PMA_sqlAddslashes($cfgBookmark['user']) . '\''
+            . ' WHERE dbase = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
+            . ' AND (user = \'' . PMA_sqlmysql_real_escape_string($cfgBookmark['user']) . '\''
             . '      OR user = \'\')'
             . ' ORDER BY label';
     return PMA_DBI_fetch_result($query, 'id', 'label', $controllink, PMA_DBI_QUERY_STORE);
@@ -86,7 +86,7 @@ function PMA_Bookmark_getList($db)
  * Gets the sql command from a bookmark
  *
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_fetch_value()
  * @uses    PMA_Bookmark_getParams()
  * @global  resource  the controluser db connection handle
@@ -111,8 +111,8 @@ function PMA_Bookmark_get($db, $id, $id_field = 'id', $action_bookmark_all = FAL
     }
 
     $query = 'SELECT query FROM ' . PMA_backquote($cfgBookmark['db']) . '.' . PMA_backquote($cfgBookmark['table'])
-        . ' WHERE dbase = \'' . PMA_sqlAddslashes($db) . '\''
-        . ($action_bookmark_all? '' : ' AND (user = \'' . PMA_sqlAddslashes($cfgBookmark['user']) . '\''
+        . ' WHERE dbase = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
+        . ($action_bookmark_all? '' : ' AND (user = \'' . PMA_sqlmysql_real_escape_string($cfgBookmark['user']) . '\''
         . '      OR user = \'\')')
         . ' AND ' . PMA_backquote($id_field) . ' = ' . $id;
     return PMA_DBI_fetch_value($query, 0, 0, $controllink);
@@ -122,7 +122,7 @@ function PMA_Bookmark_get($db, $id, $id_field = 'id', $action_bookmark_all = FAL
  * Adds a bookmark
  *
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_query()
  * @uses    PMA_Bookmark_getParams()
  * @global  resource  the controluser db connection handle
@@ -146,7 +146,7 @@ function PMA_Bookmark_save($fields, $all_users = false)
     }
 
     $query = 'INSERT INTO ' . PMA_backquote($cfgBookmark['db']) . '.' . PMA_backquote($cfgBookmark['table'])
-           . ' (id, dbase, user, query, label) VALUES (NULL, \'' . PMA_sqlAddslashes($fields['dbase']) . '\', \'' . ($all_users ? '' : PMA_sqlAddslashes($fields['user'])) . '\', \'' . PMA_sqlAddslashes(urldecode($fields['query'])) . '\', \'' . PMA_sqlAddslashes($fields['label']) . '\')';
+           . ' (id, dbase, user, query, label) VALUES (NULL, \'' . PMA_sqlmysql_real_escape_string($fields['dbase']) . '\', \'' . ($all_users ? '' : PMA_sqlmysql_real_escape_string($fields['user'])) . '\', \'' . PMA_sqlmysql_real_escape_string(urldecode($fields['query'])) . '\', \'' . PMA_sqlmysql_real_escape_string($fields['label']) . '\')';
     return PMA_DBI_query($query, $controllink);
 } // end of the 'PMA_Bookmark_save()' function
 
@@ -155,7 +155,7 @@ function PMA_Bookmark_save($fields, $all_users = false)
  * Deletes a bookmark
  *
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_try_query()
  * @uses    PMA_Bookmark_getParams()
  * @global  resource  the controluser db connection handle
@@ -176,7 +176,7 @@ function PMA_Bookmark_delete($db, $id)
     }
 
     $query  = 'DELETE FROM ' . PMA_backquote($cfgBookmark['db']) . '.' . PMA_backquote($cfgBookmark['table'])
-            . ' WHERE (user = \'' . PMA_sqlAddslashes($cfgBookmark['user']) . '\''
+            . ' WHERE (user = \'' . PMA_sqlmysql_real_escape_string($cfgBookmark['user']) . '\''
             . '        OR user = \'\')'
             . ' AND id = ' . $id;
     return PMA_DBI_try_query($query, $controllink);

@@ -210,8 +210,8 @@ function submit_work($uid, $id, $file) {
         $ext = get_file_extension($file);
 	$local_name = greek_to_latin('Group '. $group . (empty($ext)? '': '.' . $ext));
 
-        $r = mysql_fetch_row(db_query('SELECT filename FROM group_documents WHERE path = ' .
-                                      autoquote($file)));
+        $r = mysql_fetch_row(db_query("SELECT filename FROM group_documents WHERE path = '".
+                                      mysql_real_escape_string($file)."'"));
         $original_filename = $r[0];
 
 	$source = $groupPath.$file;
@@ -221,10 +221,15 @@ function submit_work($uid, $id, $file) {
         delete_submissions_by_uid($uid, $group, $id, $destination);
 	if (copy($source, "$workPath/$destination")) {
 		db_query("INSERT INTO assignment_submit (uid, assignment_id, submission_date,
-			             submission_ip, file_path, file_name, comments, group_id)
-                          VALUES ('$uid','$id', NOW(), '$_SERVER[REMOTE_ADDR]', '$destination'," .
-				quote($original_filename) . ', ' .
-                                autoquote($_POST['comments']) . ", $group)",
+				submission_ip, file_path, file_name, comments, group_id)
+				VALUES (
+				'".mysql_real_escape_string($uid)."',
+				'".mysql_real_escape_string($id)."',
+				NOW(), 
+				'".mysql_real_escape_string($_SERVER[REMOTE_ADDR])."',
+				'".mysql_real_escape_string($destination)."',
+				'".mysql_real_escape_string($original_filename)."',
+				'".mysql_real_escape_string($_POST['comments'])."', $group)",
                         $currentCourseID);
 
 		$tool_content .="<p class=\"success_small\">$langUploadSuccess<br />$m[the_file] \"$original_filename\" $m[was_submitted]<br /><a href='work.php'>$langBack</a></p><br />";

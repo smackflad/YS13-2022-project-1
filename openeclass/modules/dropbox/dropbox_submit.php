@@ -421,12 +421,12 @@ if (isset($_GET['mailingIndex']))  // examine or send
 					}
 				}
 
-				$sendDT = addslashes(date("Y-m-d H:i:s",time()));
+				$sendDT = mysql_real_escape_string(date("Y-m-d H:i:s",time()));
 				// set filesize to zero on send, to avoid 2nd send (see index.php)
 				$sql = "UPDATE `".$dropbox_cnf["fileTbl"]."`
 						SET filesize = '0'
 						, uploadDate = '".$sendDT."', lastUploadDate = '".$sendDT."'
-						WHERE id='".addslashes($mailing_item->id)."'";
+						WHERE id='".mysql_real_escape_string($mailing_item->id)."'";
 				$result = mysql_query($sql) or die($dropbox_lang["queryError"]);
 			}
 			elseif ( $mailing_item->filesize != 0)
