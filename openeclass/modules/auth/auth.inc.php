@@ -227,10 +227,10 @@ function auth_user_login ($auth, $test_username, $test_password)  {
     {
 	case '1':
 	    // Returns true if the username and password work and false if they don't
-	    $sql = "SELECT user_id FROM user WHERE username='".mysql_real_escape_string($test_username)."' 
-		AND password='".mysql_real_escape_string($test_password)."'";
-	    $result = db_query($sql);
-	    if(mysql_num_rows($result)==1) {
+//	    $sql = "SELECT user_id FROM user WHERE username='".mysql_real_escape_string($test_username)."'
+//		AND password='".mysql_real_escape_string($test_password)."'";
+	    $result = run_Query("SELECT user_id FROM user WHERE username=? AND password=?", array("ss", mysql_real_escape_string($test_username), mysql_real_escape_string($test_password)));
+	    if($result->num_rows==1) {
     		$testauth = true;
 	    } else {
 		$testauth = false;

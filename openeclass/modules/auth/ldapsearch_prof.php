@@ -210,9 +210,8 @@ if (isset($submit))  {
 	
 	$sql = "INSERT INTO prof_request(profname, profsurname, profuname, profpassword,
 		profemail, proftmima, profcomm, status, date_open, comment, lang, statut) VALUES(
-		'$name','$surname','$username','$password','$usermail','$depid','$userphone',
-		1, NOW(), '$usercomment', '$lang', 1)";
-	$upd = db_query($sql,$mysqlMainDb);
+		?,?,?,?,?,?,?, 1, NOW(), ?, ?, 1)";
+	$upd = run_Query($sql,array("sssssssss", $name, $surname, $username, $password, $usermail, $depid, $userphone, $usercomment, $lang));
 	
 	// send email
         $MailMessage = $mailbody1 . $mailbody2 . "$name $surname\n\n" . $mailbody3

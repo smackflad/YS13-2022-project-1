@@ -140,19 +140,20 @@ $registration_errors = array();
                     }
             }
 
-            db_query('INSERT INTO prof_request SET
-                                profname = ' . autoquote($prenom_form). ',
-                                profsurname = ' . autoquote($nom_form). ',
-                                profuname = ' . autoquote($uname). ',
-                                profemail = ' . autoquote($email_form). ',
-                                proftmima = ' . autoquote($department). ',
-                                profcomm = ' . autoquote($userphone). ',
-                                status = 1,
-                                statut = 1,
-                                date_open = NOW(),
-                                comment = ' . autoquote($usercomment). ',
-                                lang = ' . autoquote($proflang),
-                     $mysqlMainDb);
+            run_Query('INSERT INTO prof_request SET
+                                    profname = ?,
+                                    profsurname = ?,
+                                    profuname = ?,
+                                    profemail = ?,
+                                    proftmima = ?,
+                                    profcomm = ?,
+                                    status = 1,
+                                    statut = 1,
+                                    date_open = NOW(),
+                                    comment = ?,
+                                    lang = ?',
+                array("ssssssss", $prenom_form, $nom_form, $uname, $email_form, $department, $userphone, $usercomment, $proflang));
+
 
             //----------------------------- Email Message --------------------------
             $MailMessage = $mailbody1 . $mailbody2 . "$prenom_form $nom_form\n\n" . $mailbody3 .

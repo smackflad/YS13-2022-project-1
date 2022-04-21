@@ -531,6 +531,9 @@ function run_Query($query, $params){
         if($result){
             return $result;
         }else{
+            if($stmt->insert_id){
+                return $stmt->insert_id;
+            }
             return true;
         }
     }
