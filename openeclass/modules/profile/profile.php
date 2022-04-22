@@ -38,12 +38,13 @@ check_guest();
 $allow_username_change = !get_config('block-username-change');
 
 if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
-        if (!$allow_username_change) {
-                $username_form = $uname;
-        }
+    if (!$allow_username_change) {
+            $username_form = $uname;
+    }
+
 	// check if username exists
-	$username_check=mysql_query("SELECT username FROM user WHERE username='".escapeSimple($username_form)."'");
-	while ($myusername = mysql_fetch_array($username_check))
+    $username_check=run_Query("SELECT username FROM user WHERE username=?", array("s", $username_form));
+	while ($myusername = $username_check->fetch_array())
 	{
 		$user_exist=$myusername[0];
 	}
@@ -83,11 +84,11 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 		$langcode = langname_to_code($language);
 
 		$username_form = escapeSimple($username_form);
-		if(mysql_query("UPDATE user
-	        SET nom='$nom_form', prenom='$prenom_form',
-	        username='$username_form', email='$email_form', am='$am_form',
-	            perso='$persoStatus', lang='$langcode'
-	        WHERE user_id='".$_SESSION["uid"]."'")) {
+		if(run_Query("UPDATE user
+	        SET nom=?, prenom=?,
+	        username=?, email=?, am=?,
+	            perso=?, lang=?
+	        WHERE user_id=?", array("ssssssss", $nom_form, $prenom_form, $username_form, $email_form, $am_form, $persoStatus, $langcode, $_SESSION["uid"]))) {
 			if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
                 		unset($_SESSION['user_perso_active']);
 			}
@@ -99,11 +100,11 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 
 ##[BEGIN personalisation modification - For LDAP users]############
 if (isset($submit) && isset($ldap_submit) && ($ldap_submit == "ON")) {
-	$_SESSION['langswitch'] = $language = langcode_to_name($_REQUEST['userLanguage']);
+    $_SESSION['langswitch'] = $language = langcode_to_name($_REQUEST['userLanguage']);
 	$langcode = langname_to_code($language);
 
-	mysql_query("UPDATE user SET perso = '$persoStatus',
-		lang = '$langcode' WHERE user_id='".$_SESSION["uid"]."' ");
+	run_Query("UPDATE user SET perso = ?,
+		lang = ? WHERE user_id=?", array("sss", $persoStatus, $langcode, $_SESSION["uid"]));
 	
 	if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
 		unset($_SESSION['user_perso_active']);

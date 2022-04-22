@@ -60,17 +60,8 @@ if (!isset($doit) or $doit != "yes") {
 } else {
 if (isset($uid) and $uid==$_SESSION['uid']) {
             $sqlLogin= "DELETE from cours_user WHERE cours_id = (SELECT cours_id FROM cours WHERE code = ?) AND user_id=?";
-            $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,"eclass");
-            $conn->query("SET NAMES utf8");
-            $stmt=$conn->prepare($sqlLogin);
-            $stmt->bind_param('s', $uname);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $conn->close();
-            $stmt->close();
-
-            db_query("DELETE from cours_user WHERE cours_id = (SELECT cours_id FROM cours WHERE code = " . quote($cid) . ") AND user_id='$uid'");
-                if (mysql_affected_rows() > 0) {
+            $result = run_Query($sqlLogin, array("ss", $cid, $uid));
+                if ($result->num_rows > 0) {
                         $tool_content .= "<p class='success_small'>$langCoursDelSuccess</p>";
                 } else {
                         $tool_content .= "<p class='caution_small'>$langCoursError</p>";
