@@ -215,7 +215,16 @@ function show_submission($sid)
 	$nameTools = $langWorks;
 	$navigation[] = array("url"=>"work.php", "name"=> $langWorks);
 
-	if ($sub = mysql_fetch_array(db_query("SELECT * FROM assignment_submit WHERE id = '$sid'"))) {
+	$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);			
+	$conn->query("SET NAMES utf8");
+	$stmt=$conn->prepare("SELECT * FROM assignment_submit WHERE id = ?");							
+	$stmt->bind_param('s', $sid);						
+	$stmt->execute();						
+	$result = $stmt->get_result();
+
+	$sub= $result->fetch_assoc();
+	//if ($sub = mysql_fetch_array(db_query("SELECT * FROM assignment_submit WHERE id = '$sid'"))) {
+		if ($sub) {
 
 		$tool_content .= "<p>$langSubmissionDescr".
 		uid_to_name($sub['uid']).
@@ -229,6 +238,11 @@ function show_submission($sid)
 	} else {
 		$tool_content .= "<p class=\"caution_small\">error - no such submission with id $sid</p>\n";
 	}
+
+	$stmt->close();
+	$conn->close();
+
+
 }
 
 
