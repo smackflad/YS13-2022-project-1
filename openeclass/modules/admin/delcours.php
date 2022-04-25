@@ -76,13 +76,13 @@ if (isset($search) && ($search=="yes")) {
 if (isset($_GET['delete']) && isset($_GET['c']))  {
 	db_query("DROP DATABASE `".mysql_real_escape_string($_GET['c'])."`");
         mysql_select_db($mysqlMainDb);
-        $code = quote($_GET['c']);
-	db_query("DELETE FROM cours_faculte WHERE code = $code");
+        // $code = quote($_GET['c']);
+	db_query("DELETE FROM cours_faculte WHERE code = '".mysql_real_escape_string($_GET['c'])."'");
 	db_query("DELETE FROM cours_user WHERE cours_id =
-                        (SELECT cours_id FROM cours WHERE code = $code)");
+                        (SELECT cours_id FROM cours WHERE code = '".mysql_real_escape_string($_GET['c'])."')");
 	db_query("DELETE FROM annonces WHERE cours_id =
-                        (SELECT cours_id FROM cours WHERE code = $code)");
-	db_query("DELETE FROM cours WHERE code = $code");
+                        (SELECT cours_id FROM cours WHERE code = '".mysql_real_escape_string($_GET['c'])."')");
+	db_query("DELETE FROM cours WHERE code = '".mysql_real_escape_string($_GET['c'])."'");
 	@mkdir("../../courses/garbage");
 	rename("../../courses/".$_GET['c'], "../../courses/garbage/".$_GET['c']);
 	$tool_content .= "<p>".$langCourseDelSuccess."</p>";

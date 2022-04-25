@@ -114,16 +114,16 @@ if(isset($_POST['ump_id']))
   
   $sql = "UPDATE `".$TABLEUSERMODULEPROGRESS."` 
             SET 
-                `lesson_location` = '". addslashes($_POST['lesson_location'])."',
-                `lesson_status` = '". addslashes($lesson_status_value) ."',
-                `entry` = '". addslashes($entry_value) ."',
+                `lesson_location` = '". mysql_real_escape_string($_POST['lesson_location'])."',
+                `lesson_status` = '". mysql_real_escape_string($lesson_status_value) ."',
+                `entry` = '". mysql_real_escape_string($entry_value) ."',
                 `raw` = '". $raw_value ."',
                 `scoreMin` = '". $scoreMin_value ."',
                 `scoreMax` = '". $scoreMax_value ."',
-                `total_time` = '". addslashes($total_time_value) ."',
-                `session_time` = '". addslashes($session_time_formatted) ."',
-                `suspend_data` = '". addslashes($_POST['suspend_data'])."',
-                `credit` = '". addslashes($credit_value) ."'
+                `total_time` = '". mysql_real_escape_string($total_time_value) ."',
+                `session_time` = '". mysql_real_escape_string($session_time_formatted) ."',
+                `suspend_data` = '". mysql_real_escape_string($_POST['suspend_data'])."',
+                `credit` = '". mysql_real_escape_string($credit_value) ."'
           WHERE `user_module_progress_id` = ". (int)$_POST['ump_id'];
   db_query($sql);
 }

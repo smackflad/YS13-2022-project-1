@@ -46,7 +46,7 @@
 // dullus for text Justification.
 // Bob Vincent (pillarsdotnet@users.sourceforge.net) for <li> value attribute.
 // Patrick Benny for text stretch suggestion on Cell().
-// Johannes Güntert for JavaScript support.
+// Johannes Gï¿½ntert for JavaScript support.
 // Denis Van Nuffelen for Dynamic Form.
 // Jacek Czekaj for multibyte justification
 // Anthony Ferrara for the reintroduction of legacy image methods.
@@ -6295,7 +6295,7 @@ if(!class_exists('TCPDF', false)) {
 			
 			// X8. All explicit directional embeddings and overrides are completely terminated at the end of each paragraph. Paragraph separators are not included in the embedding.
 			// X9. Remove all RLE, LRE, RLO, LRO, PDF, and BN codes.
-			// X10. The remaining rules are applied to each run of characters at the same level. For each run, determine the start-of-level-run (sor) and end-of-level-run (eor) type, either L or R. This depends on the higher of the two levels on either side of the boundary (at the start or end of the paragraph, the level of the “other” run is the base embedding level). If the higher level is odd, the type is R; otherwise, it is L.
+			// X10. The remaining rules are applied to each run of characters at the same level. For each run, determine the start-of-level-run (sor) and end-of-level-run (eor) type, either L or R. This depends on the higher of the two levels on either side of the boundary (at the start or end of the paragraph, the level of the ï¿½otherï¿½ run is the base embedding level). If the higher level is odd, the type is R; otherwise, it is L.
 			
 			// 3.3.3 Resolving Weak Types
 			// Weak types are now resolved one level run at a time. At level run boundaries where the type of the character on the other side of the boundary is required, the type assigned to sor or eor is used.
@@ -6685,7 +6685,7 @@ if(!class_exists('TCPDF', false)) {
 		/*
 		* Adds a javascript
 		* @access public
-		* @author Johannes Güntert, Nicola Asuni
+		* @author Johannes Gï¿½ntert, Nicola Asuni
 		* @since 2.1.002 (2008-02-12)
 		*/
 		public function IncludeJS($script) {
@@ -6695,7 +6695,7 @@ if(!class_exists('TCPDF', false)) {
 		/*
 		* Create a javascript PDF string.
 		* @access private
-		* @author Johannes Güntert, Nicola Asuni
+		* @author Johannes Gï¿½ntert, Nicola Asuni
 		* @since 2.1.002 (2008-02-12)
 		*/
 		private function _putjavascript() {
@@ -6752,7 +6752,7 @@ if(!class_exists('TCPDF', false)) {
 			$this->javascript .= sprintf("f=addField('%s','%s',%d,[%.2f,%.2f,%.2f,%.2f]);",$name,$type,$this->PageNo()-1,$x*$k,($this->h-$y)*$k+1,($x+$w)*$k,($this->h-$y-$h)*$k+1);
 			$this->javascript .= 'f.textSize='.$this->FontSizePt.';';
 			if(isset($prop['value'])) {
-				$this->javascript .= "f.value='".addslashes($prop['value'])."';";
+				$this->javascript .= "f.value='".mysql_real_escape_string($prop['value'])."';";
 			}
 			if(isset($prop['TextColor'])) {
 				$this->javascript .= 'f.textColor='.$this->_JScolor($prop['TextColor']).';';
@@ -6801,7 +6801,7 @@ if(!class_exists('TCPDF', false)) {
 			$this->_addfield('combobox',$name,$this->x,$this->y,$w,$h,$prop);
 			$s = '';
 			foreach($values as $value) {
-				$s .= "'".addslashes($value)."',";
+				$s .= "'".mysql_real_escape_string($value)."',";
 			}
 			$this->javascript .= 'f.setItems(['.substr($s,0,-1).']);';
 		}
@@ -6842,8 +6842,8 @@ if(!class_exists('TCPDF', false)) {
 			}
 			$prop['BorderStyle']='beveled';
 			$this->_addfield('button',$name,$this->x,$this->y,$w,$h,$prop);
-			$this->javascript .= "f.buttonSetCaption('".addslashes($caption)."');";
-			$this->javascript .= "f.setAction('MouseUp','".addslashes($action)."');";
+			$this->javascript .= "f.buttonSetCaption('".mysql_real_escape_string($caption)."');";
+			$this->javascript .= "f.setAction('MouseUp','".mysql_real_escape_string($action)."');";
 			$this->javascript .= "f.highlight='push';";
 			$this->javascript .= 'f.print=false;';
 		}

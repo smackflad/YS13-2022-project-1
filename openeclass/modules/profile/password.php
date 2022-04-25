@@ -82,8 +82,8 @@ if (isset($submit) && isset($changePass) && ($changePass == "do")) {
 
 	if($old_pass == $old_pass_db) {
 
-		$sql = "UPDATE `user` SET `password` = '$new_pass' WHERE `user_id` = ".$_SESSION["uid"]."";
-		db_query($sql, $mysqlMainDb);
+		$sql = "UPDATE `user` SET `password` = ? WHERE `user_id` = ?";
+		run_Query($sql, array("ss", $new_pass, $_SESSION["uid"]), $mysqlMainDb);
 		header("location:". $passurl."?msg=4");
 		exit();
 	} else {

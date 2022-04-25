@@ -52,7 +52,7 @@ if (empty($is_table) && !defined('PMA_SUBMIT_MULT')) {
 
         if (! $is_table) {
             $_result = PMA_DBI_try_query(
-                'SHOW TABLES LIKE \'' . PMA_sqlAddslashes($table, true) . '\';',
+                'SHOW TABLES LIKE \'' . PMA_sqlmysql_real_escape_string($table, true) . '\';',
                 null, PMA_DBI_QUERY_STORE);
             $is_table = @PMA_DBI_num_rows($_result);
             PMA_DBI_free_result($_result);

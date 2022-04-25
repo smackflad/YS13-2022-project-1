@@ -38,12 +38,12 @@ if (PMA_foreignkey_supported($type_T1) && PMA_foreignkey_supported($type_T2) && 
     PMA_query_as_cu('DELETE FROM '
               . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.'
               . $cfg['Server']['relation'].' WHERE '
-              . 'master_db = \'' . PMA_sqlAddslashes($DB2) . '\''
-              . ' AND master_table = \'' . PMA_sqlAddslashes($T2) . '\''
-              . ' AND master_field = \'' . PMA_sqlAddslashes($F2) . '\''
-              . ' AND foreign_db = \'' . PMA_sqlAddslashes($DB1) . '\''
-              . ' AND foreign_table = \'' . PMA_sqlAddslashes($T1) . '\''
-              . ' AND foreign_field = \'' . PMA_sqlAddslashes($F1) . '\''
+              . 'master_db = \'' . PMA_sqlmysql_real_escape_string($DB2) . '\''
+              . ' AND master_table = \'' . PMA_sqlmysql_real_escape_string($T2) . '\''
+              . ' AND master_field = \'' . PMA_sqlmysql_real_escape_string($F2) . '\''
+              . ' AND foreign_db = \'' . PMA_sqlmysql_real_escape_string($DB1) . '\''
+              . ' AND foreign_table = \'' . PMA_sqlmysql_real_escape_string($T1) . '\''
+              . ' AND foreign_field = \'' . PMA_sqlmysql_real_escape_string($F1) . '\''
               , FALSE, PMA_DBI_QUERY_STORE);
 }
 PMD_return_upd(1, 'strRelationDeleted');

@@ -164,7 +164,7 @@ if ($is_adminOfCourse){
 
 		//and activate the ones the professor wants active, if any
 		if ($loopCount >0) {
-			db_query("UPDATE accueil SET visible = 1 WHERE $tool_id", $dbname);
+			run_Query("UPDATE accueil SET visible = 1 WHERE ?", array("s", $tool_id), $dbname);
 		}
 		db_query("UPDATE `accueil` SET `visible` = 2 WHERE define_var = 'MODULE_ID_UNITS'", $dbname);
 		
@@ -219,9 +219,9 @@ if ($is_adminOfCourse){
 	}
 
 	if (isset($delete)) {
-		$sql = "SELECT lien, define_var FROM accueil WHERE `id` = ". $delete ." ";
-		$result = db_query($sql, $dbname);
-		while ($res = mysql_fetch_row($result)){
+		$sql = "SELECT lien, define_var FROM accueil WHERE `id` = ?";
+		$result = run_Query($sql, array("s", $delete), $dbname);
+		while ($res = $result->fetch_row()){
 			if($res[1] == "HTML_PAGE") {
 				$link = explode(" ", $res[0]);
 				$path = substr($link[0], 6);
@@ -229,8 +229,8 @@ if ($is_adminOfCourse){
 				@unlink($file2Delete);
 			}
 		}
-		$sql = "DELETE FROM `accueil` WHERE `id` = " . $delete ." ";
-		db_query($sql, $dbname);
+		$sql = "DELETE FROM `accueil` WHERE `id` = ?";
+		run_Query($sql, array("s". $delete), $dbname);
 		unset($sql);
 
 		$tool_content .= "<p class=\"success_small\">$langLinkDeleted</p><br/>";
@@ -256,15 +256,15 @@ if ($is_adminOfCourse){
 		else $mID = $mID+1;
 		$link = quote($link);
 		$name_link = quote($name_link);
-		mysql_query("INSERT INTO accueil VALUES ($mID,
-					$name_link,
-					$link,
+		run_Query("INSERT INTO accueil VALUES (?,
+					?,
+					?,
 					'external_link',
 					'1',
 					'0',
-					$link,
+					?,
 					''
-					)");
+					)", array("ssss", $mID, $name_link, $link, $link));
 
 		$tool_content .= "<p class=\"success_small\">$langLinkAdded</p><br/>";
 		unset($action);
@@ -497,7 +497,7 @@ tForm;
 			<img src=\"../../template/classic/img/external_link_on.gif\" border=\"0\" title='$langTitle'></th>
     			<td class=\"left\">".$externalLinks[$i]['text']."</td>\n";
 			$tool_content .= "<td align='center'>
-    			<a href=\"".$_SERVER['PHP_SELF'] . "?delete=" . $externalLinks[$i]['id']."\" onClick=\"return confirmation('".addslashes($externalLinks[$i]['text'])."');\">
+    			<a href=\"".$_SERVER['PHP_SELF'] . "?delete=" . $externalLinks[$i]['id']."\" onClick=\"return confirmation('".mysql_real_escape_string($externalLinks[$i]['text'])."');\">
     			<img src=\"../../template/classic/img/delete.gif\" border=\"0\" title='$langDelete'></a>
 			</td></tr>";
 			}	// for loop

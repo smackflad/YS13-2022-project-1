@@ -90,11 +90,13 @@ if ($is_adminOfCourse) {
                         $edTitleBloc = $titreBloc[$edIdBloc];
                 }
                 db_query("INSERT IGNORE INTO course_description SET id = $new_id");
-                db_query("UPDATE course_description
-                                SET title = " . autoquote(trim($edTitleBloc)) . ",
-                                    content = " . autoquote(trim($edContentBloc)) . ",
-                                    `upDate` = NOW()
-                                WHERE id = $new_id");
+                run_Query("UPDATE course_description
+                                    SET title = ?,
+                                        content = ?,
+                                        `upDate` = NOW()
+                                    WHERE id = ?", array("sss", trim($edTitleBloc), trim($edContentBloc), $new_id));
+
+
                 header('Location: ' . $urlServer . 'modules/course_description/edit.php');
                 exit;
         } elseif (isset($_GET['delete'])) {

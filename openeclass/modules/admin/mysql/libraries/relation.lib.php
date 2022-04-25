@@ -346,7 +346,7 @@ function PMA__getRelationsParam()
  * @uses    $GLOBALS['information_schema_relations']
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_fetch_result()
  * @uses    PMA_DBI_fetch_value()
  * @uses    PMA_SQP_analyze()
@@ -371,10 +371,10 @@ function PMA_getForeigners($db, $table, $column = '', $source = 'both')
                     `foreign_table`,
                     `foreign_field`
                FROM ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['relation']) . '
-              WHERE `master_db`    = \'' . PMA_sqlAddslashes($db) . '\'
-                AND `master_table` = \'' . PMA_sqlAddslashes($table) . '\' ';
+              WHERE `master_db`    = \'' . PMA_sqlmysql_real_escape_string($db) . '\'
+                AND `master_table` = \'' . PMA_sqlmysql_real_escape_string($table) . '\' ';
         if (strlen($column)) {
-            $rel_query .= ' AND `master_field` = \'' . PMA_sqlAddslashes($column) . '\'';
+            $rel_query .= ' AND `master_field` = \'' . PMA_sqlmysql_real_escape_string($column) . '\'';
         }
         $foreign = PMA_DBI_fetch_result($rel_query, 'master_field', null, $GLOBALS['controllink']);
     }
@@ -453,7 +453,7 @@ function PMA_getForeigners($db, $table, $column = '', $source = 'both')
  * @uses    $GLOBALS['controllink']
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_fetch_single_row()
  * @uses    trim()
  * @param   string   $db    the name of the db to check for
@@ -471,8 +471,8 @@ function PMA_getDisplayField($db, $table)
         $disp_query = '
              SELECT `display_field`
                FROM ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['table_info']) . '
-              WHERE `db_name`    = \'' . PMA_sqlAddslashes($db) . '\'
-                AND `table_name` = \'' . PMA_sqlAddslashes($table) . '\'';
+              WHERE `db_name`    = \'' . PMA_sqlmysql_real_escape_string($db) . '\'
+                AND `table_name` = \'' . PMA_sqlmysql_real_escape_string($table) . '\'';
 
         $row = PMA_DBI_fetch_single_row($disp_query, 'ASSOC', $GLOBALS['controllink']);
         if (isset($row['display_field'])) {
@@ -542,7 +542,7 @@ function PMA_getComments($db, $table = '')
  * @uses    PMA_DBI_free_result()
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_query_as_cu()
  * @uses    strlen()
  * @param   string   the name of the db to check for
@@ -558,7 +558,7 @@ function PMA_getDbComment($db)
         $com_qry = "
              SELECT `comment`
                FROM " . PMA_backquote($cfgRelation['db']) . "." . PMA_backquote($cfgRelation['column_info']) . "
-              WHERE db_name     = '" . PMA_sqlAddslashes($db) . "'
+              WHERE db_name     = '" . PMA_sqlmysql_real_escape_string($db) . "'
                 AND table_name  = ''
                 AND column_name = '(db_comment)'";
         $com_rs = PMA_query_as_cu($com_qry, true, PMA_DBI_QUERY_STORE);
@@ -585,7 +585,7 @@ function PMA_getDbComment($db)
  * @uses    PMA_DBI_free_result()
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_query_as_cu()
  * @uses    strlen()
  * @param   string   the name of the db to check for
@@ -620,7 +620,7 @@ function PMA_getDbComments()
  *
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_query_as_cu()
  * @uses    strlen()
  * @access  public
@@ -642,17 +642,17 @@ function PMA_setDbComment($db, $comment = '')
                     " . PMA_backquote($cfgRelation['db']) . "." . PMA_backquote($cfgRelation['column_info']) . "
                     (`db_name`, `table_name`, `column_name`, `comment`)
              VALUES (
-                   '" . PMA_sqlAddslashes($db) . "',
+                   '" . PMA_sqlmysql_real_escape_string($db) . "',
                    '',
                    '(db_comment)',
-                   '" . PMA_sqlAddslashes($comment) . "')
+                   '" . PMA_sqlmysql_real_escape_string($comment) . "')
              ON DUPLICATE KEY UPDATE
-                `comment` = '" . PMA_sqlAddslashes($comment) . "'";
+                `comment` = '" . PMA_sqlmysql_real_escape_string($comment) . "'";
     } else {
         $upd_query = '
              DELETE FROM
                     ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['column_info']) . '
-              WHERE `db_name`     = \'' . PMA_sqlAddslashes($db) . '\'
+              WHERE `db_name`     = \'' . PMA_sqlmysql_real_escape_string($db) . '\'
                 AND `table_name`  = \'\'
                 AND `column_name` = \'(db_comment)\'';
     }
@@ -672,7 +672,7 @@ function PMA_setDbComment($db, $comment = '')
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_query_as_cu()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    count()
  * @uses    md5()
  * @uses    array_shift()
@@ -724,11 +724,11 @@ function PMA_setHistory($db, $table, $username, $sqlquery)
                 `timevalue`,
                 `sqlquery`)
          VALUES
-              (\'' . PMA_sqlAddslashes($username) . '\',
-               \'' . PMA_sqlAddslashes($db) . '\',
-               \'' . PMA_sqlAddslashes($table) . '\',
+              (\'' . PMA_sqlmysql_real_escape_string($username) . '\',
+               \'' . PMA_sqlmysql_real_escape_string($db) . '\',
+               \'' . PMA_sqlmysql_real_escape_string($table) . '\',
                NOW(),
-               \'' . PMA_sqlAddslashes($sqlquery) . '\')');
+               \'' . PMA_sqlmysql_real_escape_string($sqlquery) . '\')');
 } // end of 'PMA_setHistory()' function
 
 /**
@@ -738,7 +738,7 @@ function PMA_setHistory($db, $table, $username, $sqlquery)
  * @uses    $GLOBALS['controllink']
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_fetch_result()
  * @uses    array_reverse()
  * @param   string   $username  the username
@@ -762,7 +762,7 @@ function PMA_getHistory($username)
                 `table`,
                 `sqlquery`
            FROM ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['history']) . '
-          WHERE `username` = \'' . PMA_sqlAddslashes($username) . '\'
+          WHERE `username` = \'' . PMA_sqlmysql_real_escape_string($username) . '\'
        ORDER BY `id` DESC';
 
     return PMA_DBI_fetch_result($hist_query, null, null, $GLOBALS['controllink']);
@@ -778,7 +778,7 @@ function PMA_getHistory($username)
  * @uses    $cfg['QueryHistoryDB']
  * @uses    $GLOBALS['controllink']
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddSlashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_query_as_cu()
  * @uses    PMA_DBI_fetch_value()
  * @param   string   $username  the username
@@ -798,7 +798,7 @@ function PMA_purgeHistory($username)
     $search_query = '
          SELECT `timevalue`
            FROM ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['history']) . '
-          WHERE `username` = \'' . PMA_sqlAddSlashes($username) . '\'
+          WHERE `username` = \'' . PMA_sqlmysql_real_escape_string($username) . '\'
        ORDER BY `timevalue` DESC
           LIMIT ' . $GLOBALS['cfg']['QueryHistoryMax'] . ', 1';
 
@@ -806,7 +806,7 @@ function PMA_purgeHistory($username)
         PMA_query_as_cu('
              DELETE FROM
                     ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['history']) . '
-              WHERE `username` = \'' . PMA_sqlAddSlashes($username) . '\'
+              WHERE `username` = \'' . PMA_sqlmysql_real_escape_string($username) . '\'
                 AND `timevalue` <= \'' . $max_time . '\'');
     }
 } // end of 'PMA_purgeHistory()' function
@@ -958,7 +958,7 @@ function PMA_foreignDropdown($disp_row, $foreign_field, $foreign_display, $data,
  * @uses    PMA_Table::countRecords()
  * @uses    PMA_backquote()
  * @uses    PMA_getDisplayField()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_fetch_value()
  * @uses    PMA_DBI_free_result()
  * @uses    PMA_DBI_query()
@@ -1001,9 +1001,9 @@ function PMA_getForeignData($foreigners, $field, $override_total, $foreign_filte
                         . (($foreign_display == FALSE) ? '' : ', ' . PMA_backquote($foreign_display));
             $f_query_from = ' FROM ' . PMA_backquote($foreign_db) . '.' . PMA_backquote($foreign_table);
             $f_query_filter = empty($foreign_filter) ? '' : ' WHERE ' . PMA_backquote($foreign_field)
-                            . ' LIKE "%' . PMA_sqlAddslashes($foreign_filter, TRUE) . '%"'
+                            . ' LIKE "%' . PMA_sqlmysql_real_escape_string($foreign_filter, TRUE) . '%"'
                             . (($foreign_display == FALSE) ? '' : ' OR ' . PMA_backquote($foreign_display)
-                                . ' LIKE "%' . PMA_sqlAddslashes($foreign_filter, TRUE) . '%"'
+                                . ' LIKE "%' . PMA_sqlmysql_real_escape_string($foreign_filter, TRUE) . '%"'
                                 );
             $f_query_order = ($foreign_display == FALSE) ? '' :' ORDER BY ' . PMA_backquote($foreign_table) . '.' . PMA_backquote($foreign_display);
             $f_query_limit = isset($foreign_limit) ? $foreign_limit : '';
@@ -1073,8 +1073,8 @@ function PMA_getRelatives($from)
     $rel_query = 'SELECT *'
                . '  FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db'])
                .       '.' . PMA_backquote($GLOBALS['cfgRelation']['relation'])
-               . ' WHERE ' . $from . '_db = \'' . PMA_sqlAddslashes($GLOBALS['db']) . '\''
-               . '   AND ' . $to   . '_db = \'' . PMA_sqlAddslashes($GLOBALS['db']) . '\''
+               . ' WHERE ' . $from . '_db = \'' . PMA_sqlmysql_real_escape_string($GLOBALS['db']) . '\''
+               . '   AND ' . $to   . '_db = \'' . PMA_sqlmysql_real_escape_string($GLOBALS['db']) . '\''
                . '   AND ' . $from . '_table IN ' . $in_know
                . '   AND ' . $to   . '_table IN ' . $in_left;
     $relations = @PMA_DBI_query($rel_query, $GLOBALS['controllink']);
@@ -1103,7 +1103,7 @@ function PMA_getRelatives($from)
  *
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_query_as_cu()
  * @param string $db
  * @param string $table
@@ -1116,26 +1116,26 @@ function PMA_REL_renameField($db, $table, $field, $new_name)
 
     if ($cfgRelation['displaywork']) {
         $table_query = 'UPDATE ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['table_info'])
-                      . '   SET display_field = \'' . PMA_sqlAddslashes($new_name) . '\''
-                      . ' WHERE db_name       = \'' . PMA_sqlAddslashes($db) . '\''
-                      . '   AND table_name    = \'' . PMA_sqlAddslashes($table) . '\''
-                      . '   AND display_field = \'' . PMA_sqlAddslashes($field) . '\'';
+                      . '   SET display_field = \'' . PMA_sqlmysql_real_escape_string($new_name) . '\''
+                      . ' WHERE db_name       = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
+                      . '   AND table_name    = \'' . PMA_sqlmysql_real_escape_string($table) . '\''
+                      . '   AND display_field = \'' . PMA_sqlmysql_real_escape_string($field) . '\'';
         PMA_query_as_cu($table_query);
     }
 
     if ($cfgRelation['relwork']) {
         $table_query = 'UPDATE ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['relation'])
-                      . '   SET master_field = \'' . PMA_sqlAddslashes($new_name) . '\''
-                      . ' WHERE master_db    = \'' . PMA_sqlAddslashes($db) . '\''
-                      . '   AND master_table = \'' . PMA_sqlAddslashes($table) . '\''
-                      . '   AND master_field = \'' . PMA_sqlAddslashes($field) . '\'';
+                      . '   SET master_field = \'' . PMA_sqlmysql_real_escape_string($new_name) . '\''
+                      . ' WHERE master_db    = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
+                      . '   AND master_table = \'' . PMA_sqlmysql_real_escape_string($table) . '\''
+                      . '   AND master_field = \'' . PMA_sqlmysql_real_escape_string($field) . '\'';
         PMA_query_as_cu($table_query);
 
         $table_query = 'UPDATE ' . PMA_backquote($cfgRelation['db']) . '.' . PMA_backquote($cfgRelation['relation'])
-                      . '   SET foreign_field = \'' . PMA_sqlAddslashes($new_name) . '\''
-                      . ' WHERE foreign_db    = \'' . PMA_sqlAddslashes($db) . '\''
-                      . '   AND foreign_table = \'' . PMA_sqlAddslashes($table) . '\''
-                      . '   AND foreign_field = \'' . PMA_sqlAddslashes($field) . '\'';
+                      . '   SET foreign_field = \'' . PMA_sqlmysql_real_escape_string($new_name) . '\''
+                      . ' WHERE foreign_db    = \'' . PMA_sqlmysql_real_escape_string($db) . '\''
+                      . '   AND foreign_table = \'' . PMA_sqlmysql_real_escape_string($table) . '\''
+                      . '   AND foreign_field = \'' . PMA_sqlmysql_real_escape_string($field) . '\'';
         PMA_query_as_cu($table_query);
     } // end if relwork
 }
@@ -1146,7 +1146,7 @@ function PMA_REL_renameField($db, $table, $field, $new_name)
  * @uses    $GLOBALS['strNoDescription']
  * @uses    PMA_backquote()
  * @uses    $GLOBALS['cfgRelation']['db']
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_query_as_cu()
  * @uses    PMA_DBI_insert_id()
  * @uses    $GLOBALS['controllink']
@@ -1162,7 +1162,7 @@ function PMA_REL_create_page($newpage, $cfgRelation, $db, $query_default_option)
     }
     $ins_query   = 'INSERT INTO ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['pdf_pages'])
                  . ' (db_name, page_descr)'
-                 . ' VALUES (\'' . PMA_sqlAddslashes($db) . '\', \'' . PMA_sqlAddslashes($newpage) . '\')';
+                 . ' VALUES (\'' . PMA_sqlmysql_real_escape_string($db) . '\', \'' . PMA_sqlmysql_real_escape_string($newpage) . '\')';
     PMA_query_as_cu($ins_query, FALSE, $query_default_option);
     return PMA_DBI_insert_id(isset($GLOBALS['controllink']) ? $GLOBALS['controllink'] : '');
 }

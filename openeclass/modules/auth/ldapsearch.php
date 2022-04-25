@@ -166,8 +166,8 @@ if (isset($_POST['submit'])) {
 			$registration_errors[] = $langEmptyFields;
 		} else {
 		// check if the username is already in use
-			$q2 = "SELECT username FROM `$mysqlMainDb`.user WHERE username='".escapeSimple($uname)."'";
-			$username_check = mysql_query($q2);
+			$q2 = "SELECT username FROM `$mysqlMainDb`.user WHERE username=?";
+            $username_check = run_Query($q2, array("s", $uname));
 			if ($myusername = mysql_fetch_array($username_check)) {
 				$registration_errors[] = $langUserFree;
 			}
@@ -197,15 +197,15 @@ if (isset($_POST['submit'])) {
 		$lang = langname_to_code($language);
 	
 		$q1 = "INSERT INTO `$mysqlMainDb`.user 
-			SET nom = '$nom_form', prenom = '$prenom_form', 
-			username = '$uname', password = '$password', email = '$email',
-			statut = '5', department = '$department',
-			am = '$am', registered_at = ".$registered_at.",
-			expires_at = ".$expires_at. ",
-			lang = '$lang'";
-	
-		$inscr_user = db_query($q1);
-		$last_id = mysql_insert_id();
+			SET nom = ?, prenom = ?, 
+			username = ?, password = ?, email = ?,
+			statut = '5', department = ?,
+			am = ?, registered_at = ?,
+			expires_at = ?,
+			lang = ?";
+
+        $inscr_user = run_Query($q1, array("ssssssssss", $nom_form, $prenom_form, $uname, $password, $email, $department, $am, $registered_at, $expires_at, $lang));
+		$last_id = $inscr_user;
 		$result=mysql_query("SELECT user_id, nom, prenom FROM `$mysqlMainDb`.user WHERE user_id='$last_id'");
 		while ($myrow = mysql_fetch_array($result)) {
 			$uid=$myrow[0];

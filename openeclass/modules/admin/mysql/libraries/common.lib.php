@@ -180,7 +180,7 @@ function PMA_displayMaximumUploadSize($max_upload_size)
  *
  * @access  public
  */
-function PMA_sqlAddslashes($a_string = '', $is_like = false, $crlf = false, $php_code = false)
+function PMA_sqlmysql_real_escape_string($a_string = '', $is_like = false, $crlf = false, $php_code = false)
 {
     if ($is_like) {
         $a_string = str_replace('\\', '\\\\\\\\', $a_string);
@@ -201,7 +201,7 @@ function PMA_sqlAddslashes($a_string = '', $is_like = false, $crlf = false, $php
     }
 
     return $a_string;
-} // end of the 'PMA_sqlAddslashes()' function
+} // end of the 'PMA_sqlmysql_real_escape_string()' function
 
 
 /**
@@ -500,7 +500,7 @@ function PMA_showHint($message, $bbcode = false, $type = 'notice')
  * @uses    PMA_generate_common_hidden_inputs()
  * @uses    PMA_generate_common_url()
  * @uses    PMA_showMySQLDocu()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_SQP_isError()
  * @uses    PMA_SQP_parse()
  * @uses    PMA_SQP_getErrorString()
@@ -1052,7 +1052,7 @@ function PMA_showMessage($message, $sql_query = null, $type = 'notice')
         if (! empty($GLOBALS['show_as_php'])) {
             $new_line = '\\n"<br />' . "\n"
                 . '&nbsp;&nbsp;&nbsp;&nbsp;. "';
-            $query_base = htmlspecialchars(addslashes($sql_query));
+            $query_base = htmlspecialchars(mysql_real_escape_string($sql_query));
             $query_base = preg_replace('/((\015\012)|(\015)|(\012))/', $new_line, $query_base);
         } else {
             $query_base = $sql_query;
@@ -1898,7 +1898,7 @@ function PMA_checkParameters($params, $die = true, $request = true)
  * @uses    $GLOBALS['analyzed_sql'][0]
  * @uses    PMA_DBI_field_flags()
  * @uses    PMA_backquote()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    stristr()
  * @uses    bin2hex()
  * @uses    preg_replace()
@@ -1992,7 +1992,7 @@ function PMA_getUniqueCondition($handle, $fields_cnt, $fields_meta, $row, $force
                     }
             } else {
                 $condition .= '= \''
-                    . PMA_sqlAddslashes($row[$i], false, true) . '\' AND';
+                    . PMA_sqlmysql_real_escape_string($row[$i], false, true) . '\' AND';
             }
         }
         if ($meta->primary_key > 0) {

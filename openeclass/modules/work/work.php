@@ -333,15 +333,25 @@ function submit_work($id) {
 			delete_submissions_by_uid(-1, $group_id, $id);
 			db_query("INSERT INTO assignment_submit
 				(uid, assignment_id, submission_date, submission_ip, file_path,
-				file_name, comments, group_id) VALUES ('$uid','$id', NOW(),
-				'$REMOTE_ADDR', '$filename','".$_FILES['userfile']['name'].
-				"', '$stud_comments', '$group_id')", $currentCourseID);
+				file_name, comments, group_id) VALUES ('".mysql_real_escape_string($uid)."',
+				'".mysql_real_escape_string($id)."',
+				NOW(),
+				'".mysql_real_escape_string($REMOTE_ADDR)."',
+				'".mysql_real_escape_string($filename)."',
+				'".mysql_real_escape_string($_FILES['userfile']['name'])."',
+				'".mysql_real_escape_string($stud_comments)."',
+				'".mysql_real_escape_string($group_id)."')", $currentCourseID);
 		} else {
 			db_query("INSERT INTO assignment_submit
 				(uid, assignment_id, submission_date, submission_ip, file_path,
-				file_name, comments) VALUES ('$uid','$id', NOW(), '$REMOTE_ADDR',
-				'$filename','".$_FILES['userfile']['name'].
-				"', '$stud_comments')", $currentCourseID);
+				file_name, comments) VALUES (
+				'".mysql_real_escape_string($uid)."',
+				'".mysql_real_escape_string($id)."',
+				NOW(), 
+				'".mysql_real_escape_string($REMOTE_ADDR)."',
+				'".mysql_real_escape_string($filename)."',
+				'".mysql_real_escape_string($_FILES['userfile']['name'])."',
+				'".mysql_real_escape_string($stud_comments)."')", $currentCourseID);
 		}
 
 		$tool_content .="<p class='success_small'>$msg2<br />$msg1<br /><a href='work.php'>$langBack</a></p><br />";
@@ -543,9 +553,9 @@ function edit_assignment($id)
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $_POST['title']);
 
-	if (db_query("UPDATE assignments SET title=".autoquote($_POST['title']).",
-		description=".autoquote($_POST['desc']).", group_submissions=".autoquote($_POST['group_submissions']).",
-		comments=".autoquote($_POST['comments']).", deadline=".autoquote($_POST['WorkEnd'])." WHERE id='$id'")) {
+	if (db_query("UPDATE assignments SET title= '".mysql_real_escape_string($_POST['title'])."',
+		description= '".mysql_real_escape_string($_POST['desc'])."', group_submissions= '".mysql_real_escape_string($_POST['group_submissions'])."',
+		comments= '".mysql_real_escape_string($_POST['comments'])."', deadline= '".mysql_real_escape_string($_POST['WorkEnd'])."' WHERE id='$id'")) {
 
         $title = autounquote($_POST['title']);
 	$tool_content .="<p class='success_small'>$langEditSuccess<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
@@ -672,7 +682,7 @@ function assignment_details($id, $row, $message = null)
 	$tool_content .= "
     <div id=\"operations_container\">
       <ul id=\"opslist\">
-        <li><a href=\"work.php?id=$id&amp;choice=do_delete\" onClick=\"return confirmation('".addslashes($row['title'])."');\">$langDelAssign</a></li>
+        <li><a href=\"work.php?id=$id&amp;choice=do_delete\" onClick=\"return confirmation('".mysql_real_escape_string($row['title'])."');\">$langDelAssign</a></li>
         <li><a href=\"work.php?download=$id\">$langZipDownload</a></li>
       </ul>
     </div>
@@ -1156,7 +1166,7 @@ cData;
       <td align='right'>
          <a href='work.php?id=$row[id]&amp;choice=edit'><img src='../../template/classic/img/edit.gif' alt='$m[edit]' /></a>";
 			$tool_content .= "
-         <a href='work.php?id=$row[id]&amp;choice=do_delete' onClick='return confirmation(\"".addslashes($row_title)."\");'><img src='../../template/classic/img/delete.gif' alt='$m[delete]' /></a>";
+         <a href='work.php?id=$row[id]&amp;choice=do_delete' onClick='return confirmation(\"".mysql_real_escape_string($row_title)."\");'><img src='../../template/classic/img/delete.gif' alt='$m[delete]' /></a>";
 
 			if ($row['active']) {
 				$deactivate_temp = htmlspecialchars($m['deactivate']);

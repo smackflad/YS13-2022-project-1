@@ -11,7 +11,7 @@
  * @uses    PMA_Table::generateFieldSpec()
  * @uses    PMA_checkParameters()
  * @uses    PMA_generateCharsetQueryPart()
- * @uses    PMA_sqlAddslashes()
+ * @uses    PMA_sqlmysql_real_escape_string()
  * @uses    PMA_DBI_try_query()
  * @uses    PMA_getRelationsParam()
  * @uses    PMA_setMIME()
@@ -212,10 +212,10 @@ if (isset($_REQUEST['do_save_data'])) {
         $sql_query .= PMA_generateCharsetQueryPart($_REQUEST['tbl_collation']);
     }
     if (!empty($_REQUEST['comment'])) {
-        $sql_query .= ' COMMENT = \'' . PMA_sqlAddslashes($_REQUEST['comment']) . '\'';
+        $sql_query .= ' COMMENT = \'' . PMA_sqlmysql_real_escape_string($_REQUEST['comment']) . '\'';
     }
     if (!empty($_REQUEST['partition_definition'])) {
-        $sql_query .= ' ' . PMA_sqlAddslashes($_REQUEST['partition_definition']);
+        $sql_query .= ' ' . PMA_sqlmysql_real_escape_string($_REQUEST['partition_definition']);
     }
     $sql_query .= ';';
 

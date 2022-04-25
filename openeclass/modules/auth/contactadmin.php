@@ -55,8 +55,8 @@ $userid = isset($_GET['userid'])?$_GET['userid']:(isset($_POST['id'])?$_POST['id
 $submit = isset($_POST['submit'])?$_POST['submit']:'';
 if(!empty($userid) && is_numeric($userid))
 {
-	$sql=mysql_query("SELECT * FROM user WHERE user_id='".$userid."'");
-	while ($m = mysql_fetch_array($sql)) 
+	$sql=run_Query("SELECT * FROM user WHERE user_id=?", array("s", $userid));
+	while ($m = $sql->fetch_array())
 	{
 		$sirname = $m["nom"];
 		$firstname = $m["prenom"];

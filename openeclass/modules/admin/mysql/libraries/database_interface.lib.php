@@ -232,7 +232,7 @@ function PMA_usort_comparison_callback($a, $b)
  * @uses    PMA_escape_mysql_wildcards()
  * @uses    PMA_backquote()
  * @uses    is_array()
- * @uses    addslashes()
+ * @uses    mysql_real_escape_string()
  * @uses    strpos()
  * @uses    strtoupper()
  * @param   string          $databases      database
@@ -267,12 +267,12 @@ function PMA_DBI_get_tables_full($database, $table = false, $tbl_is_group = fals
       if ($table) {
           if (true === $tbl_is_group) {
               $sql_where_table = 'AND `TABLE_NAME` LIKE \''
-                  . PMA_escape_mysql_wildcards(addslashes($table)) . '%\'';
+                  . PMA_escape_mysql_wildcards(mysql_real_escape_string($table)) . '%\'';
           } elseif ('comment' === $tbl_is_group) {
               $sql_where_table = 'AND `TABLE_COMMENT` LIKE \''
-                  . PMA_escape_mysql_wildcards(addslashes($table)) . '%\'';
+                  . PMA_escape_mysql_wildcards(mysql_real_escape_string($table)) . '%\'';
           } else {
-              $sql_where_table = 'AND `TABLE_NAME` = \'' . addslashes($table) . '\'';
+              $sql_where_table = 'AND `TABLE_NAME` = \'' . mysql_real_escape_string($table) . '\'';
           }
       } else {
           $sql_where_table = '';
@@ -285,7 +285,7 @@ function PMA_DBI_get_tables_full($database, $table = false, $tbl_is_group = fals
       // added BINARY in the WHERE clause to force a case sensitive
       // comparison (if we are looking for the db Aa we don't want
       // to find the db aa)
-      $this_databases = array_map('PMA_sqlAddslashes', $databases);
+      $this_databases = array_map('PMA_sqlmysql_real_escape_string', $databases);
 
       $sql = '
            SELECT *,
@@ -357,7 +357,7 @@ function PMA_DBI_get_tables_full($database, $table = false, $tbl_is_group = fals
             if (true === $tbl_is_group) {
                 $sql = 'SHOW TABLE STATUS FROM '
                     . PMA_backquote($each_database)
-                    .' LIKE \'' . PMA_escape_mysql_wildcards(addslashes($table)) . '%\'';
+                    .' LIKE \'' . PMA_escape_mysql_wildcards(mysql_real_escape_string($table)) . '%\'';
             } else {
                 $sql = 'SHOW TABLE STATUS FROM '
                     . PMA_backquote($each_database);
@@ -527,7 +527,7 @@ function PMA_DBI_get_databases_full($database = null, $force_stats = false,
         // get table information from information_schema
         if ($database) {
             $sql_where_schema = 'WHERE `SCHEMA_NAME` LIKE \''
-                . addslashes($database) . '\'';
+                . mysql_real_escape_string($database) . '\'';
         } else {
             $sql_where_schema = '';
         }
@@ -674,17 +674,17 @@ function PMA_DBI_get_columns_full($database = null, $table = null,
 
         // get columns information from information_schema
         if (null !== $database) {
-            $sql_wheres[] = '`TABLE_SCHEMA` = \'' . addslashes($database) . '\' ';
+            $sql_wheres[] = '`TABLE_SCHEMA` = \'' . mysql_real_escape_string($database) . '\' ';
         } else {
             $array_keys[] = 'TABLE_SCHEMA';
         }
         if (null !== $table) {
-            $sql_wheres[] = '`TABLE_NAME` = \'' . addslashes($table) . '\' ';
+            $sql_wheres[] = '`TABLE_NAME` = \'' . mysql_real_escape_string($table) . '\' ';
         } else {
             $array_keys[] = 'TABLE_NAME';
         }
         if (null !== $column) {
-            $sql_wheres[] = '`COLUMN_NAME` = \'' . addslashes($column) . '\' ';
+            $sql_wheres[] = '`COLUMN_NAME` = \'' . mysql_real_escape_string($column) . '\' ';
         } else {
             $array_keys[] = 'COLUMN_NAME';
         }
@@ -914,7 +914,7 @@ function PMA_DBI_postConnect($link, $is_controluser = false)
     if (! empty($GLOBALS['collation_connection'])) {
     	PMA_DBI_query("SET CHARACTER SET 'utf8';", $link, PMA_DBI_QUERY_STORE);
         $mysql_charset = explode('_', $GLOBALS['collation_connection']);
-        PMA_DBI_query("SET collation_connection = '" . PMA_sqlAddslashes($GLOBALS['collation_connection']) . "';", $link, PMA_DBI_QUERY_STORE);
+        PMA_DBI_query("SET collation_connection = '" . PMA_sqlmysql_real_escape_string($GLOBALS['collation_connection']) . "';", $link, PMA_DBI_QUERY_STORE);
     } else {
         PMA_DBI_query("SET NAMES 'utf8' COLLATE 'utf8_general_ci';", $link, PMA_DBI_QUERY_STORE);
     }
@@ -1325,7 +1325,7 @@ function PMA_DBI_get_triggers($db, $table)
     // Note: in http://dev.mysql.com/doc/refman/5.0/en/faqs-triggers.html
     // their example uses WHERE TRIGGER_SCHEMA='dbname' so let's use this
     // instead of WHERE EVENT_OBJECT_SCHEMA='dbname'
-    $triggers = PMA_DBI_fetch_result("SELECT TRIGGER_SCHEMA, TRIGGER_NAME, EVENT_MANIPULATION, ACTION_TIMING, ACTION_STATEMENT, EVENT_OBJECT_SCHEMA, EVENT_OBJECT_TABLE FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA= '" . PMA_sqlAddslashes($db,true) . "' and EVENT_OBJECT_TABLE = '" . PMA_sqlAddslashes($table, true) . "';");
+    $triggers = PMA_DBI_fetch_result("SELECT TRIGGER_SCHEMA, TRIGGER_NAME, EVENT_MANIPULATION, ACTION_TIMING, ACTION_STATEMENT, EVENT_OBJECT_SCHEMA, EVENT_OBJECT_TABLE FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA= '" . PMA_sqlmysql_real_escape_string($db,true) . "' and EVENT_OBJECT_TABLE = '" . PMA_sqlmysql_real_escape_string($table, true) . "';");
 
     if ($triggers) {
         $delimiter = '//';

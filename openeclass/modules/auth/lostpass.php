@@ -57,14 +57,11 @@ function check_password_editable($password)
 if (isset($_REQUEST['do']) && $_REQUEST['do'] == "go") {
 	$userUID = (int)$_REQUEST['u'];
 	$hash = $_REQUEST['h'];
-	$res = db_query("SELECT `user_id`, `hash`, `password`, `datetime` FROM passwd_reset
-			WHERE `user_id` = '" . mysql_escape_string($userUID) . "'
-			AND `hash` = '" . mysql_escape_string($hash) . "'
-			AND TIME_TO_SEC(TIMEDIFF(`datetime`,NOW())) < 3600
-			", $mysqlMainDb);
+	$res = run_Query("SELECT `user_id`, `hash`, `password`, `datetime` FROM passwd_reset
+			WHERE `user_id` = ? AND `hash` = ? AND TIME_TO_SEC(TIMEDIFF(`datetime`,NOW())) < 3600", array("ss", $userUID, $hash));
 
-	if (mysql_num_rows($res) == 1) {
-		$myrow = mysql_fetch_array($res);
+	if ($res->num_rows == 1) {
+		$myrow = $res->fetch_array();
 		//copy pass hash (md5) from reset_pass to user table
 		$sql = "UPDATE `user` SET `password` = '".$myrow['hash']."' WHERE `user_id` = ".$myrow['user_id']."";
 		if(db_query($sql, $mysqlMainDb)) {
@@ -130,16 +127,15 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == "go") {
 
 } elseif (!isset($_REQUEST['do'])) {
 	/***** If valid e-mail address was entered, find user and send email *****/
-	$res = db_query("SELECT user_id, nom, prenom, username, password, statut FROM user
-			WHERE email = '" . mysql_escape_string($email) . "'
-			AND BINARY username = '" . mysql_escape_string($userName) . "'", $mysqlMainDb);
+	$res = run_Query("SELECT user_id, nom, prenom, username, password, statut FROM user
+			WHERE email = ? AND BINARY username = ?", array("ss", $email, $userName));
 
         $found_editable_password = false;
-	if (mysql_num_rows($res) == 1) {
+	if ($res->num_rows == 1) {
 		$text = $langPassResetIntro. $emailhelpdesk;
 		$text .= "$langHowToResetTitle";
 
-		while ($s = mysql_fetch_array($res, MYSQL_ASSOC)) {
+		while ($s = $res->fetch_array(MYSQL_ASSOC)) {
 			$is_editable = check_password_editable($s['password']);
 			if($is_editable) {
                                 $found_editable_password = true;
@@ -147,8 +143,8 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == "go") {
 				$new_pass = create_pass();
 				//TODO: add a query to check if the newly generated password already exists in the
 				//reset-pass table. If yes, attempt to generate another one.
-				$sql = "INSERT INTO `passwd_reset` (`user_id`, `hash`, `password`, `datetime`) VALUES ('".$s['user_id']."',  '".md5($new_pass)."', '$new_pass', NOW())";
-				db_query($sql, $mysqlMainDb);
+				$sql = "INSERT INTO `passwd_reset` (`user_id`, `hash`, `password`, `datetime`) VALUES (?,  ?, ?, NOW())";
+				run_Query($sql, array("sss", $s['user_id'], md5($new_pass), $new_pass));
 				//prepare instruction for password reset
 				$text .= $langPassResetGoHere;
 				$text .= $urlServer . "modules/auth/lostpass.php?do=go&u=".$s['user_id']."&h=" .md5($new_pass);

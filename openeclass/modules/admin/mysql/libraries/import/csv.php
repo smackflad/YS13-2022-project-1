@@ -291,7 +291,7 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
                 if ($val === null) {
                     $sql .= 'NULL';
                 } else {
-                    $sql .= '\'' . addslashes($val) . '\'';
+                    $sql .= '\'' . mysql_real_escape_string($val) . '\'';
                 }
 
                 $first = FALSE;

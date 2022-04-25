@@ -30,7 +30,7 @@
  * @uses    uksort()
  * @uses    strnatcasecmp()
  * @uses    count()
- * @uses    addslashes()
+ * @uses    mysql_real_escape_string()
  * @version $Id: db_info.inc.php 12142 2008-12-16 17:13:12Z lem9 $
  * @package phpMyAdmin
  */
@@ -157,7 +157,7 @@ if (true === $cfg['SkipLockedTables']) {
                     if (!isset($sot_cache[$tmp[0]])) {
                         $sts_result  = PMA_DBI_query(
                             'SHOW TABLE STATUS FROM ' . PMA_backquote($db)
-                             . ' LIKE \'' . addslashes($tmp[0]) . '\';');
+                             . ' LIKE \'' . mysql_real_escape_string($tmp[0]) . '\';');
                         $sts_tmp     = PMA_DBI_fetch_assoc($sts_result);
                         PMA_DBI_free_result($sts_result);
                         unset($sts_result);

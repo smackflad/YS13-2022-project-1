@@ -289,23 +289,23 @@ function PMA_displayPrivTable($db = '*', $table = '*', $submit = TRUE)
         if ($db == '*') {
             $sql_query =
                  "SELECT * FROM `mysql`.`user`"
-                ." WHERE `User` = '" . PMA_sqlAddslashes($username) . "'"
-                ." AND `Host` = '" . PMA_sqlAddslashes($hostname) . "';";
+                ." WHERE `User` = '" . PMA_sqlmysql_real_escape_string($username) . "'"
+                ." AND `Host` = '" . PMA_sqlmysql_real_escape_string($hostname) . "';";
         } elseif ($table == '*') {
             $sql_query =
                 "SELECT * FROM `mysql`.`db`"
-                ." WHERE `User` = '" . PMA_sqlAddslashes($username) . "'"
-                ." AND `Host` = '" . PMA_sqlAddslashes($hostname) . "'"
+                ." WHERE `User` = '" . PMA_sqlmysql_real_escape_string($username) . "'"
+                ." AND `Host` = '" . PMA_sqlmysql_real_escape_string($hostname) . "'"
                 ." AND '" . PMA_unescape_mysql_wildcards($db) . "'"
                 ." LIKE `Db`;";
         } else {
             $sql_query =
                 "SELECT `Table_priv`"
                 ." FROM `mysql`.`tables_priv`"
-                ." WHERE `User` = '" . PMA_sqlAddslashes($username) . "'"
-                ." AND `Host` = '" . PMA_sqlAddslashes($hostname) . "'"
+                ." WHERE `User` = '" . PMA_sqlmysql_real_escape_string($username) . "'"
+                ." AND `Host` = '" . PMA_sqlmysql_real_escape_string($hostname) . "'"
                 ." AND `Db` = '" . PMA_unescape_mysql_wildcards($db) . "'"
-                ." AND `Table_name` = '" . PMA_sqlAddslashes($table) . "';";
+                ." AND `Table_name` = '" . PMA_sqlmysql_real_escape_string($table) . "';";
         }
         $row = PMA_DBI_fetch_single_row($sql_query);
     }
@@ -369,13 +369,13 @@ function PMA_displayPrivTable($db = '*', $table = '*', $submit = TRUE)
             'SELECT `Column_name`, `Column_priv`'
             .' FROM `mysql`.`columns_priv`'
             .' WHERE `User`'
-            .' = \'' . PMA_sqlAddslashes($username) . "'"
+            .' = \'' . PMA_sqlmysql_real_escape_string($username) . "'"
             .' AND `Host`'
-            .' = \'' . PMA_sqlAddslashes($hostname) . "'"
+            .' = \'' . PMA_sqlmysql_real_escape_string($hostname) . "'"
             .' AND `Db`'
             .' = \'' . PMA_unescape_mysql_wildcards($db) . "'"
             .' AND `Table_name`'
-            .' = \'' . PMA_sqlAddslashes($table) . '\';');
+            .' = \'' . PMA_sqlmysql_real_escape_string($table) . '\';');
 
         while ($row1 = PMA_DBI_fetch_row($res)) {
             $row1[1] = explode(',', $row1[1]);
@@ -701,7 +701,7 @@ function PMA_displayLoginInformationFields($mode = 'new')
         }
     }
     echo '    onchange="if (this.value == \'any\') { hostname.value = \'%\'; } else if (this.value == \'localhost\') { hostname.value = \'localhost\'; } '
-       . (empty($thishost) ? '' : 'else if (this.value == \'thishost\') { hostname.value = \'' . addslashes(htmlspecialchars($thishost)) . '\'; } ')
+       . (empty($thishost) ? '' : 'else if (this.value == \'thishost\') { hostname.value = \'' . mysql_real_escape_string(htmlspecialchars($thishost)) . '\'; } ')
        . 'else if (this.value == \'hosttable\') { hostname.value = \'\'; } else if (this.value == \'userdefined\') { hostname.focus(); hostname.select(); }">' . "\n";
     unset($_current_user);
 
@@ -797,7 +797,7 @@ function PMA_displayLoginInformationFields($mode = 'new')
 if (isset($_REQUEST['change_copy'])) {
     $user_host_condition =
         ' WHERE `User`'
-        .' = \'' . PMA_sqlAddslashes($old_username) . "'"
+        .' = \'' . PMA_sqlmysql_real_escape_string($old_username) . "'"
         .' AND `Host`'
         .' = \'' . $old_hostname . '\';';
     $row = PMA_DBI_fetch_single_row('SELECT * FROM `mysql`.`user` ' . $user_host_condition);
@@ -843,25 +843,25 @@ if (isset($_REQUEST['adduser_submit']) || isset($_REQUEST['change_copy'])) {
             break;
     }
     $sql = "SELECT '1' FROM `mysql`.`user`"
-        . " WHERE `User` = '" . PMA_sqlAddslashes($username) . "'"
-        . " AND `Host` = '" . PMA_sqlAddslashes($hostname) . "';";
+        . " WHERE `User` = '" . PMA_sqlmysql_real_escape_string($username) . "'"
+        . " AND `Host` = '" . PMA_sqlmysql_real_escape_string($hostname) . "';";
     if (PMA_DBI_fetch_value($sql) == 1) {
         $message = PMA_Message::error('strUserAlreadyExists');
         $message->addParam('[i]\'' . $username . '\'@\'' . $hostname . '\'[/i]');
         $_REQUEST['adduser'] = true;
     } else {
 
-        $create_user_real = 'CREATE USER \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\'';
+        $create_user_real = 'CREATE USER \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\'';
 
         $real_sql_query =
             'GRANT ' . join(', ', PMA_extractPrivInfo()) . ' ON *.* TO \''
-            . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\'';
+            . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\'';
         if ($pred_password != 'none' && $pred_password != 'keep') {
             $sql_query = $real_sql_query . ' IDENTIFIED BY \'***\'';
-            $real_sql_query .= ' IDENTIFIED BY \'' . PMA_sqlAddslashes($pma_pw) . '\'';
+            $real_sql_query .= ' IDENTIFIED BY \'' . PMA_sqlmysql_real_escape_string($pma_pw) . '\'';
             if (isset($create_user_real)) {
                 $create_user_show = $create_user_real . ' IDENTIFIED BY \'***\'';
-                $create_user_real .= ' IDENTIFIED BY \'' . PMA_sqlAddslashes($pma_pw) . '\'';
+                $create_user_real .= ' IDENTIFIED BY \'' . PMA_sqlmysql_real_escape_string($pma_pw) . '\'';
             }
         } else {
             if ($pred_password == 'keep' && !empty($password)) {
@@ -936,7 +936,7 @@ if (isset($_REQUEST['adduser_submit']) || isset($_REQUEST['change_copy'])) {
                 case '1' :
                     // Create database with same name and grant all privileges
                     $q = 'CREATE DATABASE IF NOT EXISTS '
-                        . PMA_backquote(PMA_sqlAddslashes($username)) . ';';
+                        . PMA_backquote(PMA_sqlmysql_real_escape_string($username)) . ';';
                     $sql_query .= $q;
                     if (! PMA_DBI_try_query($q)) {
                         $message = PMA_Message::rawError(PMA_DBI_getError());
@@ -946,8 +946,8 @@ if (isset($_REQUEST['adduser_submit']) || isset($_REQUEST['change_copy'])) {
                     PMA_reloadNavigation();
 
                     $q = 'GRANT ALL PRIVILEGES ON '
-                        . PMA_backquote(PMA_sqlAddslashes($username)) . '.* TO \''
-                        . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\';';
+                        . PMA_backquote(PMA_sqlmysql_real_escape_string($username)) . '.* TO \''
+                        . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\';';
                     $sql_query .= $q;
                     if (! PMA_DBI_try_query($q)) {
                         $message = PMA_Message::rawError(PMA_DBI_getError());
@@ -956,8 +956,8 @@ if (isset($_REQUEST['adduser_submit']) || isset($_REQUEST['change_copy'])) {
                 case '2' :
                     // Grant all privileges on wildcard name (username\_%)
                     $q = 'GRANT ALL PRIVILEGES ON '
-                        . PMA_backquote(PMA_sqlAddslashes($username) . '\_%') . '.* TO \''
-                        . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\';';
+                        . PMA_backquote(PMA_sqlmysql_real_escape_string($username) . '\_%') . '.* TO \''
+                        . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\';';
                     $sql_query .= $q;
                     if (! PMA_DBI_try_query($q)) {
                         $message = PMA_Message::rawError(PMA_DBI_getError());
@@ -966,8 +966,8 @@ if (isset($_REQUEST['adduser_submit']) || isset($_REQUEST['change_copy'])) {
                 case '3' :
                     // Grant all privileges on the specified database to the new user
                     $q = 'GRANT ALL PRIVILEGES ON '
-                    . PMA_backquote(PMA_sqlAddslashes($dbname)) . '.* TO \''
-                    . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\';';
+                    . PMA_backquote(PMA_sqlmysql_real_escape_string($dbname)) . '.* TO \''
+                    . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\';';
                     $sql_query .= $q;
                     if (! PMA_DBI_try_query($q)) {
                     $message = PMA_Message::rawError(PMA_DBI_getError());
@@ -1002,7 +1002,7 @@ if (isset($_REQUEST['adduser_submit']) || isset($_REQUEST['change_copy'])) {
 if (isset($_REQUEST['change_copy'])) {
     $user_host_condition =
         ' WHERE `User`'
-        .' = \'' . PMA_sqlAddslashes($old_username) . "'"
+        .' = \'' . PMA_sqlmysql_real_escape_string($old_username) . "'"
         .' AND `Host`'
         .' = \'' . $old_hostname . '\';';
     $res = PMA_DBI_query('SELECT * FROM `mysql`.`db`' . $user_host_condition);
@@ -1010,7 +1010,7 @@ if (isset($_REQUEST['change_copy'])) {
         $queries[] =
             'GRANT ' . join(', ', PMA_extractPrivInfo($row))
             .' ON ' . PMA_backquote($row['Db']) . '.*'
-            .' TO \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\''
+            .' TO \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\''
             . ($row['Grant_priv'] == 'Y' ? ' WITH GRANT OPTION;' : ';');
     }
     PMA_DBI_free_result($res);
@@ -1024,7 +1024,7 @@ if (isset($_REQUEST['change_copy'])) {
             'SELECT `Column_name`, `Column_priv`'
             .' FROM `mysql`.`columns_priv`'
             .' WHERE `User`'
-            .' = \'' . PMA_sqlAddslashes($old_username) . "'"
+            .' = \'' . PMA_sqlmysql_real_escape_string($old_username) . "'"
             .' AND `Host`'
             .' = \'' . $old_hostname . '\''
             .' AND `Db`'
@@ -1074,7 +1074,7 @@ if (isset($_REQUEST['change_copy'])) {
         $queries[] =
             'GRANT ' . join(', ', $tmp_privs1)
             . ' ON ' . PMA_backquote($row['Db']) . '.' . PMA_backquote($row['Table_name'])
-            . ' TO \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\''
+            . ' TO \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\''
             . (in_array('Grant', explode(',', $row['Table_priv'])) ? ' WITH GRANT OPTION;' : ';');
     }
 }
@@ -1088,11 +1088,11 @@ if (!empty($update_privs)) {
 
     $sql_query0 =
         'REVOKE ALL PRIVILEGES ON ' . $db_and_table
-        . ' FROM \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\';';
+        . ' FROM \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\';';
     if (!isset($Grant_priv) || $Grant_priv != 'Y') {
         $sql_query1 =
             'REVOKE GRANT OPTION ON ' . $db_and_table
-            . ' FROM \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\';';
+            . ' FROM \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\';';
     } else {
         $sql_query1 = '';
     }
@@ -1103,7 +1103,7 @@ if (!empty($update_privs)) {
         $sql_query2 =
             'GRANT ' . join(', ', PMA_extractPrivInfo())
             . ' ON ' . $db_and_table
-            . ' TO \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\'';
+            . ' TO \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\'';
 
         /**
          * @todo similar code appears twice in this script
@@ -1206,8 +1206,8 @@ if (isset($_REQUEST['change_pw'])) {
                       . 'PASSWORD';
 
         // in $sql_query which will be displayed, hide the password
-        $sql_query        = 'SET PASSWORD FOR \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\' = ' . (($pma_pw == '') ? '\'\'' : $hashing_function . '(\'' . preg_replace('@.@s', '*', $pma_pw) . '\')');
-        $local_query      = 'SET PASSWORD FOR \'' . PMA_sqlAddslashes($username) . '\'@\'' . $hostname . '\' = ' . (($pma_pw == '') ? '\'\'' : $hashing_function . '(\'' . PMA_sqlAddslashes($pma_pw) . '\')');
+        $sql_query        = 'SET PASSWORD FOR \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\' = ' . (($pma_pw == '') ? '\'\'' : $hashing_function . '(\'' . preg_replace('@.@s', '*', $pma_pw) . '\')');
+        $local_query      = 'SET PASSWORD FOR \'' . PMA_sqlmysql_real_escape_string($username) . '\'@\'' . $hostname . '\' = ' . (($pma_pw == '') ? '\'\'' : $hashing_function . '(\'' . PMA_sqlmysql_real_escape_string($pma_pw) . '\')');
         PMA_DBI_try_query($local_query)
             or PMA_mysqlDie(PMA_DBI_getError(), $sql_query, FALSE, $err_url);
         $message = PMA_Message::success('strPasswordChanged');
@@ -1231,7 +1231,7 @@ if (isset($_REQUEST['delete']) || (isset($_REQUEST['change_copy']) && $_REQUEST[
     foreach ($selected_usr as $each_user) {
         list($this_user, $this_host) = explode('&amp;#27;', $each_user);
         $queries[] = '# ' . sprintf($GLOBALS['strDeleting'], '\'' . $this_user . '\'@\'' . $this_host . '\'') . ' ...';
-        $queries[] = 'DROP USER \'' . PMA_sqlAddslashes($this_user) . '\'@\'' . $this_host . '\';';
+        $queries[] = 'DROP USER \'' . PMA_sqlmysql_real_escape_string($this_user) . '\'@\'' . $this_host . '\';';
 
         if (isset($_REQUEST['drop_users_db'])) {
             $queries[] = 'DROP DATABASE IF EXISTS ' . PMA_backquote($this_user) . ';';
@@ -1615,8 +1615,8 @@ if (empty($_REQUEST['adduser']) && (! isset($checkprivs) || ! strlen($checkprivs
 
 
         $sql = "SELECT '1' FROM `mysql`.`user`"
-            . " WHERE `User` = '" . PMA_sqlAddslashes($username) . "'"
-            . " AND `Host` = '" . PMA_sqlAddslashes($hostname) . "';";
+            . " WHERE `User` = '" . PMA_sqlmysql_real_escape_string($username) . "'"
+            . " AND `Host` = '" . PMA_sqlmysql_real_escape_string($hostname) . "';";
         $user_does_not_exists = (bool) ! PMA_DBI_fetch_value($sql);
         unset($sql);
         if ($user_does_not_exists) {
@@ -1668,9 +1668,9 @@ if (empty($_REQUEST['adduser']) && (! isset($checkprivs) || ! strlen($checkprivs
 
             $user_host_condition =
                 ' WHERE `User`'
-                . ' = \'' . PMA_sqlAddslashes($username) . "'"
+                . ' = \'' . PMA_sqlmysql_real_escape_string($username) . "'"
                 . ' AND `Host`'
-                . ' = \'' . PMA_sqlAddslashes($hostname) . "'";
+                . ' = \'' . PMA_sqlmysql_real_escape_string($hostname) . "'";
 
             // table body
             // get data
@@ -2067,7 +2067,7 @@ if (empty($_REQUEST['adduser']) && (! isset($checkprivs) || ! strlen($checkprivs
     $sql_query =
         '(SELECT ' . $list_of_privileges . ', `Db`'
         .' FROM `mysql`.`db`'
-        .' WHERE \'' . PMA_sqlAddslashes($checkprivs) . "'"
+        .' WHERE \'' . PMA_sqlmysql_real_escape_string($checkprivs) . "'"
         .' LIKE `Db`'
         .' AND NOT (' . $list_of_compared_privileges. ')) '
         .'UNION '

@@ -511,3 +511,33 @@ function lang_select_options($name, $onchange_js = '', $default_langcode = false
 	return selection($native_language_names, $name, $default_langcode, $onchange_js);
 }
 
+function run_Query($query, $params, $db_){
+    global $mysqlServer, $mysqlUser, $mysqlPassword,$mysqlMainDb;
+    if(!isset($db_)){
+        $db_=$mysqlMainDb;
+    }
+    $sqlLogin= $query;
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$db_);
+    $conn->query("SET NAMES utf8");
+    $stmt=$conn->prepare($sqlLogin);
+    $tmp = array();
+    foreach($params as $key => $value) $tmp[$key] = &$params[$key];
+    call_user_func_array(array($stmt, 'bind_param'), $tmp);
+    $stmt->execute();
+    $result = $stmt->get_result();
+//        echo "<script>alert('$result->num_rows');</script>";
+    $conn->close();
+    $stmt->close();
+    if($stmt->error){
+        return false;
+    }else {
+        if($result){
+            return $result;
+        }else{
+            if($stmt->insert_id){
+                return $stmt->insert_id;
+            }
+            return true;
+        }
+    }
+}

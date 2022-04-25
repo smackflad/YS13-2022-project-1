@@ -238,7 +238,7 @@ if (isset($primary_keys)) {
 <!-- Insert/Edit form -->
 <form method="post" action="tbl_replace.php" name="insertForm" <?php if ($is_upload) { echo ' enctype="multipart/form-data"'; } ?>>
 <?php
-echo PMA_generate_common_hidden_inputs($_form_params);
+echo htmlspecialchars(PMA_generate_common_hidden_inputs($_form_params), ENT_QUOTES);
 
 $titles['Browse'] = PMA_getIcon('b_browse.png', $strBrowseForeignValues);
 
@@ -412,11 +412,11 @@ foreach ($rows as $row_id => $vrow) {
         ?>
         <tr class="<?php echo $odd_row ? 'odd' : 'even'; ?>">
             <td <?php echo ($cfg['LongtextDoubleTextarea'] && strstr($field['True_Type'], 'longtext') ? 'rowspan="2"' : ''); ?> align="center">
-                <?php echo $field['Field_title']; ?>
-                <input type="hidden" name="fields_name<?php echo $field_name_appendix; ?>" value="<?php echo $field['Field_html']; ?>"/>
+                <?php echo htmlspecialchars($field['Field_title'], ENT_QUOTES); ?>
+                <input type="hidden" name="fields_name<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="<?php echo htmlspecialchars($field['Field_html'], ENT_QUOTES); ?>"/>
             </td>
-            <td align="center"<?php echo $field['wrap']; ?>>
-                <?php echo $field['pma_type']; ?>
+            <td align="center"<?php echo htmlspecialchars($field['wrap'], ENT_QUOTES); ?>>
+                <?php echo htmlspecialchars($field['pma_type'], ENT_QUOTES); ?>
             </td>
 
         <?php
@@ -491,7 +491,7 @@ foreach ($rows as $row_id => $vrow) {
             } else {
                 ?>
             <td>
-                <select name="funcs<?php echo $field_name_appendix; ?>" <?php echo $unnullify_trigger; ?> tabindex="<?php echo ($tabindex + $tabindex_for_function); ?>" id="field_<?php echo $idindex; ?>_1">
+                <select name="funcs<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" <?php echo $unnullify_trigger; ?> tabindex="<?php echo ($tabindex + $tabindex_for_function); ?>" id="field_<?php echo $idindex; ?>_1">
                     <option></option>
                 <?php
                 $selected     = '';
@@ -576,7 +576,7 @@ foreach ($rows as $row_id => $vrow) {
         $foreignData = PMA_getForeignData($foreigners, $field['Field'], false, '', '');
         echo '        <td>' . "\n";
         if ($field['Null'] == 'YES') {
-            echo '            <input type="hidden" name="fields_null_prev' . $field_name_appendix . '"';
+            echo '            <input type="hidden" name="fields_null_prev' . htmlspecialchars($field_name_appendix, ENT_QUOTES) . '"';
             if ($real_null_value && !$field['first_timestamp']) {
                 echo ' value="on"';
             }
@@ -585,7 +585,7 @@ foreach ($rows as $row_id => $vrow) {
             if (!(($cfg['ProtectBinary'] && $field['is_blob']) || ($cfg['ProtectBinary'] == 'all' && $field['is_binary']))) {
 
                 echo '            <input type="checkbox" tabindex="' . ($tabindex + $tabindex_for_null) . '"'
-                     . ' name="fields_null' . $field_name_appendix . '"';
+                     . ' name="fields_null' . htmlspecialchars($field_name_appendix, ENT_QUOTES) . '"';
                 if ($real_null_value && !$field['first_timestamp']) {
                     echo ' checked="checked"';
                 }
@@ -611,7 +611,7 @@ foreach ($rows as $row_id => $vrow) {
                 $onclick         .= '\'' . PMA_escapeJsString($field['Field_html']) . '\', \'' . $field['Field_md5'] . '\', \'' . PMA_escapeJsString($vkey) . '\'); this.checked = true}; return true" />' . "\n";
                 echo $onclick;
             } else {
-                echo '            <input type="hidden" name="fields_null' . $field_name_appendix . '"';
+                echo '            <input type="hidden" name="fields_null' . htmlspecialchars($field_name_appendix, ENT_QUOTES) . '"';
                 if ($real_null_value && !$field['first_timestamp']) {
                     echo ' value="on"';
                 }
@@ -629,11 +629,11 @@ foreach ($rows as $row_id => $vrow) {
         if ($foreignData['foreign_link'] == true) {
             echo $backup_field . "\n";
             ?>
-            <input type="hidden" name="fields_type<?php echo $field_name_appendix; ?>"
+            <input type="hidden" name="fields_type<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                 value="foreign" />
-            <input type="hidden" name="fields<?php echo $field_name_appendix; ?>"
+            <input type="hidden" name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                 value="" id="field_<?php echo ($idindex); ?>_3A" />
-            <input type="text" name="field_<?php echo $field_name_appendix_md5; ?>"
+            <input type="text" name="field_<?php echo htmlspecialchars($field_name_appendix_md5, ENT_QUOTES); ?>"
                 class="textfield" <?php echo $unnullify_trigger; ?>
                 tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
                 id="field_<?php echo ($idindex); ?>_3"
@@ -642,7 +642,7 @@ foreach ($rows as $row_id => $vrow) {
             //<![CDATA[
                 document.writeln('<a target="_blank" onclick="window.open(this.href, \'foreigners\', \'width=640,height=240,scrollbars=yes,resizable=yes\'); return false"');
                 document.write(' href="browse_foreigners.php?');
-                document.write('<?php echo PMA_generate_common_url($db, $table); ?>');
+                document.write('<?php echo htmlspecialchars(PMA_generate_common_url($db, $table), ENT_QUOTES); ?>');
                 document.writeln('&amp;field=<?php echo PMA_escapeJsString(urlencode($field['Field']) . $browse_foreigners_uri); ?>">');
                 document.writeln('<?php echo str_replace("'", "\'", $titles['Browse']); ?></a>');
             //]]>
@@ -651,15 +651,15 @@ foreach ($rows as $row_id => $vrow) {
         } elseif (is_array($foreignData['disp_row'])) {
             echo $backup_field . "\n";
             ?>
-            <input type="hidden" name="fields_type<?php echo $field_name_appendix; ?>"
+            <input type="hidden" name="fields_type<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                 value="foreign" />
-            <input type="hidden" name="fields<?php echo $field_name_appendix; ?>"
+            <input type="hidden" name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                 value="" id="field_<?php echo $idindex; ?>_3A" />
-            <select name="field_<?php echo $field_name_appendix_md5; ?>"
+            <select name="field_<?php echo htmlspecialchars($field_name_appendix_md5, ENT_QUOTES); ?>"
                 <?php echo $unnullify_trigger; ?>
                 tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
                 id="field_<?php echo ($idindex); ?>_3">
-                <?php echo PMA_foreignDropdown($foreignData['disp_row'], $foreignData['foreign_field'], $foreignData['foreign_display'], $data, $cfg['ForeignKeyMaxLimit']); ?>
+                <?php echo htmlspecialchars(PMA_foreignDropdown($foreignData['disp_row'], $foreignData['foreign_field'], $foreignData['foreign_display'], $data, $cfg['ForeignKeyMaxLimit']), ENT_QUOTES); ?>
             </select>
             <?php
                 // still needed? :
@@ -671,26 +671,26 @@ foreach ($rows as $row_id => $vrow) {
         <tr class="<?php echo $odd_row ? 'odd' : 'even'; ?>">
             <td colspan="5" align="right">
                 <?php echo $backup_field . "\n"; ?>
-                <textarea name="fields<?php echo $field_name_appendix; ?>"
+                <textarea name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                     rows="<?php echo ($cfg['TextareaRows']*2); ?>"
                     cols="<?php echo ($cfg['TextareaCols']*2); ?>"
                     dir="<?php echo $text_dir; ?>"
                     id="field_<?php echo ($idindex); ?>_3"
                     <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
-                    ><?php echo $special_chars_encoded; ?></textarea>
+                    ><?php echo htmlspecialchars($special_chars_encoded, ENT_QUOTES); ?></textarea>
           <?php
         } elseif (strstr($field['pma_type'], 'text')) {
             echo $backup_field . "\n";
             ?>
-                <textarea name="fields<?php echo $field_name_appendix; ?>"
+                <textarea name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                     rows="<?php echo $cfg['TextareaRows']; ?>"
                     cols="<?php echo $cfg['TextareaCols']; ?>"
                     dir="<?php echo $text_dir; ?>"
                     id="field_<?php echo ($idindex); ?>_3"
                     <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
-                    ><?php echo $special_chars_encoded; ?></textarea>
+                    ><?php echo htmlspecialchars($special_chars_encoded, ENT_QUOTES); ?></textarea>
             <?php
             echo "\n";
             if (strlen($special_chars) > 32000) {
@@ -711,15 +711,15 @@ foreach ($rows as $row_id => $vrow) {
             }
             $field_enum_values = $table_fields[$i]['values'];
             ?>
-                <input type="hidden" name="fields_type<?php echo $field_name_appendix; ?>" value="enum" />
-                <input type="hidden" name="fields<?php echo $field_name_appendix; ?>" value="" />
+                <input type="hidden" name="fields_type<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="enum" />
+                <input type="hidden" name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="" />
             <?php
             echo "\n" . '            ' . $backup_field . "\n";
 
             // show dropdown or radio depend on length
             if (strlen($field['Type']) > 20) {
                 ?>
-                <select name="field_<?php echo $field_name_appendix_md5; ?>"
+                <select name="field_<?php echo htmlspecialchars($field_name_appendix_md5, ENT_QUOTES); ?>"
                     <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
                     id="field_<?php echo ($idindex); ?>_3">
@@ -729,7 +729,7 @@ foreach ($rows as $row_id => $vrow) {
 
                 foreach ($field_enum_values as $enum_value) {
                     echo '                ';
-                    echo '<option value="' . $enum_value['html'] . '"';
+                    echo '<option value="' . htmlspecialchars($enum_value['html'], ENT_QUOTES) . '"';
                     if ($data == $enum_value['plain']
                      || ($data == ''
                       && (! isset($primary_key) || $field['Null'] != 'YES')
@@ -737,7 +737,7 @@ foreach ($rows as $row_id => $vrow) {
                       && $enum_value['plain'] == $field['Default'])) {
                         echo ' selected="selected"';
                     }
-                    echo '>' . $enum_value['html'] . '</option>' . "\n";
+                    echo '>' . htmlspecialchars($enum_value['html'], ENT_QUOTES) . '</option>' . "\n";
                 } // end for
 
                 ?>
@@ -747,8 +747,8 @@ foreach ($rows as $row_id => $vrow) {
                 $j = 0;
                 foreach ($field_enum_values as $enum_value) {
                     echo '            ';
-                    echo '<input type="radio" name="field_' . $field_name_appendix_md5 . '"';
-                    echo ' value="' . $enum_value['html'] . '"';
+                    echo '<input type="radio" name="field_' . htmlspecialchars($field_name_appendix_md5, ENT_QUOTES) . '"';
+                    echo ' value="' . htmlspecialchars($enum_value['html'], ENT_QUOTES) . '"';
                     echo ' id="field_' . ($idindex) . '_3_'  . $j . '"';
                     echo $unnullify_trigger;
                     if ($data == $enum_value['plain']
@@ -759,8 +759,8 @@ foreach ($rows as $row_id => $vrow) {
                         echo ' checked="checked"';
                     }
                     echo ' tabindex="' . ($tabindex + $tabindex_for_value) . '" />';
-                    echo '<label for="field_' . $idindex . '_3_' . $j . '">'
-                        . $enum_value['html'] . '</label>' . "\n";
+                    echo '<label for="field_' . htmlspecialchars($idindex, ENT_QUOTES) . '_3_' . $j . '">'
+                        . htmlspecialchars($enum_value['html'], ENT_QUOTES) . '</label>' . "\n";
                     $j++;
                 } // end for
             } // end else
@@ -781,21 +781,21 @@ foreach ($rows as $row_id => $vrow) {
             $vset = array_flip(explode(',', $data));
             echo $backup_field . "\n";
             ?>
-                <input type="hidden" name="fields_type<?php echo $field_name_appendix; ?>" value="set" />
-                <input type="hidden" name="fields<?php echo $field_name_appendix; ?>" value="" />
-                <select name="field_<?php echo $field_name_appendix_md5; ?>"
-                    size="<?php echo $select_size; ?>"
+                <input type="hidden" name="fields_type<?php htmlspecialchars(echo $field_name_appendix, ENT_QUOTES); ?>" value="set" />
+                <input type="hidden" name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="" />
+                <select name="field_<?php echo htmlspecialchars($field_name_appendix_md5, ENT_QUOTES); ?>"
+                    size="<?php echo htmlspecialchars($select_size, ENT_QUOTES); ?>"
                     multiple="multiple" <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
                     id="field_<?php echo ($idindex); ?>_3">
             <?php
             foreach ($field_set_values as $field_set_value) {
                 echo '                ';
-                echo '<option value="' . $field_set_value['html'] . '"';
+                echo '<option value="' . htmlspecialchars($field_set_value['html'], ENT_QUOTES) . '"';
                 if (isset($vset[$field_set_value['plain']])) {
                     echo ' selected="selected"';
                 }
-                echo '>' . $field_set_value['html'] . '</option>' . "\n";
+                echo '>' . htmlspecialchars($field_set_value['html'], ENT_QUOTES) . '</option>' . "\n";
             } // end for
             ?>
                 </select>
@@ -854,9 +854,9 @@ foreach ($rows as $row_id => $vrow) {
 
                     if ($bs_reference_exists)
                     {
-                        echo '<input type="hidden" name="remove_blob_ref_' . $field['Field_md5'] . $vkey . '" value="' . $data . '" />';
-                        echo '<input type="checkbox" name="remove_blob_repo_' . $field['Field_md5'] . $vkey . '" /> ' . $strBLOBRepositoryRemove . "<br />";
-                        echo PMA_BS_CreateReferenceLink($data, $db);
+                        echo '<input type="hidden" name="remove_blob_ref_' . htmlspecialchars($field['Field_md5'], ENT_QUOTES) . $vkey . '" value="' . htmlspecialchars($data, ENT_QUOTES) . '" />';
+                        echo '<input type="checkbox" name="remove_blob_repo_' . htmlspecialchars($field['Field_md5'], ENT_QUOTES) . $vkey . '" /> ' . htmlspecialchars($strBLOBRepositoryRemove, ENT_QUOTES) . "<br />";
+                        echo htmlspecialchars(PMA_BS_CreateReferenceLink($data, $db), ENT_QUOTES);
                         echo "<br />";
                     }
                     else
@@ -864,27 +864,27 @@ foreach ($rows as $row_id => $vrow) {
                         echo $strBinaryDoNotEdit;
                         if (isset($data)) {
                             $data_size = PMA_formatByteDown(strlen(stripslashes($data)), 3, 1);
-                            echo ' ('. $data_size [0] . ' ' . $data_size[1] . ')';
+                            echo ' ('. htmlspecialchars($data_size [0], ENT_QUOTES) . ' ' . htmlspecialchars($data_size[1], ENT_QUOTES) . ')';
                                     unset($data_size);
                         }
                         echo "\n";
                     }   // end if ($bs_reference_exists)
                 ?>
-                <input type="hidden" name="fields_type<?php echo $field_name_appendix; ?>" value="protected" />
-                <input type="hidden" name="fields<?php echo $field_name_appendix; ?>" value="" />
+                <input type="hidden" name="fields_type<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="protected" />
+                <input type="hidden" name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="" />
                 <?php
             } elseif ($field['is_blob']) {
                 echo "\n";
                 echo $backup_field . "\n";
                 ?>
-                <textarea name="fields<?php echo $field_name_appendix; ?>"
+                <textarea name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                     rows="<?php echo $cfg['TextareaRows']; ?>"
                     cols="<?php echo $cfg['TextareaCols']; ?>"
                     dir="<?php echo $text_dir; ?>"
                     id="field_<?php echo ($idindex); ?>_3"
                     <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
-                    ><?php echo $special_chars_encoded; ?></textarea>
+                    ><?php echo htmlspecialchars($special_chars_encoded, ENT_QUOTES); ?></textarea>
                 <?php
 
             } else {
@@ -893,8 +893,8 @@ foreach ($rows as $row_id => $vrow) {
                 echo "\n";
                 echo $backup_field . "\n";
                 ?>
-                <input type="text" name="fields<?php echo $field_name_appendix; ?>"
-                    value="<?php echo $special_chars; ?>" size="<?php echo $fieldsize; ?>"
+                <input type="text" name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
+                    value="<?php echo $special_chars; ?>" size="<?php echo htmlspecialchars($fieldsize, ENT_QUOTES); ?>"
                     class="textfield" <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
                     id="field_<?php echo ($idindex); ?>_3" />
@@ -955,7 +955,7 @@ foreach ($rows as $row_id => $vrow) {
                                                 if ($allBSTablesExist)
                                                 {
                                                     echo '<br />';
-                                                    echo '<input type="checkbox" name="upload_blob_repo_' . $field['Field_md5'] . $vkey . '" /> ' . $strBLOBRepositoryUpload;
+                                                    echo '<input type="checkbox" name="upload_blob_repo_' . htmlspecialchars($field['Field_md5'], ENT_QUOTES) . $vkey . '" /> ' . htmlspecialchars($strBLOBRepositoryUpload, ENT_QUOTES);
                                                 }   // end if ($allBSTablesExist)
                                             }   // end if (isset($bs_tables)
                                         }   // end if (!empty($bs_tables) && strlen ($db) > 0)
@@ -967,7 +967,7 @@ foreach ($rows as $row_id => $vrow) {
                 }
 
                 echo '<br />';
-                echo '<input type="file" name="fields_upload_' . $field['Field_md5'] . $vkey . '" class="textfield" id="field_' . $idindex . '_3" size="10" />&nbsp;';
+                echo '<input type="file" name="fields_upload_' . htmlspecialchars($field['Field_md5'], ENT_QUOTES) . $vkey . '" class="textfield" id="field_' . htmlspecialchars($idindex, ENT_QUOTES) . '_3" size="10" />&nbsp;';
 
                 // find maximum upload size, based on field type
                 /**
@@ -1000,7 +1000,7 @@ foreach ($rows as $row_id => $vrow) {
                 } elseif (!empty($files)) {
                     echo "<br />\n";
                     echo '    <i>' . $strOr . '</i>' . ' ' . $strWebServerUploadDirectory . ':<br />' . "\n";
-                    echo '        <select size="1" name="fields_uploadlocal_' . $field['Field_md5'] . $vkey . '">' . "\n";
+                    echo '        <select size="1" name="fields_uploadlocal_' . htmlspecialchars($field['Field_md5'], ENT_QUOTES) . $vkey . '">' . "\n";
                     echo '            <option value="" selected="selected"></option>' . "\n";
                     echo $files;
                     echo '        </select>' . "\n";
@@ -1014,36 +1014,36 @@ foreach ($rows as $row_id => $vrow) {
             if ($field['is_char'] && ($cfg['CharEditing'] == 'textarea' || strpos($data, "\n") !== FALSE)) {
                 echo "\n";
                 ?>
-                <textarea name="fields<?php echo $field_name_appendix; ?>"
+                <textarea name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
                     rows="<?php echo $cfg['CharTextareaRows']; ?>"
                     cols="<?php echo $cfg['CharTextareaCols']; ?>"
                     dir="<?php echo $text_dir; ?>"
                     id="field_<?php echo ($idindex); ?>_3"
                     <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
-                    ><?php echo $special_chars_encoded; ?></textarea>
+                    ><?php echo htmlspecialchars($special_chars_encoded, ENT_QUOTES); ?></textarea>
                 <?php
             } else {
                 ?>
-                <input type="text" name="fields<?php echo $field_name_appendix; ?>"
-                    value="<?php echo $special_chars; ?>" size="<?php echo $fieldsize; ?>"
+                <input type="text" name="fields<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>"
+                    value="<?php echo htmlspecialchars($special_chars, ENT_QUOTES); ?>" size="<?php echo htmlspecialchars($fieldsize, ENT_QUOTES); ?>"
                     class="textfield" <?php echo $unnullify_trigger; ?>
                     tabindex="<?php echo ($tabindex + $tabindex_for_value); ?>"
                     id="field_<?php echo ($idindex); ?>_3" />
                 <?php
                 if ($field['Extra'] == 'auto_increment') {
                     ?>
-                    <input type="hidden" name="auto_increment<?php echo $field_name_appendix; ?>" value="1" />
+                    <input type="hidden" name="auto_increment<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="1" />
                     <?php
                 } // end if
                 if (substr($field['pma_type'], 0, 9) == 'timestamp') {
                     ?>
-                    <input type="hidden" name="fields_type<?php echo $field_name_appendix; ?>" value="timestamp" />
+                    <input type="hidden" name="fields_type<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="timestamp" />
                     <?php
                 }
                 if ($field['True_Type'] == 'bit') {
                     ?>
-                    <input type="hidden" name="fields_type<?php echo $field_name_appendix; ?>" value="bit" />
+                    <input type="hidden" name="fields_type<?php echo htmlspecialchars($field_name_appendix, ENT_QUOTES); ?>" value="bit" />
                     <?php
                 }
                 if ($field['pma_type'] == 'date' || $field['pma_type'] == 'datetime' || substr($field['pma_type'], 0, 9) == 'timestamp') {
@@ -1144,7 +1144,7 @@ if ($insert_mode) {
 ?>
 <!-- Restart insertion form -->
 <form method="post" action="tbl_replace.php" name="restartForm" >
-    <?php echo PMA_generate_common_hidden_inputs($db, $table); ?>
+    <?php echo htmlspecialchars(PMA_generate_common_hidden_inputs($db, $table), ENT_QUOTES); ?>
     <input type="hidden" name="goto" value="<?php echo htmlspecialchars($GLOBALS['goto']); ?>" />
     <input type="hidden" name="err_url" value="<?php echo htmlspecialchars($err_url); ?>" />
     <input type="hidden" name="sql_query" value="<?php echo htmlspecialchars($sql_query); ?>" />

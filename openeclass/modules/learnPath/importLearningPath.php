@@ -548,7 +548,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !is_null($_POST) )
 
     $sql = "INSERT INTO `".$TABLELEARNPATH."`
             (`name`,`visibility`,`rank`,`comment`)
-            VALUES ('". addslashes($lpName) ."','HIDE',".($rankMax+1).",'')";
+            VALUES ('". mysql_real_escape_string($lpName) ."','HIDE',".($rankMax+1).",'')";
     db_query($sql);
 
 
@@ -900,7 +900,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !is_null($_POST) )
 
                     $sql = "INSERT INTO `".$TABLEMODULE."`
                             (`name` , `comment`, `contentType`, `launch_data`)
-                            VALUES ('".addslashes($chapterTitle)."' , '', '".CTLABEL_."','')";
+                            VALUES ('".mysql_real_escape_string($chapterTitle)."' , '', '".CTLABEL_."','')";
 
                     $query = db_query($sql);
 
@@ -992,7 +992,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !is_null($_POST) )
 
                 $sql = "INSERT INTO `".$TABLEMODULE."`
                         (`name` , `comment`, `contentType`, `launch_data`)
-                        VALUES ('".addslashes($moduleName)."' , '".addslashes($description)."', '".$contentType."', '".addslashes($item['datafromlms'])."')";
+                        VALUES ('".mysql_real_escape_string($moduleName)."' , '".mysql_real_escape_string($description)."', '".$contentType."', '".mysql_real_escape_string($item['datafromlms'])."')";
                 $query = db_query($sql);
 
                 if ( mysql_error() )
@@ -1034,7 +1034,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !is_null($_POST) )
                 // create new asset
                 $sql = "INSERT INTO `".$TABLEASSET."`
                         (`path` , `module_id` , `comment`)
-                        VALUES ('". addslashes($assetPath) ."', ".$insertedModule_id[$i]." , '')";
+                        VALUES ('". mysql_real_escape_string($assetPath) ."', ".$insertedModule_id[$i]." , '')";
 
                 $query = db_query($sql);
                 if ( mysql_error() )
@@ -1072,7 +1072,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !is_null($_POST) )
                 // finally : insert in learning path
                 $sql = "INSERT INTO `".$TABLELEARNPATHMODULE."`
                         (`learnPath_id`, `module_id`, `specificComment`, `rank`, `visibility`, `lock`, `parent`)
-                        VALUES ('".$tempPathId."', '".$insertedModule_id[$i]."','".addslashes($langDefaultModuleAddedComment)."', ".$rank.", '".$visibility."', 'OPEN', ".$parent.")";
+                        VALUES ('".$tempPathId."', '".$insertedModule_id[$i]."','".mysql_real_escape_string($langDefaultModuleAddedComment)."', ".$rank.", '".$visibility."', 'OPEN', ".$parent.")";
                 $query = db_query($sql);
 
                 // get the inserted id of the learnPath_module rel to allow 'parent' link in next inserts
@@ -1182,8 +1182,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !is_null($_POST) )
 
         $sql = "UPDATE `".$TABLELEARNPATH."`
                 SET `rank` = ".($rankMax+1).",
-                    `name` = '".addslashes($lpName)."',
-                    `comment` = '".addslashes($lpComment)."',
+                    `name` = '".mysql_real_escape_string($lpName)."',
+                    `comment` = '".mysql_real_escape_string($lpComment)."',
                     `visibility` = 'SHOW'
                 WHERE `learnPath_id` = ". (int)$tempPathId;
         db_query($sql);
