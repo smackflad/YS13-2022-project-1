@@ -84,19 +84,49 @@ $tool_content .= "<li><a href='newtopic.php?forum=$forum'>$langNewTopic</a></li>
 /*
 * Retrieve and present data from course's forum
 */
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);
+$conn->query("SET NAMES utf8");
 
-$sql = "SELECT f.forum_type, f.forum_name
-	FROM forums f
-	WHERE forum_id = '$forum'";
+//$sql = "SELECT f.forum_type, f.forum_name FROM forums f WHERE forum_id = '$forum'";
+$sql = "SELECT f.forum_type, f.forum_name FROM forums f WHERE forum_id = ?";
 
-$result = db_query($sql, $currentCourseID);
-$myrow = mysql_fetch_array($result);
- 
+$stmt=$conn->prepare($sql);
+$stmt->bind_param('s', $forum);
+$stmt->execute();						
+$result = $stmt->get_result();
+
+//$result = db_query($sql, $currentCourseID);
+//$myrow = mysql_fetch_array($result);
+
+
+$myrow = $result->fetch_assoc();
+
+$stmt->close();
+$conn->close();
+
+
 $forum_name = own_stripslashes($myrow["forum_name"]);
 $nameTools = $forum_name;
 
-$topic_count = mysql_fetch_row(db_query("SELECT COUNT(*) FROM topics WHERE forum_id = '$forum'"));
+
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);
+$conn->query("SET NAMES utf8");
+
+$sql = "SELECT COUNT(*) FROM topics WHERE forum_id = ?";
+
+$stmt=$conn->prepare($sql);							
+$stmt->bind_param('s', $forum);						
+$stmt->execute();						
+$topic_count = $stmt->get_result();
+
+$topic_count = $result->fetch_assoc();
+$stmt->close();
+$conn->close();
+//$topic_count = mysql_fetch_row(db_query("SELECT COUNT(*) FROM topics WHERE forum_id = '$forum'"));
 $total_topics = $topic_count[0];
+
+
+
 
 if ($total_topics > $topics_per_page) { 
 	$pages = intval($total_topics / $topics_per_page) + 1; // get total number of pages
@@ -143,8 +173,23 @@ if ($total_topics > $topics_per_page) { // navigation
 }
 
 if(isset($topicnotify)) { // modify topic notification
-	$rows = mysql_num_rows(db_query("SELECT * FROM forum_notify 
-		WHERE user_id = $uid AND topic_id = $topic_id AND course_id = $cours_id", $mysqlMainDb));
+
+	$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);			
+	$conn->query("SET NAMES utf8");
+
+	$stmt=$conn->prepare("SELECT * FROM forum_notify WHERE user_id = ? AND topic_id = ? AND course_id = ?");							
+	$stmt->bind_param('iii', $uid,$topic_id,$cours_id);						
+	$stmt->execute();		
+
+	$rows = mysqli_num_rows($stmt->get_result());
+
+
+	$stmt->close();
+	$conn->close();
+
+
+	//$rows = mysql_num_rows(db_query("SELECT * FROM forum_notify 
+		//WHERE user_id = $uid AND topic_id = $topic_id AND course_id = $cours_id", $mysqlMainDb));
 	if ($rows > 0) {
 		db_query("UPDATE forum_notify SET notify_sent = '$topicnotify' 
 			WHERE user_id = $uid AND topic_id = $topic_id AND course_id = $cours_id", $mysqlMainDb);
@@ -164,16 +209,34 @@ $tool_content .= "<table width='99%' class='ForumSum'><thead><tr>
 <td class='ForumHead' width='20'>$langNotifyActions</td>
 </tr></thead><tbody>";
 
-$sql = "SELECT t.*, p.post_time, p.nom AS nom1, p.prenom AS prenom1
+/* $sql = "SELECT t.*, p.post_time, p.nom AS nom1, p.prenom AS prenom1
         FROM topics t
         LEFT JOIN posts p ON t.topic_last_post_id = p.post_id
         WHERE t.forum_id = '$forum' 
-        ORDER BY topic_time DESC LIMIT $first_topic, $topics_per_page";
+        ORDER BY topic_time DESC LIMIT $first_topic, $topics_per_page"; */
 
-$result = db_query($sql, $currentCourseID);
+	$sql = "SELECT t.*, p.post_time, p.nom AS nom1, p.prenom AS prenom1
+        FROM topics t
+        LEFT JOIN posts p ON t.topic_last_post_id = p.post_id
+        WHERE t.forum_id = ?
+        ORDER BY topic_time DESC LIMIT ?, ?";
 
-if (mysql_num_rows($result) > 0) { // topics found
-	while($myrow = mysql_fetch_array($result)) {
+	$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);			
+	$conn->query("SET NAMES utf8");
+	$stmt=$conn->prepare($sql);							
+	$stmt->bind_param('sii', $forum,$first_topic,$topics_per_page);						
+	$stmt->execute();						
+	$result = $stmt->get_result();
+
+//$result = db_query($sql, $currentCourseID);
+
+$stmt->close();
+$conn->close();
+
+
+if (mysqli_num_rows($result) > 0) { // topics found
+	//while($myrow = mysql_fetch_array($result)) {
+	while($myrow = $result->fetch_assoc()){
 		$tool_content .= "<tr>";
 		$replys = $myrow["topic_replies"];
 		$last_post = $myrow["post_time"];
@@ -237,8 +300,26 @@ if (mysql_num_rows($result) > 0) { // topics found
 		$tool_content .= "<td class='Forum_leftside1'>$myrow[prenom] $myrow[nom]</td>\n";
 		$tool_content .= "<td class='Forum_leftside'>$myrow[topic_views]</td>\n";
 		$tool_content .= "<td class='Forum_leftside1'>$myrow[prenom1] $myrow[nom1]<br />$last_post</td>";
-		list($topic_action_notify) = mysql_fetch_row(db_query("SELECT notify_sent FROM forum_notify 
-			WHERE user_id = $uid AND topic_id = $myrow[topic_id] AND course_id = $cours_id", $mysqlMainDb));
+		
+		
+		$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$mysqlMainDb);
+		$conn->query("SET NAMES utf8");
+
+
+		$stmt=$conn->prepare("SELECT notify_sent FROM forum_notify 
+		WHERE user_id = ? AND topic_id = ? AND course_id = ?");
+
+		$stmt->bind_param('iii', $uid,$myrow[topic_id],$cours_id);						
+		$stmt->execute();
+		$result = $stmt->get_result();
+
+		list($topic_action_notify)=$result->fetch_assoc();
+
+
+		$stmt->close();
+		$conn->close();
+		//list($topic_action_notify) = mysql_fetch_row(db_query("SELECT notify_sent FROM forum_notify 
+		//	WHERE user_id = $uid AND topic_id = $myrow[topic_id] AND course_id = $cours_id", $mysqlMainDb));
 		if (!isset($topic_action_notify)) {
 			$topic_link_notify = FALSE;
 			$topic_icon = '_off';

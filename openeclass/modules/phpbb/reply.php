@@ -74,22 +74,49 @@ hContent;
 include_once("./config.php");
 include("functions.php");
 
+
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);
+$conn->query("SET NAMES utf8");
+
+
 if (isset($post_id) && $post_id) {
 	// We have a post id, so include that in the checks..
-	$sql  = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
+	/* $sql  = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
 	$sql .= "FROM forums f, topics t, posts p ";
 	$sql .= "WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic)";
 	$sql .= " AND (p.post_id = $post_id) AND (t.forum_id = f.forum_id)";
+	$sql .= " AND (p.forum_id = f.forum_id) AND (p.topic_id = t.topic_id)"; */
+	$sql  = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
+	$sql .= "FROM forums f, topics t, posts p ";
+	$sql .= "WHERE (f.forum_id = ?) AND (t.topic_id = ?)";
+	$sql .= " AND (p.post_id = ?) AND (t.forum_id = f.forum_id)";
 	$sql .= " AND (p.forum_id = f.forum_id) AND (p.topic_id = t.topic_id)";
+
+
+	$stmt=$conn->prepare($sql);																	//
+	$stmt->bind_param('sii', $forum,$topic,$post_id);
 } else {
 	// No post id, just check forum and topic.
+	/* $sql = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
+	$sql .= "FROM forums f, topics t ";
+	$sql .= "WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)"; */	
 	$sql = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
 	$sql .= "FROM forums f, topics t ";
-	$sql .= "WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";	
-}
+	$sql .= "WHERE (f.forum_id = ?) AND (t.topic_id = ?) AND (t.forum_id = f.forum_id)";
 
-$result = db_query($sql, $currentCourseID);
-$myrow = mysql_fetch_array($result);
+
+	$stmt=$conn->prepare($sql);
+	$stmt->bind_param('si', $forum,$topic);
+}
+$stmt->execute();
+$result = $stmt->get_result();
+//$result = db_query($sql, $currentCourseID);
+//$myrow = mysql_fetch_array($result);
+$myrow = $result->fetch_assoc();
+
+
+$stmt->close();
+$conn->close();
 
 $forum_name = $myrow["forum_name"];
 $forum_access = $myrow["forum_access"];

@@ -84,24 +84,50 @@ if (isset($_GET['all'])) {
         $paging = true;
 }
 
+/* $sql = "SELECT f.forum_type, f.forum_name
+	FROM forums f, topics t 
+	WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)"; */
+
 $sql = "SELECT f.forum_type, f.forum_name
 	FROM forums f, topics t 
-	WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";
-if (!$result = db_query($sql, $currentCourseID)) {
+	WHERE (f.forum_id = ?) AND (t.topic_id = ?) AND (t.forum_id = f.forum_id)";
+
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);			
+$conn->query("SET NAMES utf8");
+$stmt=$conn->prepare($sql);							
+$stmt->bind_param('si', $forum,$topic);						
+$stmt->execute();						
+$result = $stmt->get_result();
+
+//if (!$result = db_query($sql, $currentCourseID)) {
+if (!$result){
 	$tool_content .= $langErrorConnectForumDatabase;
 	draw($tool_content, 2);
 	exit();
 }
-if (!$myrow = mysql_fetch_array($result)) {
+if (!$myrow = $result->fetch_assoc()) {
 	$tool_content .= $langErrorTopicSelect;
 	draw($tool_content, 2);
 	exit();
 }
 $forum_name = own_stripslashes($myrow["forum_name"]);
 
+
+
+/* $sql = "SELECT topic_title, topic_status
+	FROM topics 
+	WHERE topic_id = '$topic'"; */
+
 $sql = "SELECT topic_title, topic_status
 	FROM topics 
-	WHERE topic_id = '$topic'";
+	WHERE topic_id = ?";
+
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);			
+$conn->query("SET NAMES utf8");
+$stmt=$conn->prepare($sql);							
+$stmt->bind_param('i',$topic);						
+$stmt->execute();						
+
 
 $total = get_total_posts($topic, $currentCourseID, "topic");
 
@@ -113,10 +139,16 @@ if ($paging and $total > $posts_per_page) {
 	$pages = $times;
 }
 
-$result = db_query($sql, $currentCourseID);
-$myrow = mysql_fetch_array($result);
+
+$result = $stmt->get_result();
+//$result = db_query($sql, $currentCourseID);
+$myrow = $result->fetch_assoc();
 $topic_subject = own_stripslashes($myrow["topic_title"]);
 $lock_state = $myrow["topic_status"];
+
+
+$conn->close();
+$stmt->close();
 
 if (!add_units_navigation(TRUE)) {
 	$navigation[]= array ("url"=>"index.php", "name"=> $langForums);
@@ -208,30 +240,64 @@ $tool_content .= <<<cData
     <tbody>
 cData;
 
+
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);			
+$conn->query("SET NAMES utf8");
+
+
 $topic = intval($_GET['topic']);
 if (isset($_GET['all'])) {
-    $sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
+    /* $sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
 		WHERE topic_id = '$topic' 
+		AND p.post_id = pt.post_id
+		ORDER BY post_id"; */
+	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
+		WHERE topic_id = ? 
 		AND p.post_id = pt.post_id
 		ORDER BY post_id";
+	$stmt=$conn->prepare($sql);							
+	$stmt->bind_param('s', $topic);	
+
+
 } elseif (isset($_GET['start'])) {
 	$start = intval($_GET['start']);
-	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
+	/* $sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
 		WHERE topic_id = '$topic' 
 		AND p.post_id = pt.post_id
-		ORDER BY post_id LIMIT $start, $posts_per_page";
+		ORDER BY post_id LIMIT $start, $posts_per_page"; */
+	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt 
+		WHERE topic_id = ? 
+		AND p.post_id = pt.post_id
+		ORDER BY post_id LIMIT ?, ?";
+	$stmt=$conn->prepare($sql);							
+	$stmt->bind_param('sii',$topic, $start,$posts_per_page);	
+
+
 } else {
-	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt
+	/* $sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt
 		WHERE topic_id = '$topic'
 		AND p.post_id = pt.post_id
-		ORDER BY post_id LIMIT $posts_per_page";
+		ORDER BY post_id LIMIT $posts_per_page"; */
+	$sql = "SELECT p.*, pt.post_text FROM posts p, posts_text pt
+		WHERE topic_id = ?
+		AND p.post_id = pt.post_id
+		ORDER BY post_id LIMIT ?";
+	$stmt=$conn->prepare($sql);							
+	$stmt->bind_param('si',$topic, $posts_per_page);	
+
+
 }
-if (!$result = db_query($sql, $currentCourseID)) {
+					
+$stmt->execute();						
+$result = $stmt->get_result();
+
+//if (!$result = db_query($sql, $currentCourseID)) {
+if (!$result) {
 	$tool_content .= "$langErrorConnectPostDatabase. $sql";
 	draw($tool_content, 2, 'phpbb');
 	exit();
 }
-$myrow = mysql_fetch_array($result);
+$myrow = $result->fetch_assoc();
 $count = 0;
 do {
 	if(!($count % 2))
@@ -264,10 +330,23 @@ do {
 	}
 	$tool_content .= "</div></td></tr>";
 	$count++;
-} while($myrow = mysql_fetch_array($result));
+} while($myrow = $result->fetch_assoc());
 
-$sql = "UPDATE topics SET topic_views = topic_views + 1 WHERE topic_id = '$topic'";
-db_query($sql, $currentCourseID);
+$conn->close();
+$stmt->close();
+
+
+/* $sql = "UPDATE topics SET topic_views = topic_views + 1 WHERE topic_id = '$topic'"; */
+
+$sql = "UPDATE topics SET topic_views = topic_views + 1 WHERE topic_id = ?";
+
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword,$currentCourseID);			
+$conn->query("SET NAMES utf8");
+$stmt=$conn->prepare($sql);							
+$stmt->bind_param('s', $topic);						
+$stmt->execute();						
+//$result = $stmt->get_result();
+//db_query($sql, $currentCourseID);
 
 $tool_content .= "</tbody></table>";
 
