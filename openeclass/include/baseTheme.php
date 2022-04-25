@@ -512,6 +512,9 @@ function lang_select_options($name, $onchange_js = '', $default_langcode = false
 }
 
 function run_Query($query, $params, $db_){
+    for ($i=1;$i<count($params);$i++){
+       $params[$i] = htmlspecialchars($params[$i]);
+    }
     global $mysqlServer, $mysqlUser, $mysqlPassword,$mysqlMainDb;
     if(!isset($db_)){
         $db_=$mysqlMainDb;

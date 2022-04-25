@@ -38,6 +38,7 @@ check_guest();
 $allow_username_change = !get_config('block-username-change');
 
 if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
+
     if (!$allow_username_change) {
             $username_form = $uname;
     }
@@ -82,7 +83,6 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 		##[BEGIN personalisation modification]############
 		$_SESSION['langswitch'] = $language = langcode_to_name($_REQUEST['userLanguage']);
 		$langcode = langname_to_code($language);
-
 		$username_form = escapeSimple($username_form);
 		if(run_Query("UPDATE user
 	        SET nom=?, prenom=?,
@@ -100,6 +100,7 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 
 ##[BEGIN personalisation modification - For LDAP users]############
 if (isset($submit) && isset($ldap_submit) && ($ldap_submit == "ON")) {
+
     $_SESSION['langswitch'] = $language = langcode_to_name($_REQUEST['userLanguage']);
 	$langcode = langname_to_code($language);
 
@@ -166,7 +167,6 @@ $sqlGetInfoUser ="SELECT nom, prenom, username, password, email, am, perso, lang
     FROM user WHERE user_id='".$uid."'";
 $result=mysql_query($sqlGetInfoUser);
 $myrow = mysql_fetch_array($result);
-
 $nom_form = $myrow['nom'];
 $prenom_form = $myrow['prenom'];
 $username_form = $myrow['username'];
