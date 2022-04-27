@@ -50,6 +50,8 @@ documents path.
 
 */
 
+use LDAP\Result;
+
 $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'Video';
@@ -74,8 +76,10 @@ if (isset($action2) and $action2 == "download")
 {
 	$real_file = $webDir."/video/".$currentCourseID."/".$id;
 	if (strpos($real_file, '/../') === FALSE) {
-		$result = db_query ("SELECT url FROM video WHERE path = '$id'", $currentCourseID);
-		$row = mysql_fetch_array($result);
+		//$result = db_query ("SELECT url FROM video WHERE path = '$id'", $currentCourseID);
+		$result=run_Query("SELECT url FROM video WHERE path = ?",array("s",$id),$currentCourseID);
+		//$row = mysql_fetch_array($result);
+		$row= $result->fetch_array();
 		if (!empty($row['url']))
 		{
 			$id = $row['url'];

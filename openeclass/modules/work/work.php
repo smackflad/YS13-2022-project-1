@@ -222,7 +222,7 @@ function show_submission($sid)
 	$stmt->execute();						
 	$result = $stmt->get_result();
 
-	$sub= $result->fetch_assoc();
+	$sub= $result->fetch_array();
 	//if ($sub = mysql_fetch_array(db_query("SELECT * FROM assignment_submit WHERE id = '$sid'"))) {
 		if ($sub) {
 
@@ -285,9 +285,13 @@ function submit_work($id) {
 		} else { //user NOT guest
 			if(isset($status) && isset($status[$_SESSION["dbname"]])) {
 				//user is registered to this lesson
-				$res = db_query("SELECT (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
-					FROM assignments WHERE id = '$id'");
-				$row = mysql_fetch_array($res);
+				/* $res = db_query("SELECT (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
+					FROM assignments WHERE id = '$id'"); */
+				$result = "SELECT (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
+					FROM assignments WHERE id = ?";
+				$res=run_Query($result,array("s",$id),$mysqlMainDb);
+				//$row = mysql_fetch_array($res);
+				$row=$res->fetch_array();
 				if ($row['days'] < 0) {
 					$submit_ok = FALSE; //after assignment deadline
 				} else {
@@ -301,8 +305,11 @@ function submit_work($id) {
 		}
 	} //checks for submission validity end here
 
-  	$res = db_query("SELECT title FROM assignments WHERE id = '$id'");
-	$row = mysql_fetch_array($res);
+  	//$res = db_query("SELECT title FROM assignments WHERE id = '$id'");
+	$res=run_Query("SELECT title FROM assignments WHERE id =?",array("s",$id),$mysqlMainDb);
+	//$row = mysql_fetch_array($res);
+	$row = $res->fetch_array();
+
 
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $row['title']);
@@ -312,7 +319,9 @@ function submit_work($id) {
 	$msg1 = delete_submissions_by_uid($uid, -1, $id);
 
 	$local_name = greek_to_latin(uid_to_name($uid));
-	$am = mysql_fetch_array(db_query("SELECT am FROM user WHERE user_id = '$uid'"));
+	//$am = mysql_fetch_array(db_query("SELECT am FROM user WHERE user_id = '$uid'"));
+	$temp=run_Query("SELECT am FROM user WHERE user_id = ?",array("s",$uid),$mysqlMainDb);
+	$am=$temp->fetch_array();
 	if (!empty($am[0])) {
 		$local_name = "$local_name $am[0]";
 	}
@@ -465,8 +474,9 @@ function show_edit_assignment($id)
 	global $urlAppend;
 	global $end_cal_Work_db;
 
-	$res = db_query("SELECT * FROM assignments WHERE id = '$id'");
-	$row = mysql_fetch_array($res);
+	//$res = db_query("SELECT * FROM assignments WHERE id = '$id'");
+	$res=run_Query("SELECT * FROM assignments WHERE id = ?",array("s",$id),$mysqlMainDb);
+	$row = $res->fetch_array();
 
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $row['title']);
@@ -553,10 +563,15 @@ function edit_assignment($id)
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 	$nav[] = array("url"=>"work.php?id=$id", "name"=> $_POST['title']);
 
-	if (db_query("UPDATE assignments SET title= '".mysql_real_escape_string($_POST['title'])."',
+	$query="UPDATE assignments SET title= ?,
+		description= ?, group_submissions= ?,
+		comments= ?, deadline= ? WHERE id=?";
+	$result=run_Query($query,array("ssssss",mysql_real_escape_string($_POST['title']),mysql_real_escape_string($_POST['desc']),mysql_real_escape_string($_POST['group_submissions']),mysql_real_escape_string($_POST['comments']),mysql_real_escape_string($_POST['WorkEnd']),$id),$mysqlMainDb);
+	/* if (db_query("UPDATE assignments SET title= '".mysql_real_escape_string($_POST['title'])."',
 		description= '".mysql_real_escape_string($_POST['desc'])."', group_submissions= '".mysql_real_escape_string($_POST['group_submissions'])."',
 		comments= '".mysql_real_escape_string($_POST['comments'])."', deadline= '".mysql_real_escape_string($_POST['WorkEnd'])."' WHERE id='$id'")) {
-
+ */
+	if ($result){
         $title = autounquote($_POST['title']);
 	$tool_content .="<p class='success_small'>$langEditSuccess<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
 	} else {
@@ -571,8 +586,13 @@ function delete_assignment($id) {
 	global $tool_content, $workPath, $currentCourseID, $webDir, $langBack, $langDeleted;
 
 	$secret = work_secret($id);
-	db_query("DELETE FROM assignments WHERE id='$id'");
-	db_query("DELETE FROM assignment_submit WHERE assignment_id='$id'");
+	//db_query("DELETE FROM assignments WHERE id='$id'");
+	//db_query("DELETE FROM assignment_submit WHERE assignment_id='$id'");
+
+	run_Query("DELETE FROM assignments WHERE id = ?",array("s",$id),$currentCourseID);
+	run_Query("DELETE FROM assignment_submit WHERE id = ?",array("s",$id),$currentCourseID);
+
+
 	@mkdir("$webDir/courses/garbage");
 	@mkdir("$webDir/courses/garbage/$currentCourseID",0777);
 	@mkdir("$webDir/courses/garbage/$currentCourseID/work",0777);
@@ -587,11 +607,18 @@ function delete_assignment($id) {
 function show_student_assignment($id)
 {
 	global $tool_content, $m, $uid, $langSubmitted, $langSubmittedAndGraded, $langNotice3,
-	$langWorks, $langUserOnly, $langBack, $langWorkGrade, $langGradeComments;
+	$langWorks, $langUserOnly, $langBack, $langWorkGrade, $langGradeComments,$currentCourseID;
 
-	$res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
-		FROM assignments WHERE id = '$id'");
-	$row = mysql_fetch_array($res);
+	/* $res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
+		FROM assignments WHERE id = '$id'"); */
+
+
+	$res=run_Query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
+		FROM assignments WHERE id =?",array("s",$id),$currentCourseID);
+
+	/* echo "<script>console.log(".$res.")</script>"; */
+	/* $row = mysql_fetch_array($res); */
+	$row = $res->fetch_assoc();
 
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
 
@@ -1252,9 +1279,10 @@ function submit_grades($grades_id, $grades)
 function send_file($id)
 {
 	global $tool_content, $currentCourseID;
-	mysql_select_db($currentCourseID);
-	$info = mysql_fetch_array(mysql_query("SELECT * FROM assignment_submit WHERE id = '$id'"));
-
+	//mysql_select_db($currentCourseID);
+	//$info = mysql_fetch_array(mysql_query("SELECT * FROM assignment_submit WHERE id = '$id'"));
+	$res=run_Query("SELECT * FROM assignment_submit WHERE id = ?",array("s",$id),$currentCourseID);
+	$info=$res->fetch_array();
 	header("Content-Type: application/octet-stream");
 	header("Content-Disposition: attachment; filename=".basename($info['file_name']));
 	readfile("$GLOBALS[workPath]/$info[file_path]");
@@ -1308,12 +1336,16 @@ function create_zip_index($path, $id, $online = FALSE)
 				<th>'.$m['grade'].'</th>
 			</tr></thead>');
 
-	$result = db_query("SELECT * FROM assignment_submit
-		WHERE assignment_id='$id' ORDER BY id");
+	/* $result = db_query("SELECT * FROM assignment_submit
+		WHERE assignment_id='$id' ORDER BY id"); */
+
+
+	$result=run_Query("SELECT * FROM assignment_submit WHERE assignment_id = ? ORDER BY id",array("s",$id),$mysqlMainDb);
 
 	$tool_content .= "<tbody>";
 
-	while ($row = mysql_fetch_array($result)) {
+	//while ($row = mysql_fetch_array($result)) {
+	while($row = $result->fetch_array()){
 		$filename = basename($row['file_path']);
 		fputs($fp, '
 			<tr>

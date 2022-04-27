@@ -133,10 +133,16 @@ function getUserNameFromId ($id)  // RH: Mailing: return 'Mailing ' + id
     $mailingId = $id - $dropbox_cnf["mailingIdBase"];
     if ($mailingId > 0) return $dropbox_lang["mailingAsUsername"] . $mailingId;
 
-    $sql = "SELECT CONCAT(nom,' ', prenom) AS name
-		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'";
-    $result = db_query($sql, $mysqlMainDb);
-    $res = mysql_fetch_array($result);
+    /* $sql = "SELECT CONCAT(nom,' ', prenom) AS name
+		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'"; */
+
+
+    /* $result = db_query($sql, $mysqlMainDb); */
+    $result=run_Query("SELECT CONCAT(nom,' ', prenom) AS name
+        FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id=?",array("s",mysql_real_escape_string($id)),$mysqlMainDb);
+    /* $res = mysql_fetch_array($result); */
+
+    $res=$result->fetch_array();
     if ($res == FALSE) return FALSE;
     return stripslashes($res["name"]);
 }
@@ -148,9 +154,12 @@ function getLoginFromId ($id)
 {
     global $dropbox_cnf, $dropbox_lang, $mysqlMainDb;
 
-    $sql = "SELECT username FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'";
-    $result = db_query($sql,$mysqlMainDb);
-    $res = mysql_fetch_array($result);
+    /* $sql = "SELECT username FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'"; */
+    $sql = "SELECT username FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id=?";
+    /* $result = db_query($sql,$mysqlMainDb);
+    $res = mysql_fetch_array($result); */
+    $result=run_Query($sql,array("s",mysql_real_escape_string($id)),$mysqlMainDb);
+    $res=$result->fetch_array();
     if ($res == FALSE) return FALSE;
     return stripslashes( $res["username"]);
 }
@@ -164,7 +173,10 @@ function isCourseMember($id)
 
     $sql = "SELECT * FROM `" . $dropbox_cnf["courseUserTbl"] . "`
 		WHERE user_id = '" . mysql_real_escape_string( $id) . "' AND cours_id = '" . $dropbox_cnf["cid"] . "'";
-    $result = db_query($sql, $mysqlMainDb); 
+    $result = db_query($sql, $mysqlMainDb);
+    
+    
+    
     if (mysql_num_rows($result) == 1)
     {
         return TRUE;
