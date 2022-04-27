@@ -68,18 +68,11 @@ if (isset($_POST['submit']) and !$all_set) {
 if ($all_set) {
 
         // register user request
-        db_query("INSERT INTO prof_request
-                        (profname, profsurname, profuname, profemail,
-                         proftmima, profcomm, status, date_open,
-                         comment, lang, statut)
-                  VALUES (".
-                  autoquote($name) .', '.
-                  autoquote($surname) .', '.
-                  autoquote($username) .', '.
-                  autoquote($usermail) .', '.
-                  intval($department) .', '.
-                  autoquote($userphone) .', 1, NOW(), '.
-                  autoquote($usercomment) .", '$lang', 5)");
+        run_Query("INSERT INTO prof_request
+                            (profname, profsurname, profuname, profemail,
+                             proftmima, profcomm, status, date_open,
+                             comment, lang, statut)
+                      VALUES (?, ?, ?, ?, ".intval($department).", ?, 1, ".NOW().", ?, ?, 5)", array("sssssss", $name, $surname, $username, $usermail, $userphone, $usercomment, $lang));
 
         //----------------------------- Email Message --------------------------
         $department = find_faculty_by_id($department);

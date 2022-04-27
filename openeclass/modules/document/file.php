@@ -59,11 +59,11 @@ $depth = 1;
 $path = '';
 foreach ($path_components as $component) {
         $component = urldecode(str_replace(chr(1), '/', $component));
-        $q = db_query("SELECT path, visibility, format,
-                              (LENGTH(path) - LENGTH(REPLACE(path, '/', ''))) AS depth
-                       FROM document WHERE filename = " . quote($component) .
-                       " AND path LIKE '$path%' HAVING depth = $depth");
-        if (!$q or mysql_num_rows($q) == 0) {
+        $q = run_Query("SELECT path, visibility, format,
+                                  (LENGTH(path) - LENGTH(REPLACE(path, '/', ''))) AS depth
+                           FROM document WHERE filename = ? AND path LIKE ? HAVING depth = ?", array("sss", $component, $path, $depth));
+
+        if (!$q or $q->num_rows == 0) {
                 restore_saved_course();
                 header("HTTP/1.0 404 Not Found");
                 echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head>',
@@ -73,7 +73,7 @@ foreach ($path_components as $component) {
                      '" was not found.</p></body></html>';
                 exit;
         }
-        $r = mysql_fetch_array($q);
+        $r = $q->fetch_array();
         $path = $r['path'];
         $depth++;
 }
