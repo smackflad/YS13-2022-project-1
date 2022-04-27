@@ -277,7 +277,6 @@ function submit_work($id) {
 	} else {
 		unset($status);
 	}
-
 	$submit_ok = FALSE; //Default do not allow submission
 	if(isset($uid) && $uid) { //check if loged-in
 		if ($GLOBALS['statut'] == 10) { //user is guest
@@ -289,7 +288,7 @@ function submit_work($id) {
 					FROM assignments WHERE id = '$id'"); */
 				$result = "SELECT (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
 					FROM assignments WHERE id = ?";
-				$res=run_Query($result,array("s",$id),$mysqlMainDb);
+				$res=run_Query($result,array("s",$id),$currentCourseID);
 				//$row = mysql_fetch_array($res);
 				$row=$res->fetch_array();
 				if ($row['days'] < 0) {
@@ -306,7 +305,7 @@ function submit_work($id) {
 	} //checks for submission validity end here
 
   	//$res = db_query("SELECT title FROM assignments WHERE id = '$id'");
-	$res=run_Query("SELECT title FROM assignments WHERE id =?",array("s",$id),$mysqlMainDb);
+	$res=run_Query("SELECT title FROM assignments WHERE id =?",array("s",$id),$currentCourseID);
 	//$row = mysql_fetch_array($res);
 	$row = $res->fetch_array();
 
