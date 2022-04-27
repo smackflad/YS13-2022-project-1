@@ -56,7 +56,8 @@ if ($is_adminOfCourse and isset($_GET['assignment']) and isset($_GET['submission
 // Returns an array of the details of assignment $id
 function get_assignment_details($id)
 {
-	return mysql_fetch_array(db_query("SELECT * FROM assignments WHERE id = '$id'"));
+	global $currentCourseID;
+	return run_Query("SELECT * FROM assignments WHERE id = ?", array("s", $id), $currentCourseID)->fetch_array();
 }
 
 
