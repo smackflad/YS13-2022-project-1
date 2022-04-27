@@ -150,7 +150,7 @@ tCont2;
       <td><input type='text' name='authors' value='".getUserNameFromId($uid)."' size='40' class='FormData_InputText' /></td>
     </tr>
     <tr>
-      <th class='left'>".$dropbox_lang["description"]." :</th>
+      <th class='left'>".htmlspecialchars($dropbox_lang["description"])." :</th>
       <td><textarea name='description' cols='37' rows='2' class='FormData_InputText'></textarea></td>
     </tr>
     <tr>

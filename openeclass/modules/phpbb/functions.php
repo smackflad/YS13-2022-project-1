@@ -63,12 +63,23 @@
  */
 function get_total_topics($forum_id, $thedb) {
 	global $langError;
-	$sql = "SELECT count(*) AS total FROM topics WHERE forum_id = '$forum_id'";
-	if(!$result = db_query($sql, $thedb))
+	/* $sql = "SELECT count(*) AS total FROM topics WHERE forum_id = '$forum_id'"; */
+
+	$sql = "SELECT count(*) AS total FROM topics WHERE forum_id = ?";
+
+	$result=run_Query($sql,array("s",$forum_id),$thedb);
+
+
+	if (!$result){
+		return($langError);
+	}
+	if(!$myrow = $result->fetch_array())
+		return($langError);
+	/* if(!$result = db_query($sql, $thedb))
 		return($langError);
 	if(!$myrow = mysql_fetch_array($result))
 		return($langError);
-	
+	 */
 	return($myrow["total"]);
 }
 
@@ -80,24 +91,37 @@ function get_total_posts($id, $thedb, $type) {
    switch($type) {
     case 'users':
       $sql = "SELECT count(*) AS total FROM users WHERE (user_id != -1) AND (user_level != -1)";
+
+		$result = run_Query($sql,array(),$thedb);
       break;
     case 'all':
       $sql = "SELECT count(*) AS total FROM posts";
+	  $result = run_Query($sql,array(),$thedb);
       break;
     case 'forum':
-      $sql = "SELECT count(*) AS total FROM posts WHERE forum_id = '$id'";
+      /* $sql = "SELECT count(*) AS total FROM posts WHERE forum_id = '$id'"; */
+	  $sql = "SELECT count(*) AS total FROM posts WHERE forum_id = ?";
+	  $result = run_Query($sql,array("s",$id),$thedb);
       break;
     case 'topic':
-      $sql = "SELECT count(*) AS total FROM posts WHERE topic_id = '$id'";
+      /* $sql = "SELECT count(*) AS total FROM posts WHERE topic_id = '$id'"; */
+	  $sql = "SELECT count(*) AS total FROM posts WHERE topic_id = ?";
+	  $result = run_Query($sql,array("s",$id),$thedb);
       break;
    // Old, we should never get this.   
     case 'user':
       error_die("Should be using the users.user_posts column for this.");
    }
-   if(!$result = db_query($sql, $thedb))
+
+   	if(!$result)
+   		return("ERROR");
+ 	if(!$myrow = $result->fetch_array())
+   		return("0");
+
+   /* if(!$result = db_query($sql, $thedb))
      return("ERROR");
    if(!$myrow = mysql_fetch_array($result))
-     return("0");
+     return("0"); */
    
    return($myrow["total"]);
    
@@ -152,7 +176,7 @@ function does_exists($id, $thedb, $type) {
 		break;
 		case 'topic':
 			/* $sql = "SELECT topic_id FROM topics WHERE topic_id = '$id'"; */
-			$sql = "SELECT topic_id FROM topics WHERE topic_id = '$id'";
+			$sql = "SELECT topic_id FROM topics WHERE topic_id = ?";
 		break;
 	}
 	/* if(!$result = db_query($sql, $thedb)) */
@@ -1029,6 +1053,8 @@ function forum_category($id) {
 	$sql="SELECT cat_id FROM forums WHERE forum_id=?";
 
 	$r=run_Query($sql,array("i",$id),$currentCourseID);
+
+	$r= $r->fetch_assoc();
 	/* if ($r = mysql_fetch_row(db_query("SELECT cat_id FROM forums WHERE forum_id=$id", $currentCourseID))) */ 
 	if ($r){
 		return $r[0];
@@ -1042,12 +1068,15 @@ function category_name($id) {
 	
 	global $currentCourseID;
 	
-	$sql="SELECT cat_title FROM catagories WHERE cat_id=$id";
+	//$sql="SELECT cat_title FROM catagories WHERE cat_id=$id";
+
+	$sql="SELECT cat_title FROM catagories WHERE cat_id=?";
+
 
 	$r=run_Query($sql,array("i",$id),$currentCourseID);
 
 
-
+	$r= $r->fetch_row();
 
 	//if ($r = mysql_fetch_row(db_query("SELECT cat_title FROM catagories WHERE cat_id=$id", $currentCourseID))) 
 	if($r){

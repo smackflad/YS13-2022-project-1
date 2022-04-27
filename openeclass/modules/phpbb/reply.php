@@ -193,44 +193,71 @@ if (isset($submit) && $submit) {
 	if (isset($sig) && $sig) {
 		$message .= "\n[addsig]";
 	}
+	/* $sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
+			VALUES ('$topic', '$forum', '$uid','$time', '$poster_ip', '$nom', '$prenom')"; */
+
 	$sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
-			VALUES ('$topic', '$forum', '$uid','$time', '$poster_ip', '$nom', '$prenom')";
-	$result = db_query($sql, $currentCourseID);
+			VALUES (?, ?, ?,?, ?, ?, ?)";
+
+
+	/* $result = db_query($sql, $currentCourseID); */
+
+	$result=run_Query($sql,array("sssssss",$topic,$forum,$uid,$time,$poster_ip,$nom,$prenom),$currentCourseID);
+
+
+
 	$this_post = mysql_insert_id();
 	if ($this_post) {
-		$sql = "INSERT INTO posts_text (post_id, post_text) VALUES ($this_post, " .
-                        autoquote($message) . ")";
-		$result = db_query($sql, $currentCourseID); 
+		/* $sql = "INSERT INTO posts_text (post_id, post_text) VALUES ($this_post, " .
+                        autoquote($message) . ")"; */
+		$sql = "INSERT INTO posts_text (post_id, post_text) VALUES (?,
+                        ?)";
+		$result = run_Query($sql,array("is",$this_post,autoquote($message)), $currentCourseID); 
 	}
-	$sql = "UPDATE topics SET topic_replies = topic_replies+1, topic_last_post_id = $this_post, topic_time = '$time' 
-		WHERE topic_id = '$topic'";
-	$result = db_query($sql, $currentCourseID);
-	$sql = "UPDATE forums SET forum_posts = forum_posts+1, forum_last_post_id = '$this_post' 
-		WHERE forum_id = '$forum'";
-	$result = db_query($sql, $currentCourseID);
+	/* $sql = "UPDATE topics SET topic_replies = topic_replies+1, topic_last_post_id = $this_post, topic_time = '$time' 
+		WHERE topic_id = '$topic'"; */
+	$sql = "UPDATE topics SET topic_replies = topic_replies+1, topic_last_post_id = ?, topic_time = ? 
+		WHERE topic_id = ?";
+	$result = run_Query($sql,array("iss",$this_post,$time,$topic), $currentCourseID);
+/* 	$sql = "UPDATE forums SET forum_posts = forum_posts+1, forum_last_post_id = '$this_post' 
+		WHERE forum_id = '$forum'"; */
+	$sql = "UPDATE forums SET forum_posts = forum_posts+1, forum_last_post_id = ? 
+		WHERE forum_id = ?";
+	$result = run_Query($sql,array("ss",$this_post,$forum), $currentCourseID);
 	if (!$result) {
 		$tool_content .= $langErrorUpadatePostCount;
 		draw($tool_content, 2, 'phpbb', $head_content);
 		exit();
 	}
-	
 	// --------------------------------
 	// notify users 
 	// --------------------------------
 	$subject_notify = "$logo - $langSubjectNotify";
 	$category_id = forum_category($forum);
 	$cat_name = category_name($category_id);
-	$sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
+/* 	$sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
 			WHERE (topic_id = $topic OR forum_id = $forum OR cat_id = $category_id) 
-			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb);
+			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb); */
+
+	$sql="SELECT DISTINCT user_id FROM forum_notify 
+		WHERE (topic_id = ? OR forum_id = ? OR cat_id = ?) 
+		AND notify_sent = 1 AND course_id = ?";
+
+	$result=run_Query($sql,array("iiii",$topic,$forum,$category_id,$cours_id),$mysqlMainDb);
+
+
 	$c = course_code_to_title($currentCourseID);
 	$body_topic_notify = "$langCourse: '$c'\n\n$langBodyTopicNotify $langInForum '$topic_title' $langOfForum '$forum_name' $langInCat '$cat_name' \n\n$gunet";
-	while ($r = mysql_fetch_array($sql)) {
+
+	while ($r = $result->fetch_array()) {
 		$emailaddr = uid_to_email($r['user_id']);
 		send_mail('', '', '', $emailaddr, $subject_notify, $body_topic_notify, $charset);
 	}
+	/* while ($r = mysql_fetch_array($sql)) {
+		$emailaddr = uid_to_email($r['user_id']);
+		send_mail('', '', '', $emailaddr, $subject_notify, $body_topic_notify, $charset);
+	} */
 	// end of notification
-	 
 	$total_forum = get_total_topics($forum, $currentCourseID);
 	$total_topic = get_total_posts($topic, $currentCourseID, "topic")-1;
 	// Subtract 1 because we want the nr of replies, not the nr of posts.
@@ -296,11 +323,21 @@ if (isset($submit) && $submit) {
 	<tr>
         <th class=\"left\">$langBodyMessage:";
 	if (isset($quote) && $quote) {
+		/* $sql = "SELECT pt.post_text, p.post_time, u.username 
+			FROM posts p, posts_text pt 
+			WHERE p.post_id = '$post' AND pt.post_id = p.post_id"; */
+
+
 		$sql = "SELECT pt.post_text, p.post_time, u.username 
 			FROM posts p, posts_text pt 
-			WHERE p.post_id = '$post' AND pt.post_id = p.post_id";
-		if ($r = db_query($sql, $currentCourseID)) {
-			$m = mysql_fetch_array($r);
+			WHERE p.post_id = ? AND pt.post_id = p.post_id";
+
+
+		/* if ($r = db_query($sql, $currentCourseID)) { */
+		if ($r = run_Query($sql,array("s",$post), $currentCourseID)) {
+			/* $m = mysql_fetch_array($r); */
+
+			$m = $r->fetch_array();
 			$text = $m["post_text"];
 			$text = str_replace("<BR>", "\n", $text);
 			$text = stripslashes($text);

@@ -81,12 +81,20 @@ include("functions.php"); // application logic for phpBB
 
 $sql = "SELECT forum_name, forum_access, forum_type FROM forums
 	WHERE (forum_id = '$forum')";
-if (!$result = db_query($sql, $currentCourseID)) {
+
+	$sql = "SELECT forum_name, forum_access, forum_type FROM forums
+	WHERE (forum_id = ?)";
+
+	$result=run_Query($sql,array("s",$forum),$currentCourseID);
+/* if (!$result = db_query($sql, $currentCourseID)) { */
+if (!$result ) {
 	$tool_content .= $langErrorDataForum;
 	draw($tool_content, 2, 'phpbb', $head_content);
 	exit;
 }
-$myrow = mysql_fetch_array($result);
+/* $myrow = mysql_fetch_array($result); */
+
+$myrow = $result->fetch_array();
 $forum_name = $myrow["forum_name"];
 $forum_access = $myrow["forum_access"];
 $forum_type = $myrow["forum_type"];
@@ -144,33 +152,60 @@ if (isset($submit) && $submit) {
 	if (isset($sig) && $sig) {
 		$message .= "\n[addsig]";
 	}
+/* 	$sql = "INSERT INTO topics (topic_title, topic_poster, forum_id, topic_time, topic_notify, nom, prenom)
+			VALUES (" . autoquote($subject) . ", '$uid', '$forum', '$time', 1, '$nom', '$prenom')"; */
+
+
 	$sql = "INSERT INTO topics (topic_title, topic_poster, forum_id, topic_time, topic_notify, nom, prenom)
-			VALUES (" . autoquote($subject) . ", '$uid', '$forum', '$time', 1, '$nom', '$prenom')";
-	$result = db_query($sql, $currentCourseID);
+			VALUES (?, ?, ?, ?, 1, ?, ?)";
+	/* $result = db_query($sql, $currentCourseID); */
+
+	$result = run_Query($sql,array("ssssss",autoquote($subject),$uid,$forum,$time,$nom,$prenom),$currentCourseID);
 
 	$topic_id = mysql_insert_id();
+	/* $sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
+			VALUES ('$topic_id', '$forum', '$uid', '$time', '$poster_ip', '$nom', '$prenom')"; */
+
+
 	$sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
-			VALUES ('$topic_id', '$forum', '$uid', '$time', '$poster_ip', '$nom', '$prenom')";
-	if (!$result = db_query($sql, $currentCourseID)) {
+			VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+	$result = run_Query($sql,array("sssssss",autoquote($subject),$topic_id,$forum,$uid,$time,$poster_ip,$nom,$prenom),$currentCourseID);
+	/* if (!$result = db_query($sql, $currentCourseID)) { */
+	if (!$result ) {
 		$tool_content .= $langErrorEnterPost;
 		draw($tool_content, 2, 'phpbb', $head_content);
 		exit();
 	} else {
 		$post_id = mysql_insert_id();
 		if ($post_id) {
-			$sql = "INSERT INTO posts_text (post_id, post_text)
-					VALUES ($post_id, " . autoquote($message) . ")";
-			$result = db_query($sql, $currentCourseID);
-			$sql = "UPDATE topics
+			/* $sql = "INSERT INTO posts_text (post_id, post_text)
+					VALUES ($post_id, " . autoquote($message) . ")"; */
+				$sql = "INSERT INTO posts_text (post_id, post_text)
+					VALUES (?, ?)";
+			/* $result = db_query($sql, $currentCourseID); */
+
+
+			$result= run_Query($sql,array("is",$post_id,autoquote($message)),$currentCourseID);
+			/* $sql = "UPDATE topics
 				SET topic_last_post_id = $post_id
-				WHERE topic_id = '$topic_id'";
-			$result = db_query($sql, $currentCourseID);
+				WHERE topic_id = '$topic_id'"; */
+			$sql = "UPDATE topics
+				SET topic_last_post_id = ?
+				WHERE topic_id = ?";
+			/* $result = db_query($sql, $currentCourseID); */
+			$result = run_Query($sql,array("is",$post_id,$topic_id), $currentCourseID);
 		}
 	}
-	$sql = "UPDATE forums
+	/* $sql = "UPDATE forums
 		SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = $post_id
-		WHERE forum_id = '$forum'";
-	$result = db_query($sql, $currentCourseID);
+		WHERE forum_id = '$forum'"; */
+	$sql = "UPDATE forums
+		SET forum_posts = forum_posts+1, forum_topics = forum_topics+1, forum_last_post_id = ?
+		WHERE forum_id = ?";
+	/* $result = db_query($sql, $currentCourseID); */
+
+	$result=run_Query($sql,array("is",$post_id,$forum),$currentCourseID);
 	
 	$topic = $topic_id;
 	$total_forum = get_total_topics($forum, $currentCourseID);
@@ -184,12 +219,17 @@ if (isset($submit) && $submit) {
 	$subject_notify = "$logo - $langNewForumNotify";
 	$category_id = forum_category($forum);
 	$cat_name = category_name($category_id);
-	$sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
+	/* $sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
 			WHERE (forum_id = $forum OR cat_id = $category_id) 
-			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb);
+			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb); */
+
+	$sql = run_Query("SELECT DISTINCT user_id FROM forum_notify 
+			WHERE (forum_id = ? OR cat_id = ?) 
+			AND notify_sent = 1 AND course_id = ?",array("iii",$forum,$category_id,$cours_id),$mysqlMainDb);
 	$c = course_code_to_title($currentCourseID);
 	$body_topic_notify = "$langCourse: '$c'\n\n$langBodyForumNotify $langInForums '$forum_name' $langInCat '$cat_name' \n\n$gunet";
-	while ($r = mysql_fetch_array($sql)) {
+	/* while ($r = mysql_fetch_array($sql)) { */
+	while ($r = $sql->fetch_array()) {
 		$emailaddr = uid_to_email($r['user_id']);
 		send_mail('', '', '', $emailaddr, $subject_notify, $body_topic_notify, $charset);
 	}
