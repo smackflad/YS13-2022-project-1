@@ -66,8 +66,15 @@ $action = new action();
 $action->record('MODULE_ID_UNITS');
 
 $sql = 'SELECT `description`,`course_keywords`, `course_addon`,`faculte`,`lastEdit`,`type`, `visible`, `titulaires`, `fake_code` FROM `cours` WHERE `code` = "'.$currentCourse.'"';
-$res = db_query($sql, $mysqlMainDb);
-while($result = mysql_fetch_row($res)) {
+
+$res=run_Query("SELECT `description`,`course_keywords`, `course_addon`,`faculte`,`lastEdit`,`type`, `visible`, `titulaires`, `fake_code` FROM `cours` WHERE `code` = ?",
+        array("s",$currentCourse),$mysqlMainDb);
+
+
+
+//$res = db_query($sql, $mysqlMainDb);
+//while($result = mysql_fetch_row($res)) {
+while($result=$res->fetch_array()){
 	$description = trim($result[0]);
 	$keywords = trim($result[1]);
 	$addon = nl2br(trim($result[2]));
@@ -99,8 +106,13 @@ if (!empty($addon)) {
 	$main_content .= "\n      <div class='course_info'><h1>$langCourseAddon</h1><p>$addon</p></div>";
 }
 
-$result = db_query("SELECT MAX(`order`) FROM course_units WHERE course_id = $cours_id");
-list($maxorder) = mysql_fetch_row($result);
+/* $result = db_query("SELECT MAX(`order`) FROM course_units WHERE course_id = $cours_id"); */
+$result = run_Query("SELECT MAX(`order`) FROM course_units WHERE course_id = ?",array("i",$cours_id),$mysqlMainDb);
+/* list($maxorder) = mysql_fetch_row($result); */
+
+list($maxorder) = $result->fetch_assoc();
+
+
 
 // other actions in course unit
 if ($is_adminOfCourse) {
@@ -160,18 +172,26 @@ if ($is_adminOfCourse) {
         list($last_id) = mysql_fetch_row(db_query("SELECT id FROM course_units
                                                    WHERE course_id = $cours_id
                                                    ORDER BY `order` DESC LIMIT 1"));
-	$query = "SELECT id, title, comments, visibility
+	/* $query = "SELECT id, title, comments, visibility
 		  FROM course_units WHERE course_id = $cours_id
+                  ORDER BY `order`"; */
+        $query = "SELECT id, title, comments, visibility
+		  FROM course_units WHERE course_id = ?
                   ORDER BY `order`";
 } else {
-	$query = "SELECT id, title, comments, visibility
+	/* $query = "SELECT id, title, comments, visibility
 		  FROM course_units WHERE course_id = $cours_id AND visibility='v'
+                  ORDER BY `order`"; */
+        $query = "SELECT id, title, comments, visibility
+		  FROM course_units WHERE course_id = ? AND visibility='v'
                   ORDER BY `order`";
 }
-$sql = db_query($query);
+/* $sql = db_query($query); */
+$sql=run_Query($query,array("i",$cours_id),$mysqlMainDb);
 $first = true;
 $count_index = 1;
-while ($cu = mysql_fetch_array($sql)) {
+/* while ($cu = mysql_fetch_array($sql)) {
+ */while ( $cu = $sql->fetch_array()){
                 // Visibility icon
                 $vis = $cu['visibility'];
                 $icon_vis = ($vis == 'v')? 'visible.gif': 'invisible.gif';
