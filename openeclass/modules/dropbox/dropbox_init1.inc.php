@@ -129,18 +129,13 @@ $dropbox_cnf["mailingFileRegexp"] = '/^(.+)\.\w{1,4}$/';
 function getUserNameFromId ($id)  // RH: Mailing: return 'Mailing ' + id
 {
     global $dropbox_cnf, $dropbox_lang, $mysqlMainDb;
+
     $mailingId = $id - $dropbox_cnf["mailingIdBase"];
     if ($mailingId > 0) return $dropbox_lang["mailingAsUsername"] . $mailingId;
 
-<<<<<<< HEAD
-    $result = db_query("SELECT CONCAT(nom,' ', prenom) AS name
-    FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='$id'", $mysqlMainDb);
-
-=======
     $sql = "SELECT CONCAT(nom,' ', prenom) AS name
-		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . addslashes($id) . "'";
+		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'";
     $result = db_query($sql, $mysqlMainDb);
->>>>>>> 34369c607584d0f3e0dbe66d2472eb48ba1af555
     $res = mysql_fetch_array($result);
     if ($res == FALSE) return FALSE;
     return stripslashes($res["name"]);
