@@ -453,7 +453,10 @@ function dumpArray($arr) {
 	print_r ( $arr );
 	echo "</pre>";
 }
-
+//$cVal = $_COOKIE['PHPSESSID'];
+//$test = "test5";
+//header("Set-Cookie: PHPSESSID=$test; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
+//print_r($cVal."----test");
 /**
  * Function print_a
  *
