@@ -73,6 +73,7 @@ if (! isset($_COOKIE[$session_name])) {
     // f.e. session dir cannot be accessed - session file not created
     $orig_error_count = $GLOBALS['error_handler']->countErrors();
     $r = session_start();
+    header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
     if ($r !== true || $orig_error_count != $GLOBALS['error_handler']->countErrors()) {
         setcookie($session_name, '', 1);
         PMA_fatalError('strSessionStartupErrorGeneral');

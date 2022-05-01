@@ -20,6 +20,7 @@ if (isset($_POST['user'])) {
     $session_name = 'SignonSession';
     session_name($session_name);
     session_start();
+    header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
     /* Store there credentials */
     $_SESSION['PMA_single_signon_user'] = $_POST['user'];
     $_SESSION['PMA_single_signon_password'] = $_POST['password'];

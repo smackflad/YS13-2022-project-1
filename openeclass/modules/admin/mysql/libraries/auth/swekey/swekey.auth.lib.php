@@ -269,6 +269,7 @@ if (strstr($_SERVER['QUERY_STRING'],'session_to_unset') != false)
 	session_write_close();
 	session_id($session_to_unset);
 	session_start();
+    header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 	$_SESSION = array();
 	session_write_close();
 	session_destroy();

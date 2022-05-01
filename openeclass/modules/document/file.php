@@ -31,7 +31,7 @@ file.php
 */
 
 session_start();
-
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 // save current course
 if (isset($_SESSION['dbname'])) {
         define('old_dbname', $_SESSION['dbname']);

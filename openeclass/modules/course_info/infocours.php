@@ -27,6 +27,7 @@
 // if we come from the home page
 if (isset($from_home) and ($from_home == TRUE) and isset($_GET['cid'])) {
         session_start();
+        header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
         $_SESSION['dbname'] = $cid;
 }
 $require_current_course = TRUE;

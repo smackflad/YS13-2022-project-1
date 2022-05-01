@@ -1,5 +1,6 @@
 <?php
 session_start();
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 $path2add = 0;
 include 'include/baseTheme.php';
 if (isset($_SESSION['statut']) and $_SESSION['statut'] == 1) {

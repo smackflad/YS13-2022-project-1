@@ -37,14 +37,14 @@ $nameTools = $langModifProfile;
 check_guest();
 $allow_username_change = !get_config('block-username-change');
 
-if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
+if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 
     if (!$allow_username_change) {
             $username_form = $uname;
     }
 
 	// check if username exists
-    $username_check=run_Query("SELECT username FROM user WHERE username=?", array("s", $username_form));
+    $username_check=run_Query("SELECT username FROM user WHERE username=?", array("s", $username_form),"eclass");
 	while ($myusername = $username_check->fetch_array())
 	{
 		$user_exist=$myusername[0];
@@ -88,7 +88,7 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 	        SET nom=?, prenom=?,
 	        username=?, email=?, am=?,
 	            perso=?, lang=?
-	        WHERE user_id=?", array("ssssssss", $nom_form, $prenom_form, $username_form, $email_form, $am_form, $persoStatus, $langcode, $_SESSION["uid"]))) {
+	        WHERE user_id=?", array("ssssssss", $nom_form, $prenom_form, $username_form, $email_form, $am_form, $persoStatus, $langcode, $_SESSION["uid"]),"eclass")) {
 			if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
                 		unset($_SESSION['user_perso_active']);
 			}
@@ -105,7 +105,7 @@ if (isset($submit) && isset($ldap_submit) && ($ldap_submit == "ON")) {
 	$langcode = langname_to_code($language);
 
 	run_Query("UPDATE user SET perso = ?,
-		lang = ? WHERE user_id=?", array("sss", $persoStatus, $langcode, $_SESSION["uid"]));
+		lang = ? WHERE user_id=?", array("sss", $persoStatus, $langcode, $_SESSION["uid"]),"eclass");
 	
 	if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
 		unset($_SESSION['user_perso_active']);
@@ -216,9 +216,14 @@ if ((!isset($changePass)) || isset($_POST['submit'])) {
 	if(!in_array($password_form,$authmethods)) {
 		$tool_content .= "<li><a href=\"".$passurl."\">".$langChangePass."</a></li>";
 	}
+
+	$test=$_SESSION['_token'];
+
+
 	$tool_content .= " <li><a href='../unreguser/unreguser.php'>$langUnregUser</a></li>";
 	$tool_content .= "</ul></div>";
 	$tool_content .= "<form method=\"post\" action=\"$sec?submit=yes\"><br/>
+	<input type=\"hidden\" name=\"_token\" value=$test/>
     <table width=\"99%\">
     <tbody><tr>
        <th width=\"220\" class='left'>$langName</th>";

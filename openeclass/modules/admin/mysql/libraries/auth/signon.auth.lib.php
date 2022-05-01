@@ -75,6 +75,7 @@ function PMA_auth_check()
         session_name($session_name);
         session_id($_COOKIE[$session_name]);
         session_start();
+        header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 
         /* Grab credentials if they exist */
         if (isset($_SESSION['PMA_single_signon_user'])) {
@@ -109,7 +110,7 @@ function PMA_auth_check()
             session_id($old_id);
         }
         session_start();
-
+        header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
         /* Set the single signon host */
         $GLOBALS['cfg']['Server']['host']=$single_signon_host;
 

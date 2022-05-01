@@ -38,6 +38,21 @@
  * interface. In that case function drawPerso needs to be called.
  *
  */
+////////////////////// csrf token //////////////////////////////
+// if (!isset($_POST['_token']) || ($_POST['_token'] !== $_SESSION['_token']))
+
+// (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))
+
+
+
+
+
+
+$_SESSION['_token']=bin2hex(openssl_random_pseudo_bytes(16));
+
+
+print_r($_SESSION['_token']);
+////////////////////// csrf token //////////////////////////////
 include ('init.php');
 if ($is_adminOfCourse and isset($currentCourseID)) {
 	if (isset($_GET['hide']) and $_GET['hide'] == 0) {
@@ -455,7 +470,6 @@ function dumpArray($arr) {
 }
 //$cVal = $_COOKIE['PHPSESSID'];
 //$test = "test5";
-//header("Set-Cookie: PHPSESSID=$test; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 //print_r($cVal."----test");
 /**
  * Function print_a

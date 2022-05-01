@@ -25,7 +25,7 @@
 * =========================================================================*/
 
 session_start();
-
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 //Flag for fixing relative path
 //See init.php to undestand its logic
 $path2add=2;

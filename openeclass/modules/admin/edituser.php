@@ -1,4 +1,5 @@
 <? session_start();
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System

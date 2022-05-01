@@ -47,7 +47,7 @@ require_once('../../exercice/question.class.php');
 require_once('../../exercice/answer.class.php');
 
 session_start();
-
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 // answer types
 define('UNIQUE_ANSWER',	1);
 define('MULTIPLE_ANSWER', 2);

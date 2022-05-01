@@ -26,6 +26,7 @@
 
 if (isset($c) && ($c!="")) {
 	session_start();
+	header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 	$require_admin = TRUE;
 	$_SESSION['dbname'] = $c;
 }
