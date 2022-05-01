@@ -51,7 +51,6 @@
 $_SESSION['_token']=bin2hex(openssl_random_pseudo_bytes(16));
 
 
-print_r($_SESSION['_token']);
 ////////////////////// csrf token //////////////////////////////
 include ('init.php');
 if ($is_adminOfCourse and isset($currentCourseID)) {

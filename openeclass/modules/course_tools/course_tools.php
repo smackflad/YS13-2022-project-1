@@ -435,7 +435,7 @@ if ($is_adminOfCourse) {
 	    <li><a href=\"".$_SERVER['PHP_SELF']."?action=2\">".$langAddExtLink."</a></li>
 	  </ul>
 	</div>";
-
+	$test=$_SESSION['_token'];
 	$tool_content .= <<<tForm
 <form name="courseTools" action="$_SERVER[PHP_SELF]" method="post" enctype="multipart/form-data">
   <br/>
@@ -464,6 +464,7 @@ if ($is_adminOfCourse) {
   <tr>
     <td>&nbsp;</td>
     <td><div align="center">
+		<input type="hidden" name="_token" value=$test/>
         <input type=submit value="$langSubmitChanges"  name="toolStatus" onClick="selectAll(this.form.elements[3],true)">
         </div>
         </td>

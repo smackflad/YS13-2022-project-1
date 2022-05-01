@@ -414,7 +414,7 @@ if (isset($_POST['create_course'])) {
         $fd=fopen("../../courses/$repertoire/index.php", "w");
         $string="<?php
                 session_start();
-				header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
+				header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict\");
         $titou=\"$repertoire\";
         session_register(\"dbname\");
         include(\"../../modules/course_home/course_home.php\");
