@@ -37,7 +37,7 @@ $tool_content = "";
 if($is_adminOfCourse) 
 { 
 
-	if(isset($submit))
+	if(isset($submit) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))
 	{
 
 		// UPLOAD FILE TO "documents" DIRECTORY + INSERT INTO documents TABLE
@@ -46,10 +46,10 @@ if($is_adminOfCourse)
 		if (($file_name != "") && ($file_size <= "$size" )) {
 
 		$file_name = str_replace(" ", "", $file_name);
-		$file_name = str_replace("é", "e", $file_name);
-		$file_name = str_replace("è", "e", $file_name);
-		$file_name = str_replace("ê", "e", $file_name);
-		$file_name = str_replace("à", "a", $file_name);
+		$file_name = str_replace("ï¿½", "e", $file_name);
+		$file_name = str_replace("ï¿½", "e", $file_name);
+		$file_name = str_replace("ï¿½", "e", $file_name);
+		$file_name = str_replace("ï¿½", "a", $file_name);
 
 		@copy("$file", "$updir/$file_name")
 		or die("<p>$langCouldNot</p></tr>");
@@ -60,7 +60,7 @@ if($is_adminOfCourse)
 		}
 		if($mID<101) $mID = 101;
 		else $mID = $mID+1;
-
+		$link_name=htmlspecialchars($link_name);
 		db_query("INSERT INTO accueil VALUES (
 					$mID,
 					'$link_name',
@@ -98,6 +98,7 @@ else
 		<td><input type=\"Text\" name=\"link_name\" size=\"50\"></td>
 		</tr></thead></table>
 		<br>
+		<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 		<input type=\"Submit\" name=\"submit\" value=\"$langAdd\"></form>";
 	}	// else
 }	// if uid=prof_id

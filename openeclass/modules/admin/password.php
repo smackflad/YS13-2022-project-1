@@ -72,6 +72,7 @@ if (!isset($changePass)) {
   </tr>
   <tr>
     <th class=\"left\">&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
     <td><input type=\"submit\" name=\"submit\" value=\"$langModify\"></td>
   </tr>
   </tbody>
@@ -79,7 +80,7 @@ if (!isset($changePass)) {
 </form>";
 }
 
-elseif (isset($submit) && isset($changePass) && ($changePass == "do")) {
+elseif (isset($submit) && isset($changePass) && ($changePass == "do") && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 	$userid = $_REQUEST['userid'];
 	if (empty($_REQUEST['password_form']) || empty($_REQUEST['password_form1'])) {
 		$tool_content .= mes($langFields, "", 'caution');

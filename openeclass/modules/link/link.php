@@ -92,11 +92,11 @@ if (isset($action) && ($is_adminOfCourse)) { //allow link management actions onl
 	switch($action)
 	{
 		case "addlink":	if(isset($submitLink)) {
-			if(!addlinkcategory("link"))	// here we add a link
+			if(!addlinkcategory("link") && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))	// here we add a link
 			unset($submitLink);
 		}
 		break;
-		case "addcategory": if(isset($submitCategory)) {
+		case "addcategory": if(isset($submitCategory) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 			if(!addlinkcategory("category"))	// here we add a category
 			unset($submitCategory);
 		}
@@ -197,6 +197,7 @@ if($is_adminOfCourse) {
 		$tool_content .=  "
           <tr>
             <th class='left'>&nbsp;</th>
+			<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
             <td><input type=\"submit\" name=\"submitLink\" value=\"".$langAdd."\" /></td>
           </tr>
           </tbody>
@@ -239,6 +240,7 @@ if($is_adminOfCourse) {
           </tr>
           <tr>
             <th>&nbsp;	</th>
+			<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
             <td><input type=\"submit\" name=\"submitCategory\" value=\"".$langAdd."\" /></td>
           </tr>
           </tbody>

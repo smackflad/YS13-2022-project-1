@@ -239,7 +239,7 @@ if ($is_adminOfCourse){
 
 	//--add external link
 
-	if(isset($submit) &&  @$action == 2) {
+	if(isset($submit) &&  @$action == 2 && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 		if (($link == "http://") or ($link == "ftp://") or empty($link) or empty($name_link))  {
 			$tool_content .= "<p class=\"caution_small\">$langInvalidLink<br /><a href=\"$_SERVER[PHP_SELF]?action=2\">$langHome</a></p><br />";
 			draw($tool_content, 2, 'course_tools');
@@ -254,17 +254,18 @@ if ($is_adminOfCourse){
 
 		if($mID<101) $mID = 101;
 		else $mID = $mID+1;
-		$link = quote($link);
-		$name_link = quote($name_link);
-		run_Query("INSERT INTO accueil VALUES (?,
-					?,
-					?,
-					'external_link',
-					'1',
-					'0',
-					?,
-					''
-					)", array("ssss", $mID, $name_link, $link, $link));
+		// $link = quote($link);
+		$name_link = htmlspecialchars($name_link);
+		
+		// run_Query("INSERT INTO accueil VALUES (?,
+		// 			?,
+		// 			?,
+		// 			'external_link',
+		// 			'1',
+		// 			'0',
+		// 			?,
+		// 			''
+		// 			)", array("ssss", $mID, $name_link, $link, $link));
 
 		$tool_content .= "<p class=\"success_small\">$langLinkAdded</p><br/>";
 		unset($action);
@@ -273,11 +274,11 @@ if ($is_adminOfCourse){
 //upload html page
 // -------------------------
 
-	if(isset($submit) &&  @$action == 1){
+	if(isset($submit) &&  @$action == 1 && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))){
 		$updir = "$webDir/courses/$currentCourseID/page/"; //path to upload directory
 		$size = "20971520"; //file size is 20M (1024x1024x20)
 		if (isset($file_name) and ($file_name != "") && ($file_size <= "$size") and ($link_name != "")) {
-
+			$link_name=htmlspecialchars($link_name);
 			@copy("$file", "$updir/$file_name")
 				or die("<p>$langCouldNot</p></tr>");
 
@@ -342,6 +343,7 @@ if ($is_adminOfCourse && @$action == 1) {//upload html file
 	</tr>
 	<tr>
 	<th class='left'>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td><input type=\"Submit\" name=\"submit\" value=\"$langAdd\"></td>
 	<td>&nbsp;</td>
 	</tr>
@@ -352,7 +354,7 @@ if ($is_adminOfCourse && @$action == 1) {//upload html file
 	exit();
 }
 
-if ($is_adminOfCourse && @$action == 2) {//add external link
+if ($is_adminOfCourse && @$action == 2 ) {//add external link
 
 	$nameTools = $langAddExtLink;
 	$navigation[]= array ("url"=>"course_tools.php", "name"=> $langToolManagement);
@@ -379,6 +381,7 @@ if ($is_adminOfCourse && @$action == 2) {//add external link
 	</tr>
 	<tr>
 	<th class='left'>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td><input type=\"Submit\" name=\"submit\" value=\"$langAdd\"></td>
 	<td>&nbsp;</td>
 	</tr>

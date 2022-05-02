@@ -138,7 +138,7 @@ if (!isset($a)) {
 }
 // Add a new faculte
 elseif ($a == 1)  {
-	if (isset($add)) {
+	if (isset($add) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 		// Check for empty fields
 		if (empty($codefaculte) or empty($faculte)) {
 			$tool_content .= "<p>".$langEmptyFaculte."</p><br />";
@@ -167,6 +167,7 @@ elseif ($a == 1)  {
         }
 	} else {
 		// Display form for new faculte information
+		$test=$_SESSION['_token'];
 		$tool_content .= "<form method=\"post\" action=\"".$_SERVER['PHP_SELF']."?a=1\">";
 		$tool_content .= "<table width='99%' class='FormData'>
 		<tbody><tr>
@@ -182,6 +183,7 @@ elseif ($a == 1)  {
 		</tr>
 		<tr>
 		<th>&nbsp;</th>
+		<input type='hidden' name='_token' value='".$test."'/>
 		<td><input type='submit' name='add' value='".$langAdd."' /></td>
 		</tr>
 		</tbody>
@@ -209,7 +211,7 @@ elseif ($a == 2) {
 // Edit a faculte
 elseif ($a == 3)  {
         $c = @intval($_REQUEST['c']);
-	if (isset($_POST['edit'])) {
+	if (isset($_POST['edit']) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 		// Check for empty fields
                 $faculte = $_POST['faculte'];
 		if (empty($faculte)) {
@@ -257,6 +259,7 @@ elseif ($a == 3)  {
 		<tr>
 		<th>&nbsp;</th>
 		<td><input type='hidden' name='c' value='$c' />
+		<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 		<input type='submit' name='edit' value='$langAcceptChanges' />
 		</td>
 		</tr>

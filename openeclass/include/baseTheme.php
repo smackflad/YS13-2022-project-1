@@ -44,8 +44,8 @@
 // (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))
 
 
-
-
+// $test=$_SESSION['_token'];
+// <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 
 
 $_SESSION['_token']=bin2hex(openssl_random_pseudo_bytes(16));
