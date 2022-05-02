@@ -49,7 +49,7 @@ $all_set = register_posted_variables(array(
 
 $submit = isset($_POST['submit'])?$_POST['submit']:'';
 
-if($submit) {
+if($submit && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 	// register user
 	$depid = intval(isset($_POST['department'])?$_POST['department']: 0);
 	$proflanguage = isset($_POST['language'])?$_POST['language']:'';
@@ -202,6 +202,7 @@ $langEmail : $emailhelpdesk
 	$tool_content .= "</td></tr>
 	<tr>
 	<th>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td><input type='submit' name='submit' value='$langSubmit' >
 		<small>$langRequiredFields</small></td>
 	</tr>
