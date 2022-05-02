@@ -108,6 +108,7 @@ $tool_content .= "<table width='99%' class='FormData' align='center'><tbody>
         <table class='xinha_editor'><tr><td><textarea id='xinha' name='unitdescr'>". str_replace('{','&#123;',htmlspecialchars($unitdescr))."</textarea></td></tr>
         </table></td></tr>
         <tr><th>&nbsp;</th>
+                <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
             <td><input type='submit' name='edit_submit' value='$button'></td></tr>
 </tbody></table>
 </form>";

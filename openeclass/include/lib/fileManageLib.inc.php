@@ -471,7 +471,7 @@ function form_dir_list_exclude($dbTable, $sourceType, $sourceComponent, $command
 			}
 		}
 	}
-
+	$dialogBox .= "<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>";
 	$dialogBox .= "</select></td><td class='left'><input type=\"submit\" value=\"$langMove\"></td></tr>
         	</tbody></table><br/>";
 	$dialogBox .= "</form>";

@@ -247,7 +247,7 @@ if (!empty($show) && ($show=="closed")) {
 		break;
 	case '2':
 		$submit = isset($_POST['submit'])?$_POST['submit']:'';
-		if(!empty($submit)) {
+		if(!empty($submit) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
 			// post the comment and do the delete action
 			if (!empty($comment)) {
 				$sql = "UPDATE prof_request set status = '3',
@@ -300,6 +300,7 @@ $langEmail: $emailhelpdesk";
 			<input type='checkbox' name='sendmail' value='1' checked='yes'> <small>($langGroupValidate)</small>
 			</td></tr>
 			<tr><th class='left'>&nbsp;</th>
+			<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 			<td><input type='submit' name='submit' value='$langRejectRequest'>&nbsp;&nbsp;<small>($langRequestDisplayMessage)</small></td>
 			</tr></tbody></table>
 			</form>";

@@ -48,7 +48,7 @@ $tool_content = "";
 
 $submit = isset($_POST['submit'])?$_POST['submit']:'';
 // professor registration
-if ($submit)  {
+if ($submit && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))  {
         $auth = $_POST['auth'];
         $pn = $_POST['pn'];
         $ps = $_POST['ps'];
@@ -183,6 +183,7 @@ if ($submit)  {
 	$tool_content .= lang_select_options('language', '', $lang);
 	$tool_content .= "</td></tr>
 	<tr><th>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td><input type='submit' name='submit' value='".$langSubmit."' >
 	<input type='hidden' name='auth' value='$auth' >
 	</td></tr>
