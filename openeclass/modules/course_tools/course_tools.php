@@ -164,7 +164,8 @@ if ($is_adminOfCourse){
 
 		//and activate the ones the professor wants active, if any
 		if ($loopCount >0) {
-			run_Query("UPDATE accueil SET visible = 1 WHERE ?", array("s", $tool_id), $dbname);
+			// run_Query("UPDATE accueil SET visible = 1 WHERE ?", array("s", $tool_id), $dbname);
+			db_query("UPDATE accueil SET visible = 1 WHERE $tool_id", $dbname);
 		}
 		db_query("UPDATE `accueil` SET `visible` = 2 WHERE define_var = 'MODULE_ID_UNITS'", $dbname);
 		
@@ -219,9 +220,12 @@ if ($is_adminOfCourse){
 	}
 
 	if (isset($delete)) {
+		// $sql = "SELECT lien, define_var FROM accueil WHERE `id` = ". $delete ." ";
+		// $result = db_query($sql, $dbname);
 		$sql = "SELECT lien, define_var FROM accueil WHERE `id` = ?";
 		$result = run_Query($sql, array("s", $delete), $dbname);
 		while ($res = $result->fetch_row()){
+		// while( $res = mysql_fetch_row($result)){
 			if($res[1] == "HTML_PAGE") {
 				$link = explode(" ", $res[0]);
 				$path = substr($link[0], 6);
@@ -229,8 +233,10 @@ if ($is_adminOfCourse){
 				@unlink($file2Delete);
 			}
 		}
-		$sql = "DELETE FROM `accueil` WHERE `id` = ?";
-		run_Query($sql, array("s". $delete), $dbname);
+		$sql = "DELETE FROM `accueil` WHERE `id` = " . $delete ." ";
+		db_query($sql, $dbname);
+		// $sql = "DELETE FROM `accueil` WHERE `id` = ?";
+		// run_Query($sql, array("s", " . $delete ."), $dbname);
 		unset($sql);
 
 		$tool_content .= "<p class=\"success_small\">$langLinkDeleted</p><br/>";
@@ -254,18 +260,29 @@ if ($is_adminOfCourse){
 
 		if($mID<101) $mID = 101;
 		else $mID = $mID+1;
-		// $link = quote($link);
+		$link = quote($link);
+		// $name_link = quote($name_link);
 		$name_link = htmlspecialchars($name_link);
 		
-		// run_Query("INSERT INTO accueil VALUES (?,
-		// 			?,
-		// 			?,
-		// 			'external_link',
-		// 			'1',
-		// 			'0',
-		// 			?,
-		// 			''
-		// 			)", array("ssss", $mID, $name_link, $link, $link));
+
+		// mysql_query("INSERT INTO accueil VALUES ($mID,
+		// 		$name_link,
+		// 		$link,
+		// 		'external_link',
+		// 		'1',
+		// 		'0',
+		// 		$link,
+		// 		''
+		// 		)");
+		run_Query("INSERT INTO accueil VALUES (?,
+					?,
+					?,
+					'external_link',
+					'1',
+					'0',
+					?,
+					''
+					)", array("ssss", $mID, $name_link, $link, $link),$dbname);
 
 		$tool_content .= "<p class=\"success_small\">$langLinkAdded</p><br/>";
 		unset($action);
@@ -438,7 +455,6 @@ if ($is_adminOfCourse) {
 	    <li><a href=\"".$_SERVER['PHP_SELF']."?action=2\">".$langAddExtLink."</a></li>
 	  </ul>
 	</div>";
-	$test=$_SESSION['_token'];
 	$tool_content .= <<<tForm
 <form name="courseTools" action="$_SERVER[PHP_SELF]" method="post" enctype="multipart/form-data">
   <br/>
@@ -467,7 +483,7 @@ if ($is_adminOfCourse) {
   <tr>
     <td>&nbsp;</td>
     <td><div align="center">
-		<input type="hidden" name="_token" value=$test/>
+
         <input type=submit value="$langSubmitChanges"  name="toolStatus" onClick="selectAll(this.form.elements[3],true)">
         </div>
         </td>
