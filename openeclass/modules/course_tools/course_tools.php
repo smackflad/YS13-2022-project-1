@@ -141,13 +141,16 @@ if ($is_adminOfCourse){
 		$i =0;
 		$publicTools = array();
 		$tool_id = null;
+		$temp = array("");
 		while ($i< $loopCount) {
 			if (!isset($tool_id)) {
-				$tool_id = " (`id` = " . $tool_stat_active[$i] .")" ;
+				$tool_id = " (id = ?)" ;
 			}
 			else {
-				$tool_id .= " OR (`id` = " . $tool_stat_active[$i] .")" ;
+				$tool_id .= " OR (id = ?)" ;
 			}
+			$temp[0] .="s";
+			$temp[]=$tool_stat_active[$i];
 			$i++;
 		}
 
@@ -164,8 +167,7 @@ if ($is_adminOfCourse){
 
 		//and activate the ones the professor wants active, if any
 		if ($loopCount >0) {
-			// run_Query("UPDATE accueil SET visible = 1 WHERE ?", array("s", $tool_id), $dbname);
-			db_query("UPDATE accueil SET visible = 1 WHERE $tool_id", $dbname);
+			 run_Query("UPDATE accueil SET visible = 1 WHERE ".$tool_id, $temp, $dbname);
 		}
 		db_query("UPDATE `accueil` SET `visible` = 2 WHERE define_var = 'MODULE_ID_UNITS'", $dbname);
 		
@@ -233,10 +235,10 @@ if ($is_adminOfCourse){
 				@unlink($file2Delete);
 			}
 		}
-		$sql = "DELETE FROM `accueil` WHERE `id` = " . $delete ." ";
-		db_query($sql, $dbname);
-		// $sql = "DELETE FROM `accueil` WHERE `id` = ?";
-		// run_Query($sql, array("s", " . $delete ."), $dbname);
+//		$sql = "DELETE FROM `accueil` WHERE `id` = " . $delete ." ";
+//		db_query($sql, $dbname);
+		 $sql = "DELETE FROM `accueil` WHERE `id` = ?";
+		 run_Query($sql, array("s", $delete), $dbname);
 		unset($sql);
 
 		$tool_content .= "<p class=\"success_small\">$langLinkDeleted</p><br/>";
