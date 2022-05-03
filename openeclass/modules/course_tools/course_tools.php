@@ -128,7 +128,7 @@ hCont;
 
 if ($is_adminOfCourse){
 	global $dbname;
-	if  (isset($_REQUEST['toolStatus']) ){
+	if  (isset($_REQUEST['toolStatus']) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])) ){
 		if(isset($_POST['toolStatActive'])) $tool_stat_active = $_POST['toolStatActive'];
 
 		
@@ -457,6 +457,7 @@ if ($is_adminOfCourse) {
 	    <li><a href=\"".$_SERVER['PHP_SELF']."?action=2\">".$langAddExtLink."</a></li>
 	  </ul>
 	</div>";
+	$tokenTest =$_SESSION['_token'];
 	$tool_content .= <<<tForm
 <form name="courseTools" action="$_SERVER[PHP_SELF]" method="post" enctype="multipart/form-data">
   <br/>
@@ -485,7 +486,7 @@ if ($is_adminOfCourse) {
   <tr>
     <td>&nbsp;</td>
     <td><div align="center">
-
+		<input type='hidden' name='_token' value="$tokenTest"/>
         <input type=submit value="$langSubmitChanges"  name="toolStatus" onClick="selectAll(this.form.elements[3],true)">
         </div>
         </td>

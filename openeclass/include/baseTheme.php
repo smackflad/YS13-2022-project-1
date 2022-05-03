@@ -545,18 +545,16 @@ function run_Query($query, $params, $db_){
     $stmt->execute();
     $result = $stmt->get_result();
 //        echo "<script>alert('$result->num_rows');</script>";
+    $insertId= $conn->insert_id;
     $conn->close();
     $stmt->close();
     if($stmt->error){
         return false;
     }else {
-        if($result){
+        if(!$insertId){
             return $result;
         }else{
-            if($stmt->insert_id){
-                return $stmt->insert_id;
-            }
-            return true;
+            return $insertId;
         }
     }
 }
