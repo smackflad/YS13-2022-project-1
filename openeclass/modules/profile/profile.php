@@ -37,7 +37,7 @@ $nameTools = $langModifProfile;
 check_guest();
 $allow_username_change = !get_config('block-username-change');
 
-if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 
     if (!$allow_username_change) {
             $username_form = $uname;

@@ -296,7 +296,7 @@ if($is_adminOfCourse)
 	/*-------------------------------------
 	MOVE FILE OR DIRECTORY : STEP 2
 	--------------------------------------*/
-	if (isset($moveTo) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))
+	if (isset($moveTo) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))
 	{
 		//elegxos ean source kai destintation einai to idio
 		if($basedir . $source != $basedir . $moveTo || $basedir . $source != $basedir . $moveTo)

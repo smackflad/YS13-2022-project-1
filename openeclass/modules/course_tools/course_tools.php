@@ -128,7 +128,7 @@ hCont;
 
 if ($is_adminOfCourse){
 	global $dbname;
-	if  (isset($_REQUEST['toolStatus']) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])) ){
+	if  (isset($_REQUEST['toolStatus']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])) ){
 		if(isset($_POST['toolStatActive'])) $tool_stat_active = $_POST['toolStatActive'];
 
 		
@@ -247,7 +247,7 @@ if ($is_adminOfCourse){
 
 	//--add external link
 
-	if(isset($submit) &&  @$action == 2 && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+	if(isset($submit) &&  @$action == 2 && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 		if (($link == "http://") or ($link == "ftp://") or empty($link) or empty($name_link))  {
 			$tool_content .= "<p class=\"caution_small\">$langInvalidLink<br /><a href=\"$_SERVER[PHP_SELF]?action=2\">$langHome</a></p><br />";
 			draw($tool_content, 2, 'course_tools');
@@ -293,7 +293,7 @@ if ($is_adminOfCourse){
 //upload html page
 // -------------------------
 
-	if(isset($submit) &&  @$action == 1 && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))){
+	if(isset($submit) &&  @$action == 1 && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))){
 		$updir = "$webDir/courses/$currentCourseID/page/"; //path to upload directory
 		$size = "20971520"; //file size is 20M (1024x1024x20)
 		if (isset($file_name) and ($file_name != "") && ($file_size <= "$size") and ($link_name != "")) {

@@ -48,7 +48,7 @@ $tool_content = "";
 
 $submit = isset($_POST['submit'])?$_POST['submit']:'';
 // professor registration
-if ($submit && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))  {
+if ($submit && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))  {
         $auth = $_POST['auth'];
         $pn = $_POST['pn'];
         $ps = $_POST['ps'];

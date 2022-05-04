@@ -288,7 +288,7 @@ $tool_content .= "
 				$tool_content .= $langCannotDeleteAdmin;
 			}
 		}
-	}  elseif (!empty($u_submitted) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))){ // if the form was submitted then update user
+	}  elseif (!empty($u_submitted) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))){ // if the form was submitted then update user
 
 		// get the variables from the form and initialize them
 		$fname = isset($_POST['fname'])?$_POST['fname']:'';

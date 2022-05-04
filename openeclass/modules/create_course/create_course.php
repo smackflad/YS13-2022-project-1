@@ -111,7 +111,7 @@ $tool_content .= $intitule_html .
                  $course_keywords_html .
                  $visit_html;
 
-if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])) */) {
+if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])) */) {
 
    // display form
 	$tool_content .= "<table width=\"99%\" align='left' class='FormData'>
@@ -164,7 +164,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 // step 2 of creation
 // --------------------------------
 
- elseif (isset($_POST['create2']) or isset($_POST['back2']) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))  {
+ elseif (isset($_POST['create2']) or isset($_POST['back2']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))  {
 	$nameTools = $langCreateCourse . " (" . $langCreateCourseStep." 2 " .$langCreateCourseStep2 . " 3 )";
 	$tool_content .= "<table width=\"99%\" align='left' class='FormData'>
 	<tbody>
@@ -198,7 +198,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 	<p align='right'><small>$langFieldsOptionalNote</small></p>
 	<br />";
 
-}  elseif (isset($_POST['create3']) or isset($_POST['back2']) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+}  elseif (isset($_POST['create3']) or isset($_POST['back2']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 	$nameTools = $langCreateCourse . " (" . $langCreateCourseStep." 3 " .$langCreateCourseStep2 . " 3 )" ;
 	@$tool_content .= "
 	<table width=\"99%\" align='left' class='FormData'>
@@ -332,7 +332,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 } // end of create3
 
 // create the course and the course database
-if (isset($_POST['create_course']) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+if (isset($_POST['create_course']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 
         $nameTools = $langCourseCreate;
         $facid = intval($faculte);

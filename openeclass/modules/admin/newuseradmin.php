@@ -49,7 +49,7 @@ $all_set = register_posted_variables(array(
 
 $submit = isset($_POST['submit'])?$_POST['submit']:'';
 
-if($submit && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+if($submit && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 	// register user
 	$depid = intval(isset($_POST['department'])?$_POST['department']: 0);
 	$proflanguage = isset($_POST['language'])?$_POST['language']:'';

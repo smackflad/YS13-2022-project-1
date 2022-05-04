@@ -92,11 +92,11 @@ if (isset($action) && ($is_adminOfCourse)) { //allow link management actions onl
 	switch($action)
 	{
 		case "addlink":	if(isset($submitLink)) {
-			if(!addlinkcategory("link") && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))	// here we add a link
+			if(!addlinkcategory("link") && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))	// here we add a link
 			unset($submitLink);
 		}
 		break;
-		case "addcategory": if(isset($submitCategory) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+		case "addcategory": if(isset($submitCategory) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 			if(!addlinkcategory("category"))	// here we add a category
 			unset($submitCategory);
 		}

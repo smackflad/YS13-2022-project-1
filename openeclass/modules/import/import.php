@@ -37,7 +37,7 @@ $tool_content = "";
 if($is_adminOfCourse) 
 { 
 
-	if(isset($submit) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token'])))
+	if(isset($submit) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))
 	{
 
 		// UPLOAD FILE TO "documents" DIRECTORY + INSERT INTO documents TABLE

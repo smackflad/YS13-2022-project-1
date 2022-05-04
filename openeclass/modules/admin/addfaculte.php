@@ -138,7 +138,7 @@ if (!isset($a)) {
 }
 // Add a new faculte
 elseif ($a == 1)  {
-	if (isset($add) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+	if (isset($add) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 		// Check for empty fields
 		if (empty($codefaculte) or empty($faculte)) {
 			$tool_content .= "<p>".$langEmptyFaculte."</p><br />";
@@ -211,7 +211,7 @@ elseif ($a == 2) {
 // Edit a faculte
 elseif ($a == 3)  {
         $c = @intval($_REQUEST['c']);
-	if (isset($_POST['edit']) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+	if (isset($_POST['edit']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 		// Check for empty fields
                 $faculte = $_POST['faculte'];
 		if (empty($faculte)) {

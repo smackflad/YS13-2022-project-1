@@ -247,7 +247,7 @@ if (!empty($show) && ($show=="closed")) {
 		break;
 	case '2':
 		$submit = isset($_POST['submit'])?$_POST['submit']:'';
-		if(!empty($submit) && (isset($_POST['_token']) || ($_POST['_token'] == $_SESSION['_token']))) {
+		if(!empty($submit) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 			// post the comment and do the delete action
 			if (!empty($comment)) {
 				$sql = "UPDATE prof_request set status = '3',
