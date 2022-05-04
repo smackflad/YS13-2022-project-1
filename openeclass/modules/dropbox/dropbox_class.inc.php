@@ -540,11 +540,11 @@ class Dropbox_Person {
 			}
 		}
 		if (!$found) die($dropbox_lang["generalError"]);
-		
+
 		//delete entries in person table concerning sent works
-		db_query("DELETE FROM `".$dropbox_cnf["personTbl"]."` 
+		db_query("DELETE FROM `".$dropbox_cnf["personTbl"]."`
 				WHERE personId='".$this->userId."' AND fileId='".$id."'", $currentCourseID);
-		
+
 		removeMoreIfMailing($id);  // RH: Mailing: see init1
 		removeUnusedFiles();	//check for unused files
 	}
