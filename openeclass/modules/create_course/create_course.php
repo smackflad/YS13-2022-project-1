@@ -439,6 +439,21 @@ if (isset($_POST['create_course']) && (isset($_POST['_token']) || ($_POST['_toke
         $status[$repertoire] = 1;
         $_SESSION['status'] = $status;
 
+    // ----------- dropbox index.php -----------
+    $fd=fopen("../../courses/$repertoire/dropbox/index.php", "w");
+    $string="<?php
+                    session_start();
+                    header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict\");
+            $titou=\"$repertoire\";
+            session_register(\"dbname\");
+//            include(\"../../modules/course_home/course_home.php\");
+            print_r(\"nice try\");
+            ?>";
+
+    fwrite($fd, "$string");
+    $status[$repertoire] = 1;
+    $_SESSION['status'] = $status;
+
     // ----------- Import from BetaCMS Bridge -----------
         $tool_content .= doImportFromBetaCMSAfterCourseCreation($repertoire, $mysqlMainDb, $webDir);
         // --------------------------------------------------

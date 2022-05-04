@@ -199,7 +199,7 @@ tCont2;
 		}
 	}
 	if ($dropbox_cnf["allowJustUpload"])  // RH
-	{
+    {
 		$tool_content .= '
            <option value="0">'.$dropbox_lang["justUploadInSelect"].'</option>';
 	}
