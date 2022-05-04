@@ -129,12 +129,11 @@ $dropbox_cnf["mailingFileRegexp"] = '/^(.+)\.\w{1,4}$/';
 function getUserNameFromId ($id)  // RH: Mailing: return 'Mailing ' + id
 {
     global $dropbox_cnf, $dropbox_lang, $mysqlMainDb;
-
     $mailingId = $id - $dropbox_cnf["mailingIdBase"];
     if ($mailingId > 0) return $dropbox_lang["mailingAsUsername"] . $mailingId;
 
     $sql = "SELECT CONCAT(nom,' ', prenom) AS name
-		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . mysql_real_escape_string($id) . "'";
+		FROM `" . $dropbox_cnf["userTbl"] . "` WHERE user_id='" . addslashes($id) . "'";
     $result = db_query($sql, $mysqlMainDb);
     $res = mysql_fetch_array($result);
     if ($res == FALSE) return FALSE;
@@ -161,10 +160,13 @@ function getLoginFromId ($id)
 function isCourseMember($id)
 {
     global $dropbox_cnf, $dropbox_lang, $mysqlMainDb;
-
-    $sql = "SELECT * FROM ?
+    // $sql = "SELECT * FROM `" . $dropbox_cnf["courseUserTbl"] . "`
+    // WHERE user_id = '" . addslashes( $id) . "' AND cours_id = '" . $dropbox_cnf["cid"] . "'";
+    // $result = db_query($sql, $mysqlMainDb); 
+    // if (mysql_num_rows($result) == 1)
+    $sql = "SELECT * FROM  `" . $dropbox_cnf["courseUserTbl"] . "`
 		WHERE user_id = ? AND cours_id = ?";
-    $result = run_Query($sql, array("sss", $dropbox_cnf["courseUserTbl"], htmlspecialchars($id), $dropbox_cnf["cid"]), $mysqlMainDb);
+    $result = run_Query($sql, array("ss", $id, $dropbox_cnf["cid"]), $mysqlMainDb);
     if ($result->num_rows == 1)
     {
         return TRUE;
