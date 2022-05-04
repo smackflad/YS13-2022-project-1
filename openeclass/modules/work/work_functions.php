@@ -83,7 +83,8 @@ function work_secret($id)
 		if (!empty($secret[0])) {
 			$s = $secret[0];
 		} else {
-			$s = $id;
+//			$s = $id;
+            die("ERROR: ASSIGNMENT ID NOT FOUND");
 		}
 		if (!is_dir("$workPath/$s")) {
 			if (!file_exists($coursePath)) {

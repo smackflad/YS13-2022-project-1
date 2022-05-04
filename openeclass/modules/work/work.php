@@ -339,27 +339,30 @@ function submit_work($id) {
 		$stud_comments = htmlspecialchars($stud_comments, ENT_QUOTES);
 		if ($group_sub == 'yes' and !was_submitted(-1, $group_id, $id)) {
 			delete_submissions_by_uid(-1, $group_id, $id);
-			db_query("INSERT INTO assignment_submit
-				(uid, assignment_id, submission_date, submission_ip, file_path,
-				file_name, comments, group_id) VALUES ('".mysql_real_escape_string($uid)."',
-				'".mysql_real_escape_string($id)."',
-				NOW(),
-				'".mysql_real_escape_string($REMOTE_ADDR)."',
-				'".mysql_real_escape_string($filename)."',
-				'".mysql_real_escape_string($_FILES['userfile']['name'])."',
-				'".mysql_real_escape_string($stud_comments)."',
-				'".mysql_real_escape_string($group_id)."')", $currentCourseID);
-		} else {
-			db_query("INSERT INTO assignment_submit
+            run_Query("INSERT INTO assignment_submit
+			 	(uid, assignment_id, submission_date, submission_ip, file_path,
+			 	file_name, comments, group_id) VALUES (?,
+			 	?,
+			 	NOW(),
+			 	?,
+			 	?,
+			 	?,
+			 	?,
+			 	?",array("sssssss",htmlspecialchars($uid, ENT_QUOTES),htmlspecialchars($id, ENT_QUOTES),htmlspecialchars($REMOTE_ADDR, ENT_QUOTES),
+                htmlspecialchars($filename, ENT_QUOTES),$_FILES['userfile']['name'],$stud_comments,
+                htmlspecialchars($group_id, ENT_QUOTES)),$currentCourseID);
+        } else {
+//            echo "<script>alert('test');</script>";
+			run_Query("INSERT INTO assignment_submit
 				(uid, assignment_id, submission_date, submission_ip, file_path,
 				file_name, comments) VALUES (
-				'".mysql_real_escape_string($uid)."',
-				'".mysql_real_escape_string($id)."',
+				?,
+				?,
 				NOW(), 
-				'".mysql_real_escape_string($REMOTE_ADDR)."',
-				'".mysql_real_escape_string($filename)."',
-				'".mysql_real_escape_string($_FILES['userfile']['name'])."',
-				'".mysql_real_escape_string($stud_comments)."')", $currentCourseID);
+				?,
+				?,
+				?,
+				?)", array("ssssss", intval($uid), intval($id), htmlspecialchars($REMOTE_ADDR, ENT_QUOTES), htmlspecialchars($filename, ENT_QUOTES), $_FILES['userfile']['name'], $stud_comments), $currentCourseID);
 		}
 
 		$tool_content .="<p class='success_small'>$msg2<br />$msg1<br /><a href='work.php'>$langBack</a></p><br />";
@@ -473,8 +476,8 @@ function show_edit_assignment($id)
 	global $urlAppend;
 	global $end_cal_Work_db;
 
-	//$res = db_query("SELECT * FROM assignments WHERE id = '$id'");
-	$res=run_Query("SELECT * FROM assignments WHERE id = ?",array("s",$id),$mysqlMainDb);
+//	$res = db_query("SELECT * FROM assignments WHERE id = '$id'");
+	$res=run_Query("SELECT * FROM assignments WHERE id = ?",array("s",$id));
 	$row = $res->fetch_array();
 
 	$nav[] = array("url"=>"work.php", "name"=> $langWorks);
