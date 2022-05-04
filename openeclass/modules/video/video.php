@@ -146,37 +146,37 @@ if (isset($_POST['submit']) or isset($_POST['edit_submit'])) {
 			$sql = "INSERT INTO videolinks (url,titre,description,creator,publisher,date) VALUES ('$url','".mysql_real_escape_string($titre)."','".mysql_real_escape_string($description)."','".mysql_real_escape_string($creator)."','".mysql_real_escape_string($publisher)."','".mysql_real_escape_string($date)."')";
 		} else {
 			$updir = "$webDir/video/$currentCourseID"; //path to upload directory
-			if (($file_name != "") && ($file_size <= $diskQuotaVideo )) {
-					// convert php file in phps to protect the platform against malicious codes
-					$file_name = preg_replace("/\.php$/", ".phps", $file_name);
-					// check for dangerous file extensions
-					if (preg_match('/\.(ade|adp|bas|bat|chm|cmd|com|cpl|crt|exe|hlp|hta|' .'inf|ins|isp|jse|lnk|mdb|mde|msc|msi|msp|mst|pcd|pif|reg|scr|sct|shs|' .'shb|url|vbe|vbs|wsc|wsf|wsh)$/', $file_name)) {
-						$tool_content .= "<p class=\"caution_small\">$langUnwantedFiletype:  $file_name<br />";
-						$tool_content .= "<a href=\"$_SERVER[PHP_SELF]\">$langBack</a></p><br />";
-						draw($tool_content, 2, 'video', $head_content);
-						exit;
-					}
-					$file_name = str_replace(" ", "%20", $file_name);
-					$file_name = str_replace("%20", "", $file_name);
-					$file_name = str_replace("\'", "", $file_name);
-					$safe_filename = date("YmdGis").randomkeys("8").".".get_file_extension($file_name);
-					if ($titre == "") $titre = $file_name;
-					$iscopy=@copy("$file", "$updir/$safe_filename");
-						if(!$iscopy) {
-							$tool_content .= "<p class=\"success_small\">$langFileNot<br />
-							<a href=\"$_SERVER[PHP_SELF]\">$langBack</a></p><br />";
-							draw($tool_content, 2, 'video', $head_content);
-							exit;
-						}
-				} else {
-					$tool_content .= "<p class=\"caution_small\">$langTooBig<br />
-					<a href=\"$_SERVER[PHP_SELF]\">$langBack</a></p><br />";
-					draw($tool_content, 2, 'user', $head_content);
-					exit;
-				}
-				$path = "/".$safe_filename;
-				$url="$file_name";
-				$sql = "INSERT INTO video (path, url, titre, description, creator, publisher, date) VALUES ('$path', '$url','".mysql_real_escape_string($titre)."','".mysql_real_escape_string($description)."','".mysql_real_escape_string($creator)."','".mysql_real_escape_string($publisher)."','".mysql_real_escape_string($date)."')";
+//			if (($file_name != "") && ($file_size <= $diskQuotaVideo )) {
+//					// convert php file in phps to protect the platform against malicious codes
+//					$file_name = preg_replace("/\.php$/", ".phps", $file_name);
+//					// check for dangerous file extensions
+//					if (preg_match('/\.(ade|adp|bas|bat|chm|cmd|com|cpl|crt|exe|hlp|hta|' .'inf|ins|isp|jse|lnk|mdb|mde|msc|msi|msp|mst|pcd|pif|reg|scr|sct|shs|' .'shb|url|vbe|vbs|wsc|wsf|wsh)$/', $file_name)) {
+//						$tool_content .= "<p class=\"caution_small\">$langUnwantedFiletype:  $file_name<br />";
+//						$tool_content .= "<a href=\"$_SERVER[PHP_SELF]\">$langBack</a></p><br />";
+//						draw($tool_content, 2, 'video', $head_content);
+//						exit;
+//					}
+//					$file_name = str_replace(" ", "%20", $file_name);
+//					$file_name = str_replace("%20", "", $file_name);
+//					$file_name = str_replace("\'", "", $file_name);
+//					$safe_filename = date("YmdGis").randomkeys("8").".".get_file_extension($file_name);
+//					if ($titre == "") $titre = $file_name;
+//					$iscopy=@copy("$file", "$updir/$safe_filename");
+//						if(!$iscopy) {
+//							$tool_content .= "<p class=\"success_small\">$langFileNot<br />
+//							<a href=\"$_SERVER[PHP_SELF]\">$langBack</a></p><br />";
+//							draw($tool_content, 2, 'video', $head_content);
+//							exit;
+//						}
+//				} else {
+//					$tool_content .= "<p class=\"caution_small\">$langTooBig<br />
+//					<a href=\"$_SERVER[PHP_SELF]\">$langBack</a></p><br />";
+//					draw($tool_content, 2, 'user', $head_content);
+//					exit;
+//				}
+//				$path = "/".$safe_filename;
+//				$url="$file_name";
+//				$sql = "INSERT INTO video (path, url, titre, description, creator, publisher, date) VALUES ('$path', '$url','".mysql_real_escape_string($titre)."','".mysql_real_escape_string($description)."','".mysql_real_escape_string($creator)."','".mysql_real_escape_string($publisher)."','".mysql_real_escape_string($date)."')";
 			}
 		}	// else
 		$result = db_query($sql,$currentCourseID);

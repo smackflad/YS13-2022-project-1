@@ -527,12 +527,12 @@ function lang_select_options($name, $onchange_js = '', $default_langcode = false
 	return selection($native_language_names, $name, $default_langcode, $onchange_js);
 }
 
-function run_Query($query, $params, $db_){
+function run_Query($query, $params, $db_= FALSE){
     for ($i=1;$i<count($params);$i++){
        $params[$i] = htmlspecialchars($params[$i]);
     }
     global $mysqlServer, $mysqlUser, $mysqlPassword,$mysqlMainDb;
-    if(!isset($db_)){
+    if(!$db_){
         $db_=$mysqlMainDb;
     }
     $sqlLogin= $query;

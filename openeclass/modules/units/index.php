@@ -432,7 +432,7 @@ function show_work($title, $comments, $resource_id, $work_id, $visibility)
 			$exlink = "<span class='invisible'>$title ($langWasDeleted)</span>";
 		}
 	} else {
-                $work = mysql_fetch_array($r, MYSQL_ASSOC);
+                mysql_fetch_array($r, MYSQL_ASSOC);
 		$link = "<a href='${urlServer}modules/work/work.php?id=$work_id&amp;unit=$id'>";
                 $exlink = $link . "$title</a>";
 		$imagelink = $link .

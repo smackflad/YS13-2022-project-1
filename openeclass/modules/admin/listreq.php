@@ -62,7 +62,7 @@ $tool_content = "";
 
 // Main body
 $close = isset($_GET['close'])?$_GET['close']:(isset($_POST['close'])?$_POST['close']:'');
-$id = isset($_GET['id'])?$_GET['id']:(isset($_POST['id'])?$_POST['id']:'');
+$id = isset($_GET['id'])?intval($_GET['id']):(isset($_POST['id'])?intval($_POST['id']):'');
 $show = isset($_GET['show'])?$_GET['show']:(isset($_POST['show'])?$_POST['show']:'');
 
 // Deal with navigation

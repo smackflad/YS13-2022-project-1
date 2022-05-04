@@ -71,52 +71,53 @@ tCont2;
 mysql_select_db($mysqlMainDb);
 $search=array();
 if(!empty($search_nom)) {
-	$search[] = "u.nom LIKE '".mysql_escape_string($search_nom)."%'";
+	$search[] = "u.nom LIKE '".mysql_real_escape_string($search_nom)."%'";
 }
 if(!empty($search_prenom)) {
-	$search[] = "u.prenom LIKE '".mysql_escape_string($search_prenom)."%'";
+	$search[] = "u.prenom LIKE '".mysql_real_escape_string($search_prenom)."%'";
 }
 if(!empty($search_uname)) {
-	$search[] = "u.username LIKE '".mysql_escape_string($search_uname)."%'";
+	$search[] = "u.username LIKE '".mysql_real_escape_string($search_uname)."%'";
 }
 // added by jexi
-if (!empty($users_file)) {
-	$tmpusers=trim($_FILES['users_file']['name']);
-	$tool_content .= <<<tCont3
-		<table width=99%>
-		<thead>
-		<tr>
-		<th>$langUsers</th><th>$langResult</th>
-		</thead>
-		<tbody>
-tCont3;
-	$f=fopen($users_file,"r");
-	while (!feof($f))	{
-		$uname=trim(fgets($f,1024));
-		if (!$uname) continue;
-		if (!check_uname_line($uname)) {
-			$tool_content .= "<tr><td colspan=\"2\">$langFileNotAllowed</td></tr>\n";
-			break;
-		}
-		$result = adduser($uname, $cours_id);
-		$tool_content .= "<tr><td align=center>$uname</td><td>";
-		if ($result == -1) {
-			$tool_content .= $langUserNoExist;
-		} elseif ($result == -2) {
-			$tool_content .= $langUserAlready;
-		} else {
-			$tool_content .= $langTheU.$langAdded;
-		}
-		$tool_content .= "</td></tr>\n";
-	}
-	$tool_content .= "</tbody></table>\n";
-	fclose($f);
-}
+//if (!empty($users_file)) {
+//	$tmpusers=trim($_FILES['users_file']['name']);
+//	$tool_content .= <<<tCont3
+//		<table width=99%>
+//		<thead>
+//		<tr>
+//		<th>$langUsers</th><th>$langResult</th>
+//		</thead>
+//		<tbody>
+//tCont3;
+//	$f=fopen($users_file,"r");
+//	while (!feof($f))	{
+//		$uname=trim(fgets($f,1024));
+//		if (!$uname) continue;
+//		if (!check_uname_line($uname)) {
+//			$tool_content .= "<tr><td colspan=\"2\">$langFileNotAllowed</td></tr>\n";
+//			break;
+//		}
+//		$result = adduser($uname, $cours_id);
+//		$tool_content .= "<tr><td align=center>$uname</td><td>";
+//		if ($result == -1) {
+//			$tool_content .= $langUserNoExist;
+//		} elseif ($result == -2) {
+//			$tool_content .= $langUserAlready;
+//		} else {
+//			$tool_content .= $langTheU.$langAdded;
+//		}
+//		$tool_content .= "</td></tr>\n";
+//	}
+//	$tool_content .= "</tbody></table>\n";
+//	fclose($f);
+//}
 
 // end
 
 $query = join(' AND ', $search);
 if (!empty($query)) {
+    echo "<script>alert('1');</script>";
 	db_query("CREATE TEMPORARY TABLE lala AS
 			SELECT user_id FROM cours_user WHERE cours_id = $cours_id
 			");
@@ -174,7 +175,7 @@ draw($tool_content, 2, 'user');
 // returns userid (yes  everything is ok )
 
 function adduser($user, $cid) {
-	$result = db_query("SELECT user_id FROM user WHERE username='".mysql_escape_string($user)."'");
+	$result = db_query("SELECT user_id FROM user WHERE username='".mysql_real_escape_string($user)."'");
 	if (!mysql_num_rows($result))
 	return -1;
 
