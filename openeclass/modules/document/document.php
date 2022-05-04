@@ -221,17 +221,17 @@ if($is_adminOfCourse)
                                 $dialogBox .= "$langUnwantedFiletype: {$_FILES['userFile']['name']}";
                         }
                         /*** Unzipping stage ***/
-                        elseif (isset($uncompress) and $uncompress == 1
-                                and preg_match('/\.zip$/i', $_FILES['userFile']['name'])) {
-                                $zipFile = new pclZip($userFile);
-                                $realFileSize = 0;
-                                $zipFile->extract(PCLZIP_CB_PRE_EXTRACT, 'process_extracted_file');
-                                if ($diskUsed + $realFileSize > $diskQuotaDocument) {
-                                        $dialogBox .= $langNoSpace;
-                                } else {
-                                        $dialogBox .= "<p class='success_small'>$langDownloadAndZipEnd</p><br />";
-                                }
-                        }
+//                        elseif (isset($uncompress) and $uncompress == 1
+//                                and preg_match('/\.zip$/i', $_FILES['userFile']['name'])) {
+//                                $zipFile = new pclZip($userFile);
+//                                $realFileSize = 0;
+//                                $zipFile->extract(PCLZIP_CB_PRE_EXTRACT, 'process_extracted_file');
+//                                if ($diskUsed + $realFileSize > $diskQuotaDocument) {
+//                                        $dialogBox .= $langNoSpace;
+//                                } else {
+//                                        $dialogBox .= "<p class='success_small'>$langDownloadAndZipEnd</p><br />";
+//                                }
+//                        }
                         else
                         {
                         $fileName = trim ($_FILES['userFile']['name']);
