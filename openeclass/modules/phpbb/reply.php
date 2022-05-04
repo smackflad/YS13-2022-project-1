@@ -362,7 +362,7 @@ if (isset($submit) && $submit) {
 	<table class='xinha_editor'>
 	<tr>
 	<td>
-	<textarea id='xinha' name='message' rows='15' cols='70' class='auth_input'>$reply</textarea></td>
+	<textarea id='' name='message' rows='15' cols='70' class='auth_input'>$reply</textarea></td>
 	</tr></table></td>
 	</tr>
 	<tr>

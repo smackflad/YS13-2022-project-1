@@ -407,7 +407,7 @@ function new_assignment()
       <td>
         <table class='xinha_editor'>
         <tr>
-          <td><textarea id='xinha' name='desc' style='width:100%'>";
+          <td><textarea id='' name='desc' style='width:100%'>";
         if ($desc) {
                 $tool_content .= $desc;
         }
@@ -506,7 +506,7 @@ function show_edit_assignment($id)
       <td>
         <table class='xinha_editor'>
         <tr>
-          <td><textarea id='xinha' name='desc' value='$description' style='width:100%'>${row['description']}</textarea></td>
+          <td><textarea id='' name='desc' value='$description' style='width:100%'>${row['description']}</textarea></td>
         </tr>
         </table>
       </td>

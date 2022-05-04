@@ -270,7 +270,7 @@ if (isset($submit) && $submit) {
 	<td>
 	<table class='xinha_editor'>
 	<tr>
-	<td><textarea id='xinha' name='message' rows='14' cols='50' class='FormData_InputText'></textarea></td>
+	<td><textarea id='' name='message' rows='14' cols='50' class='FormData_InputText'></textarea></td>
 	</tr></table>
 	</td>
 	</tr>

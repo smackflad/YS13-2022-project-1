@@ -151,7 +151,7 @@ if ($displayForm && (@$addAnnouce==1 || isset($modify))) {
                     <td><input type='text' name='title' value='$titleToModify' size='50' class='FormData_InputText' /></td></tr>
                 <tr><th class='left'>$langAnnouncement</th>
                     <td><table class='xinha_editor'>
-                            <tr><td><textarea id='xinha' name='newContent'>$contentToModify</textarea>
+                            <tr><td><textarea id='' name='newContent'>$contentToModify</textarea>
                                     </td></tr></table>
                         $id_hidden_input</td></tr>
                 <tr><th class='left'>$langComments</th>
@@ -162,7 +162,7 @@ if ($displayForm && (@$addAnnouce==1 || isset($modify))) {
                     <td><input type='text' name='title_en' value='$titleToModifyEn' size='50' class='FormData_InputText' /></td></tr>
                 <tr><th class='left'>$langAdminAnnBodyEn</th>
                     <td><table class='xinha_editor'>
-                            <tr><td><textarea id='xinha_en' name='newContent_en'>$contentToModifyEn</textarea>
+                            <tr><td><textarea id='' name='newContent_en'>$contentToModifyEn</textarea>
                                     </td></tr>
                          </table></td></tr>
                <tr><th class='left'>$langAdminAnnCommEn</th>

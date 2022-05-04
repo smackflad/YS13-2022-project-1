@@ -323,7 +323,7 @@ function confirmation (name)
 			$contenu = "";
 		}
 		$tool_content .= "<tr><th class='left'>$langDetail:</th>
-			<td><textarea id='xinha' name='contenu'>".$contenu."</textarea></td>
+			<td><textarea id='' name='contenu'>".$contenu."</textarea></td>
 			</tr>
 			<tr><th class='left'>&nbsp;</th>
 			<td><input type='submit' name='submit' value='$langAddModify' /></td>

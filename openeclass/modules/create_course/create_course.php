@@ -177,7 +177,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 	<td>
 	<table class='xinha_editor'>
 	<tr>
-	<td><textarea id='xinha' name='description' wrap=\"soft\">$description</textarea></td>
+	<td><textarea id='' name='description' wrap=\"soft\">$description</textarea></td>
 	</tr>
 	</table>
 	</td>

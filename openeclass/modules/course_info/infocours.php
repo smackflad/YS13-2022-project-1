@@ -218,7 +218,7 @@ if (isset($_POST['submit'])) {
         <td width='100'>
 	      <table class='xinha_editor'>
           <tr>
-             <td><textarea id='xinha' name='description' cols='20' rows='4' class='FormData_InputText'>$description</textarea></td>
+             <td><textarea id='' name='description' cols='20' rows='4' class='FormData_InputText'>$description</textarea></td>
           </tr>
           </table>
         </td>
@@ -234,7 +234,7 @@ if (isset($_POST['submit'])) {
         <td width='100'>
 	      <table class='xinha_editor'>
           <tr>
-        <td><textarea id='xinha2' name='course_addon' cols='20' rows='4' class='FormData_InputText'>$course_addon</textarea></td>
+        <td><textarea id='' name='course_addon' cols='20' rows='4' class='FormData_InputText'>$course_addon</textarea></td>
         </tr>
           </table>
           </td>

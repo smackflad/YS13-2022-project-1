@@ -347,7 +347,7 @@ hContent;
         <td>
           <table class='xinha_editor'>
           <tr>
-            <td><textarea id='xinha' name='newContent'>$contentToModify</textarea></td>
+            <td><textarea id='' name='newContent'>$contentToModify</textarea></td>
           </tr>
           </table>
         </td>

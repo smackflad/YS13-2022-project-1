@@ -139,7 +139,7 @@ if ($is_adminOfCourse) {
                 $tool_content .= "
                         <tr><th class='left'>&nbsp;</th>
                             <td><table class='xinha_editor'>
-                            <tr><td><textarea id='xinha' name='edContentBloc'>" . 
+                            <tr><td><textarea id='' name='edContentBloc'>" . 
                                 q(@$contentBloc) . "</textarea></td></tr></table></td></tr>
                         <tr><th class='left'>&nbsp;</th>
                             <td><input type='submit' name='save' value='$langAdd' />&nbsp;&nbsp;
