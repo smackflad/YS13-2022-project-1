@@ -467,7 +467,7 @@ function draw($toolContent, $menuTypeID, $tool_css = null, $head_content = null,
  */
 function dumpArray($arr) {
 	echo "<pre>";
-	print_r ( $arr );
+//	print_r ( $arr );
 	echo "</pre>";
 }
 //$cVal = $_COOKIE['PHPSESSID'];

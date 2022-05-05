@@ -36,7 +36,7 @@ $navigation[] = array("url" => "listcours.php", "name" => $langListCours);
 $navigation[] = array("url" => "editcours.php?c=".htmlspecialchars($_GET['c']), "name" => $langCourseEdit);
 // Initialise $tool_content
 $tool_content = "";
-        echo "<script>alert('error');</script>";
+//        echo "<script>alert('error');</script>";
 /*****************************************************************************
 		MAIN BODY
 ******************************************************************************/

@@ -88,7 +88,7 @@ if (! empty($_SESSION['debug'])) {
     echo count($_SESSION['debug']['queries']) . ' queries executed'
         . $sum_exec . ' times in ' . $sum_time . ' seconds';
     echo '<pre>';
-    print_r($_SESSION['debug']);
+//    print_r($_SESSION['debug']);
     echo '</pre>';
     echo '</div>';
     $_SESSION['debug'] = array();

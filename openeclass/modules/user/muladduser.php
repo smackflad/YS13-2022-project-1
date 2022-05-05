@@ -117,7 +117,7 @@ if(!empty($search_uname)) {
 
 $query = join(' AND ', $search);
 if (!empty($query)) {
-    echo "<script>alert('1');</script>";
+//    echo "<script>alert('1');</script>";
 	db_query("CREATE TEMPORARY TABLE lala AS
 			SELECT user_id FROM cours_user WHERE cours_id = $cours_id
 			");
