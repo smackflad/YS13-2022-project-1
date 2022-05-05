@@ -1,6 +1,6 @@
 <? session_start();
 header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
-header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly;  SameSite=Strict");
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System

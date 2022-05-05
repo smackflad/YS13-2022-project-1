@@ -43,7 +43,7 @@ $tool_content = "";
 require_once("include/bcms.inc.php");
 session_start();
 header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
-header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly;  SameSite=Strict");
 
 if (!ini_get('allow_url_include')) {
 	$tool_content .= "<p class=\"caution_small\">".

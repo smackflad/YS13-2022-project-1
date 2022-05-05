@@ -32,7 +32,7 @@ file.php
 
 session_start();
 header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
-header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly;  SameSite=Strict");
 // save current course
 if (isset($_SESSION['dbname'])) {
         define('old_dbname', $_SESSION['dbname']);

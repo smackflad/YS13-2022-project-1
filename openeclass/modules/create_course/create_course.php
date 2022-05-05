@@ -25,7 +25,7 @@
 * =========================================================================*/
 session_start();
 header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
-header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
+header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly;  SameSite=Strict");
 $require_login = TRUE;
 $require_prof = TRUE;
 $require_help = TRUE;
@@ -416,7 +416,7 @@ if (isset($_POST['create_course']) && (isset($_POST['_token']) && ($_POST['_toke
         $string="<?php
                 session_start();
 				header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
-				header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict\");
+				header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly;  SameSite=Strict\");
         $titou=\"$repertoire\";
         session_register(\"dbname\");
         include(\"../../modules/course_home/course_home.php\");
@@ -431,7 +431,7 @@ if (isset($_POST['create_course']) && (isset($_POST['_token']) && ($_POST['_toke
         $string="<?php
                     session_start();
 					header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
-                    header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict\");
+                    header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly;  SameSite=Strict\");
             $titou=\"$repertoire\";
             session_register(\"dbname\");
 //            include(\"../../modules/course_home/course_home.php\");
@@ -447,7 +447,7 @@ if (isset($_POST['create_course']) && (isset($_POST['_token']) && ($_POST['_toke
     $string="<?php
                     session_start();
 					header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
-                    header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict\");
+                    header(\"Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly;  SameSite=Strict\");
             $titou=\"$repertoire\";
             session_register(\"dbname\");
 //            include(\"../../modules/course_home/course_home.php\");
