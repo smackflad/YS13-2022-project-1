@@ -72,7 +72,7 @@ hContent;
 
 $titulaire_probable="$prenom $nom";
 
-$tool_content .= "<form method='post' name='createform' action='$_SERVER[PHP_SELF]' onsubmit=\"return checkrequired(this, 'intitule', 'titulaires');\"> <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>";
+$tool_content .= "<form method='post' name='createform' action='$_SERVER[PHP_SELF]' onsubmit=\"return checkrequired(this, 'intitule', 'titulaires');\">";
 
 // Import from BetaCMS Bridge
 doImportFromBetaCMSBeforeCourseCreation();
@@ -155,6 +155,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 	$tool_content .= lang_select_options('languageCourse');
 	$tool_content .= "</td><td>&nbsp;</td></tr>
 	<tr><th>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td><input type='submit' name='create2' value='$langNextStep >' /><input type='hidden' name='visit' value='true' /></td>
 	<td><p align='right'><small>(*) &nbsp;$langFieldsRequ</small></p></td>
 </tbody>
@@ -193,6 +194,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 	</tr>
 	<tr>
 	<th>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td><input type='submit' name='back1' value='< $langPreviousStep ' />&nbsp;<input type='submit' name='create3' value='$langNextStep >' /></td>
 	</tbody>
 	</table>
@@ -324,6 +326,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 	</tr>
 	<tr>
 	<th>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>	
 	<td width='400'><input type='submit' name='back2' value='< $langPreviousStep '>&nbsp;
 	<input type='submit' name='create_course' value=\"$langFinalize\"></td>
 	<td><p align='right'><small>$langFieldsOptionalNote</small></p></td>
@@ -333,8 +336,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])/* && (isset($_POST['_token
 } // end of create3
 
 // create the course and the course database
-if (isset($_POST['create_course']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
-
+if (isset($_POST['create_course'])) {
         $nameTools = $langCourseCreate;
         $facid = intval($faculte);
         $facname = find_faculty_by_id($facid);
