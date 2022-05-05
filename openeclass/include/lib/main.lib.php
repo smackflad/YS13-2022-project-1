@@ -413,9 +413,9 @@ function check_admin() {
 	else unset($uid);
 
 	if (isset($uid)) {
-		$res = db_query("SELECT * FROM admin WHERE idUser='$uid'");
+		$res = run_Query("SELECT * FROM admin WHERE idUser=?", array("s", $uid));
 	}
-	if (!isset($uid) or !$res or mysql_num_rows($res) == 0) {
+	if (!isset($uid) or !$res or $res->num_rows == 0) {
 		return false;
 	} else return true;
 }
