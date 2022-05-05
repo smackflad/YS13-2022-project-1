@@ -66,7 +66,7 @@ if (isset($path2add) && $path2add == 0){
 // function library
 include $relPathLib . "lib/main.lib.php";
 //if session isn't started, start it. Needed by the language switch
-if (!session_id()) { session_start();header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict"); }
+if (!session_id()) { session_start();header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict"); }
 
 header('Content-Type: text/html; charset=UTF-8');
 

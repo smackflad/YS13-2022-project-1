@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('X-FRAME-OPTIONS: SAMEORIGIN', TRUE);
 header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 /*========================================================================
 *   Open eClass 2.3

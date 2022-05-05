@@ -375,6 +375,7 @@ function auth_user_login ($auth, $test_username, $test_password)  {
 			$filecontents = '
 <? 
 session_start();
+header("X-FRAME-OPTIONS: SAMEORIGIN", TRUE);
 header("Set-Cookie: ".session_name()."=".session_id()."; path=/; domain=; HttpOnly; Secure; SameSite=Strict");
 $_SESSION[\'shib_email\'] = '.autounquote($_POST['shibemail']).';
 $_SESSION[\'shib_uname\'] = '.autounquote($_POST['shibuname']).';
