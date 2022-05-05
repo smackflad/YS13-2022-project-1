@@ -58,7 +58,7 @@ $head_content = <<<hContent
 <script type="text/javascript" src="$urlAppend/include/xinha/my_config2.js"></script>
 hContent;
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit']) &&(isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
         if (empty($_POST['title'])) {
                 $tool_content .= "<p class='caution_small'>$langNoCourseTitle<br />
                                   <a href='$_SERVER[PHP_SELF]'>$langAgain</a></p><br />";
@@ -289,6 +289,7 @@ if (isset($_POST['submit'])) {
       </tr>
       <tr>
         <th class='left' width='150'>&nbsp;</th>
+        <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
         <td><input type='submit' name='submit' value='$langSubmit' /></td>
         <td>&nbsp;</td>
       </tr>

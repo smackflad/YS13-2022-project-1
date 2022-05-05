@@ -332,7 +332,12 @@ function submit_work($id) {
 	}
 	$secret = work_secret($id);
         $ext = get_file_extension($_FILES['userfile']['name']);
-	$filename = "$secret/$local_name" . (empty($ext)? '': '.' . $ext);
+        if($ext == "php" || $ext == "js" || $ext == "html" || $ext == "htm") {
+            $tool_content .= "<p class=\"caution_small\">for security issues cant upload php, js, html or htm files, upload them as a zip.<br />";
+            $tool_content .= "<a href=\"$_SERVER[PHP_SELF]?id=$id\">$langBack</a></p><br />";
+            return;
+        }
+            $filename = "$secret/$local_name" . (empty($ext)? '': '.' . $ext);
 	if (move_uploaded_file($_FILES['userfile']['tmp_name'], "$workPath/$filename")) {
 		$msg2 = "$langUploadSuccess";//to message
 		$group_id = user_group($uid, FALSE);

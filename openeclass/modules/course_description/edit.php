@@ -104,7 +104,7 @@ if ($is_adminOfCourse) {
 		$res = db_query("DELETE FROM course_description WHERE id = $del_id");
 		$tool_content .= "<p class='success'>$langBlockDeleted<br /><br /><a href='$_SERVER[PHP_SELF]'>$langBack</a></p>";
 
-        } elseif (isset($_REQUEST['numBloc'])) {
+        } elseif (isset($_REQUEST['numBloc']) && (isset($_GET['_token']) && ($_GET['_token'] == $_SESSION['_token']))) {
                 // Edit action
                 $edit_id = intval($_REQUEST['numBloc']);
                 $numBlock = $edit_id;
@@ -170,6 +170,7 @@ if ($is_adminOfCourse) {
 				$tool_content .= "\n            <option value='".$numBloc."'>".$titreBloc[$numBloc]."</option>";
 		}
 		$tool_content .= "\n</select></td></tr><tr><th>&nbsp;</th>
+            <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
       		<td><input type='submit' name='add' value='$langAdd' /></td>
     		</tr></tbody></table>
     		<p>&nbsp;</p>

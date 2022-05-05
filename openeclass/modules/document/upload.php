@@ -139,6 +139,7 @@ if($is_adminOfCourse) {
 	</tr>
 	<tr>
 	<th class='left'>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td colspan='2'><input type='submit' value='$langUpload' /><p align='right'><small>$langNotRequired<br />$langMaxFileSize ".
         ini_get('upload_max_filesize')."</small></p></td>
 	</tr>

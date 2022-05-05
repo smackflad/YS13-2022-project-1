@@ -82,7 +82,7 @@ function confirmation (name)
 }
 
 // Group creation
-if(isset($_REQUEST['creation']) && $is_adminOfCourse) {
+if(isset($_REQUEST['creation']) && $is_adminOfCourse && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 	// Create a hidden category for group forums
         $req = db_query('SELECT cat_id FROM catagories WHERE cat_order = -1');
         if ($req and mysql_num_rows($req) > 0) {

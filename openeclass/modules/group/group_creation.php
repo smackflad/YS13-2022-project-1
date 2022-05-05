@@ -46,7 +46,7 @@ if (!$is_adminOfCourse) {
 $nameTools = $langNewGroupCreate;
 $navigation[]= array ("url"=>"group.php", "name"=> $langGroups);
 $tool_content = "";
-
+$test=$_SESSION['_token'];
 $tool_content = <<<tCont
 
     <form method="post" action="group.php">
@@ -66,6 +66,7 @@ $tool_content = <<<tCont
     </tr>
     <tr>
       <th>&nbsp;</th>
+      <input type='hidden' name='_token' value='$test'/>
       <td><input type="submit" value=$langCreate name="creation"></td>
     </tr>
     </tbody>

@@ -204,7 +204,7 @@ hContent;
 	SUBMIT ANNOUNCEMENT COMMAND
 	--------------------------------------*/
 
-    if (isset($_POST['submitAnnouncement'])) {
+    if (isset($_POST['submitAnnouncement']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
         // modify announcement
         $antitle = autoquote($_POST['antitle']);
         $newContent = autoquote($_POST['newContent']);
@@ -358,6 +358,7 @@ hContent;
       </tr>
       <tr>
         <th>&nbsp;</th>
+        <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
         <td><input type='submit' name='submitAnnouncement' value='$langAdd' /></td>
       </tr>
       </tbody>

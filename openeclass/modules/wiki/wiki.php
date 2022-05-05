@@ -137,7 +137,7 @@ function confirmation (name)
     $creatorId = $uid;
 
     // get request variable for wiki edition
-    if ( $action == "exEdit" )
+    if ( $action == "exEdit" && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))
     {
         $wikiTitle = ( isset( $_POST['title'] ) ) ? strip_tags( $_POST['title'] ) : '';
         $wikiDesc = ( isset( $_POST['desc'] ) ) ? strip_tags( $_POST['desc'] ) : '';

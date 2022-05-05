@@ -255,7 +255,7 @@ if ($is_adminOfCourse) {
 			// CREATE COMMAND
 			case "create" :
 				// create form sent
-				if( isset($_POST["newPathName"]) && $_POST["newPathName"] != "") {
+				if( isset($_POST["newPathName"]) && $_POST["newPathName"] != "" && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 					// check if name already exists
 					$sql = "SELECT `name` FROM `".$TABLELEARNPATH."`
 						WHERE `name` = '". mysql_real_escape_string($_POST['newPathName']) ."'";
@@ -297,6 +297,7 @@ if ($is_adminOfCourse) {
     </tr>
     <tr>
       <th class='left'>&nbsp;</th>
+      <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
       <td><input type='hidden' name='cmd' value='create'><input type='submit' value='$langCreate'></input></td>
     </tr>
     </tbody>

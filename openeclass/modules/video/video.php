@@ -135,7 +135,7 @@ hContent;
 // ----------------------
 
 $nick=$prenom." ".$nom;
-if (isset($_POST['submit']) or isset($_POST['edit_submit'])) {
+if (isset($_POST['submit']) or isset($_POST['edit_submit']) &&(isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 	if($id) {
 		$sql = "UPDATE $table SET url='".mysql_real_escape_string($url)."', titre='".mysql_real_escape_string($titre)."', description='".mysql_real_escape_string($description)."',creator='".mysql_real_escape_string($creator)."',publisher='".mysql_real_escape_string($publisher)."'
 			WHERE id='".mysql_real_escape_string($id)."'";
@@ -238,6 +238,7 @@ if (isset($_POST['submit']) or isset($_POST['edit_submit'])) {
     </tr>
     <tr>
       <th class=\"left\">&nbsp;</th>
+      <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
       <td><input type=\"submit\" name=\"submit\" value=\"$dropbox_lang[uploadFile]\"></td>
     </tr>
     </tbody>
@@ -284,6 +285,7 @@ ini_get('upload_max_filesize') . "</small></p>";
     </tr>
     <tr>
       <th class=\"left\">&nbsp;</th>
+      <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
       <td><input type=\"submit\" name=\"submit\" value=\"$langAdd\"></td>
     </tr>
     </tbody>
@@ -352,6 +354,7 @@ if (isset($id)) {
         </tr>
         <tr>
           <th class=\"left\">&nbsp;</th>
+          <input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
           <td><input type=\"submit\" name=\"edit_submit\" value=\"$langModify\">
             <input type=\"hidden\" name=\"id\" value=\"".@$id."\">
             <input type=\"hidden\" name=\"table\" value=\"".$table_edit."\">

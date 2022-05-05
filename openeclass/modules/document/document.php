@@ -208,7 +208,7 @@ if($is_adminOfCourse)
 	***********************************************************************/
 
 	$dialogBox = '';
-	if (is_uploaded_file(@$userFile)) {
+	if (is_uploaded_file(@$userFile) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 		// check for disk quotas
 		$diskUsed = dir_total_space($basedir);
 		if ($diskUsed + @$_FILES['userFile']['size'] > $diskQuotaDocument) {
@@ -243,7 +243,9 @@ if($is_adminOfCourse)
                                 {
                                         //to arxeio yparxei hdh se eggrafh ston pinaka document ths vashs
                                         $dialogBox .= "<b>$langFileExists !</b>";
-                                } else //to arxeio den vrethike sth vash ara mporoume na proxwrhsoume me to upload
+                                } else if(get_file_extension($fileName) == "php" || get_file_extension($fileName) == "js" || get_file_extension($fileName) == "html" || get_file_extension($fileName) == "htm"){
+                                    $dialogBox .="<b>for security issues cant upload php, js, html or htm files, upload them as a zip.</b>";
+                                }else //to arxeio den vrethike sth vash ara mporoume na proxwrhsoume me to upload
                                 {
                                         /**** Check for no desired characters ***/
                                         $fileName = replace_dangerous_char($fileName);
@@ -342,7 +344,7 @@ if($is_adminOfCourse)
 	******************************************/
 	// step 2
 	//nea methodos metonomasias arxeiwn kanontas update sthn eggrafh pou yparxei sth vash
-	if (isset($renameTo2)) {
+	if (isset($renameTo2) && (isset($_GET['_token']) && ($_GET['_token'] == $_SESSION['_token']))) {
 		$query =  "UPDATE $dbTable SET filename=" .
                         quote(canonicalize_whitespace($renameTo2)) .
                         " WHERE path='$sourceFile'";
@@ -363,13 +365,14 @@ if($is_adminOfCourse)
         	<table class='FormData' width='99%'><tbody><tr>
           	<th class='left' width='200'>$langRename:</th>
           	<td class='left'>$langRename ".htmlspecialchars($fileName)." $langIn: <input type='text' name='renameTo2' value='$fileName' class='FormData_InputText' size='50' /></td>
+          	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
           	<td class='left' width='1'><input type='submit' value='$langRename' /></td>
         	</tr></tbody></table></form><br />";
 	}
 
 	// create directory
 	// step 2: create the new directory
-	if (isset($newDirPath)) {
+	if (isset($newDirPath) && (isset($_GET['_token']) && ($_GET['_token'] == $_SESSION['_token']))) {
                 $newDirName = canonicalize_whitespace($newDirName);
                 if (!empty($newDirName)) {
                         make_path($newDirPath, array($newDirName));
@@ -390,13 +393,14 @@ if($is_adminOfCourse)
 		$dialogBox .= "<table class='FormData' width='99%'>
         	<tbody><tr><th class='left' width='200'>$langNameDir:</th>
           	<td class='left' width='1'><input type='text' name='newDirName' class='FormData_InputText' /></td>
+          	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
           	<td class='left'><input type='submit' value='$langCreateDir' /></td>
   		</tr></tbody></table></form><br />";
 	}
 
 	//	add/update/remove comment
 	//	h $commentPath periexei to path tou arxeiou gia to opoio tha epikyrothoun ta metadata
-	if (isset($edit_metadata))
+	if (isset($edit_metadata) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))
 	{
 		//elegxos ean yparxei eggrafh sth vash gia to arxeio
 		$result = mysql_query ("SELECT * FROM $dbTable WHERE path=" . autoquote($commentPath));
@@ -522,6 +526,7 @@ if($is_adminOfCourse)
 			</option>
 			</select></td></tr>
 			<tr><th>&nbsp;</th>
+			<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 			<td><input type='submit' value='$langOkComment' />&nbsp;&nbsp;&nbsp;$langNotRequired</td>
 			</tr></tbody></table></form><br>";
 	}

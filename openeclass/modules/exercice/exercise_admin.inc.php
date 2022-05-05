@@ -27,7 +27,7 @@
 include('../../include/phpmathpublisher/mathpublisher.php');
 
 // the exercise form has been submitted
-if(isset($submitExercise)) {
+if(isset($submitExercise) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 	$exerciseTitle = trim($exerciseTitle);
 	$exerciseDescription = trim($exerciseDescription);
 	@$randomQuestions=$randomQuestions?$questionDrawn:0;
@@ -172,6 +172,7 @@ if(isset($modifyExercise))
 	</tr>";
 
 	$tool_content .= "<tr><th class='left'>&nbsp;</th>
+	<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 	<td><input type='submit' name='submitExercise' value='$langCreate'>&nbsp;&nbsp;
 	<input type='submit' name='cancelExercise' value='$langCancel'></td>
 	</tr></tbody></table>

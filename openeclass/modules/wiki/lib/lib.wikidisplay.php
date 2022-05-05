@@ -383,7 +383,7 @@
                . '        <th class="left">&nbsp;</th>' . "\n"
                . '        <td>' . "\n";
 
-
+        $form .="<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>";
         $form .= '        <input type="submit" name="action[exEdit]" value="' . $langSave . '" />' . "\n"
             . disp_button ($_SERVER['PHP_SELF'] . '?action=list', $langCancel) . "\n"
             ;

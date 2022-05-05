@@ -134,7 +134,7 @@ if ($is_adminOfCourse) {
 		db_query($sql);
 		db_query($p_sql, $mysqlMainDb);
 	}
-	if (isset($_POST['submit'])) {
+	if (isset($_POST['submit']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token']))) {
 		$date_selection = $date;
 		$hour = $fhour.":".$fminute;
 
@@ -326,6 +326,7 @@ function confirmation (name)
 			<td><textarea id='' name='contenu'>".$contenu."</textarea></td>
 			</tr>
 			<tr><th class='left'>&nbsp;</th>
+			<input type='hidden' name='_token' value='".$_SESSION['_token']."'/>
 			<td><input type='submit' name='submit' value='$langAddModify' /></td>
 			</tr></tbody></table>
 			</form><br />";

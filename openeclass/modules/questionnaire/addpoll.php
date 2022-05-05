@@ -69,7 +69,7 @@ if (isset($_GET['edit']) and isset($pid))  {
 	}
 }
 
-if (isset($_POST['PollCreate']))  {
+if (isset($_POST['PollCreate']) && (isset($_POST['_token']) && ($_POST['_token'] == $_SESSION['_token'])))  {
 	if (isset($_POST['question']) and questions_exist()) {
 		if (isset($pid)) {
 			editPoll($pid, $_POST['question'], $_POST['question_type']);
@@ -231,6 +231,7 @@ function printPollCreationForm() {
     <tr>
       <th width="220">&nbsp;</th>
       <td>
+      <input type="hidden" name="_token" value="'.$_SESSION['_token'].'"/>
       <input type="submit" name="PollCreate" value="'.$nameTools.'">
       </td>
     </tr>
